@@ -1,8 +1,9 @@
 package com.my.db.entities;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Product {
+public class Product implements Serializable {
 
     private int id;
     private String nameRu;

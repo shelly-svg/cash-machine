@@ -11,15 +11,9 @@
 
 <div id="container">
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
-    <div id="sidebar">
-        <h2><a href="?command=viewSettings">Settings</a></h2>
-        <h2><a href="?command=logout">Log out</a></h2>
-    </div>
-    <div id="content">
-
-        <h2>Add new PRODUCT</h2>
 
         <div id="add_product_form">
+            <h2>Add new PRODUCT</h2>
             <form action="controller" method="post">
                 <input type="hidden" name="command" value="addProduct"/>
                 <input type="text" placeholder="Enter product name at Russian" name="name_ru" required>
@@ -28,20 +22,21 @@
                 <input type="text" placeholder="Enter product price" name="price" required>
                 <input type="text" placeholder="Enter product amount" name="amount" required>
                 <input type="text" placeholder="Enter product weight" name="weight" required>
-                <textarea rows="5" cols="25" name="description_ru" placeholder="Enter russian description of product">
+                <textarea rows="10" cols="100" name="description_ru" placeholder="Enter russian description of product">
                 </textarea>
-                <textarea rows="5" cols="25" name="description_en" placeholder="Enter english description of product">
-                </textarea>
-
-                <input type="password" placeholder="Enter Password" name="password" required>
-                </label>
                 <hr>
-                <button type="submit" class="login_btn" name="submit"><fmt:message
-                        key="login_jsp.button.login"/></button>
+                <textarea rows="10" cols="100" name="description_en" placeholder="Enter english description of product">
+                </textarea>
+                <hr>
+                <select>
+                    <option>category 1</option>
+                    <option>category 2</option>
+                </select>
+                <hr>
+                <button type="submit" class="add_product_btn" name="submit">Add new product</button>
             </form>
         </div>
 
-    </div>
     <div id="clear">
 
     </div>

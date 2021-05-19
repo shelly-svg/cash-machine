@@ -2,5 +2,6 @@
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
 
 <div id="footer">
+    <hr>
     cash machine (c)
 </div>
