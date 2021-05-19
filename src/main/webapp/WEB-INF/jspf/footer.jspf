@@ -1,0 +1,6 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<div id="footer">
+    cash machine (c)
+</div>

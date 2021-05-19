@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="final-task:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>final-task</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="cash-machine-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="final-task:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>cash machine</display-name>
+
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!--============================================================
+	Controller
+    =============================================================-->
+    <servlet>
+        <servlet-name>Controller</servlet-name>
+        <servlet-class>com.my.web.Controller</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Controller</servlet-name>
+        <url-pattern>/controller</url-pattern>
+    </servlet-mapping>
+    <!--============================================================
+	Security filter.
+	1) admin: admin commands
+	2) client: client commands
+	3) commons: commands for all roles
+	4) out-of-control: commands without access control
+	Delimiter - space/tab
+    =============================================================-->
+    <filter>
+        <filter-name>SecurityFilter</filter-name>
+        <filter-class>com.my.web.filter.SecurityFilter</filter-class>
+        <init-param>
+            <param-name>admin</param-name>
+            <param-value></param-value>
+        </init-param>
+        <init-param>
+            <param-name>cashier</param-name>
+            <param-value></param-value>
+        </init-param>
+        <init-param>
+            <param-name>senior-cashier</param-name>
+            <param-value></param-value>
+        </init-param>
+        <init-param>
+            <param-name>commodity-expert</param-name>
+            <param-value>addProduct</param-value>
+        </init-param>
+        <init-param>
+            <param-name>common</param-name>
+            <param-value>menu logout noCommand viewSettings updateSettings</param-value>
+        </init-param>
+        <init-param>
+            <param-name>out-of-control</param-name>
+            <param-value>login changeLocaleToRu changeLocaleToEn</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+    <!--============================================================
+        Encoding support filter
+    =============================================================-->
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.my.web.filter.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/WEB-INF/jsp/*</url-pattern>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+</web-app>

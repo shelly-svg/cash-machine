@@ -1,0 +1,38 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<div id="header_container">
+    <c:if test="${not empty sessionScope.user}">
+        <div id="left_header">
+            <nav class="one">
+                <ul>
+                    <li><a href="?command=menu">Main menu</a></li>
+                    <li><a href="?command=viewSettings">Profile</a></li>
+                    <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
+                        <li><a href="?command=addProduct">Add product</a></li>
+                    </c:if>
+                    <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
+                        <li><a href="#">Edit product</a></li>
+                    </c:if>
+                    <li><a href="?command=logout">Log out</a></li>
+                    <li><a href="#">...</a></li>
+                    <li><a href="#">....</a></li>
+                </ul>
+            </nav>
+        </div>
+    </c:if>
+
+    <div id="right_header">
+
+        <form action="controller">
+            <input type="hidden" name="command" value="changeLocaleToRu"/>
+            <input type="submit" value="RU" name="RU" class="lang_button">
+        </form>
+        <form action="controller">
+            <input type="hidden" name="command" value="changeLocaleToEn"/>
+            <input type="submit" value="EN" name="RU" class="lang_button">
+        </form>
+
+    </div>
+
+</div>
