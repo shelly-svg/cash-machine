@@ -37,22 +37,13 @@ public class DBManager {
      * @return A DB connection.
      */
     public Connection getConnection() throws SQLException {
-        /*Connection connection;
-        Properties config = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream("app.properties")) {
-            config.load(fileInputStream);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        connection = DriverManager.getConnection(config.getProperty("connection.url"));
-        return connection;*/
         Connection con = null;
         try {
             Context initContext = new InitialContext();
-            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
 
             // ST4DB - the name of data source
-            DataSource ds = (DataSource)envContext.lookup("jdbc/ST4DB");
+            DataSource ds = (DataSource) envContext.lookup("jdbc/cash_machine");
             con = ds.getConnection();
         } catch (NamingException ex) {
             log.warning("Cannot obtain a connection from the pool");

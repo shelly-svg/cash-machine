@@ -14,11 +14,12 @@ public class CommandContainer {
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("noCommand", new NoCommand());
-        commands.put("menu", new MenuCommand());
+        commands.put("viewMenu", new MenuCommand());
         commands.put("changeLocaleToRu", new ChangeLangToRuCommand());
         commands.put("changeLocaleToEn", new ChangeLangToEnCommand());
         commands.put("viewSettings", new SettingsCommand());
         commands.put("addProduct", new AddProductCommand());
+        commands.put("viewProduct", new ViewProductCommand());
     }
 
     public static Command get(String commandName) {

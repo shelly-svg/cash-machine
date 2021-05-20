@@ -43,9 +43,6 @@ public class Controller extends HttpServlet {
         HttpSession session = request.getSession();
         System.out.println("FORWARDING TO ==> " + forward);
         session.setAttribute("lastAction", forward);
-        if (request.getSession().getAttribute("lastAction") != null) {
-            System.out.println(session.getAttribute("lastAction"));
-        }
 
         if (request.getMethod().equals("GET")) {
             if (forward != null) {

@@ -15,17 +15,20 @@ public class ChangeLangToRuCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Object forward;
+        String forward;
         //forward = Path.MENU_PAGE;
         HttpSession session = request.getSession();
         System.out.println("SESSION ATR" + session.getAttribute("lastAction"));
-        forward = session.getAttribute("lastAction");
+        forward = (String) session.getAttribute("lastAction");
         if (forward == null) {
             session.setAttribute("lang", "ru");
             return Path.LOGIN_PAGE;
         }
-        logger.trace("CHANGE LANG TO EN COMMAND");
+        if (forward.equals(Path.VIEW_PRODUCT_PAGE)) {
+            forward = "controller?command=viewProduct&id=" + request.getSession().getAttribute("lastViewedProductId");
+        }
+        logger.trace("CHANGE LANG TO RU COMMAND");
         session.setAttribute("lang", "ru");
-        return (String) forward;
+        return forward;
     }
 }

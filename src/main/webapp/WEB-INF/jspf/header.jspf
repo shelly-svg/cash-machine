@@ -6,7 +6,7 @@
         <div id="left_header">
             <nav class="one">
                 <ul>
-                    <li><a href="?command=menu">Main menu</a></li>
+                    <li><a href="?command=viewMenu">Main menu</a></li>
                     <li><a href="?command=viewSettings">Profile</a></li>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
                         <li><a href="?command=addProduct">Add product</a></li>

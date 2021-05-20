@@ -58,7 +58,7 @@ public class LoginCommand extends Command {
             session.setAttribute("userRole", userRole);
             logger.info("User " + user + " logged as " + userRole.toString().toLowerCase());
 
-            forward = "controller?command=menu";
+            forward = "controller?command=viewMenu";
 
             // work with i18n
             /*String userLocaleName = user.getLocaleName();

@@ -24,5 +24,9 @@ public final class Fields {
     public static final String PRODUCT__DESCRIPTION_EN = "description_en";
     public static final String PRODUCT__CATEGORY_ID = "category_id";
 
+    //category
+    public static final String CATEGORY__NAME_RU = "name_ru";
+    public static final String CATEGORY__NAME_EN = "name_en";
+
 
 }

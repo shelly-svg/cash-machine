@@ -24,7 +24,6 @@ public class UserDAO {
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            con.setAutoCommit(false);
             UserMapper mapper = new UserMapper();
             pstmt = con.prepareStatement(SQL__FIND_USER_BY_ID);
             pstmt.setLong(1, id);

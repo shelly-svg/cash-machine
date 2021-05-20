@@ -1,9 +1,6 @@
 package com.my.db.entities;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +10,8 @@ public class ProductDAO {
             "weight, description_ru, description_en, category_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     private static final String SQL__SHOW_ALL_PRODUCTS = "SELECT * FROM product ORDER BY id;";
+
+    private static final String SQL__FIND_PRODUCT_BY_ID = "SELECT * FROM product WHERE id=?;";
 
     public List<Product> findAllProducts(String localeName) {
         List<Product> products = new ArrayList<>();
@@ -38,12 +37,13 @@ public class ProductDAO {
         return products;
     }
 
-    public void addProduct(Product product) {
+    public int addProduct(Product product) {
+        int generatedKey = 0;
         PreparedStatement preparedStatement;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            preparedStatement = con.prepareStatement(SQL__ADD_NEW_PRODUCT);
+            preparedStatement = con.prepareStatement(SQL__ADD_NEW_PRODUCT, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, product.getNameRu());
             preparedStatement.setString(2, product.getNameEn());
             preparedStatement.setString(3, product.getCode());
@@ -54,6 +54,15 @@ public class ProductDAO {
             preparedStatement.setString(8, product.getDescriptionEn());
             preparedStatement.setInt(9, product.getCategoryId());
             preparedStatement.execute();
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    generatedKey = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating of product is failed, no ID obtained");
+                }
+            }
+
             preparedStatement.close();
         } catch (SQLException ex) {
             assert con != null;
@@ -63,7 +72,36 @@ public class ProductDAO {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
+        return generatedKey;
     }
+
+    public Product findProduct(Integer id) {
+        Product product = null;
+        PreparedStatement preparedStatement;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
+            preparedStatement = con.prepareStatement(SQL__FIND_PRODUCT_BY_ID);
+            preparedStatement.setInt(1, id);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                product = mapper.mapRow(rs);
+            }
+            rs.close();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return product;
+    }
+
 
     private static class ProductMapper implements EntityMapper<Product> {
 
