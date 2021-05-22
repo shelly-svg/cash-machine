@@ -51,6 +51,7 @@ public class ProductDAO {
         PreparedStatement p;
         ResultSet rs;
         Connection con = null;
+        int start = currentPage * recordsPerPage - recordsPerPage;
         try {
             con = DBManager.getInstance().getConnection();
             ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
@@ -59,7 +60,7 @@ public class ProductDAO {
             p.setString(1, pattern);
             p.setString(2, pattern);
             p.setString(3, pattern);
-            p.setInt(4, currentPage);
+            p.setInt(4, start);
             p.setInt(5, recordsPerPage);
             rs = p.executeQuery();
             while (rs.next()) {
