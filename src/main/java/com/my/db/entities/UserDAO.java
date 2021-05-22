@@ -19,23 +19,25 @@ public class UserDAO {
 
     public User findUser(Integer id) {
         User user = null;
-        PreparedStatement pstmt;
+        PreparedStatement preparedStatement;
         ResultSet rs;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
             UserMapper mapper = new UserMapper();
-            pstmt = con.prepareStatement(SQL__FIND_USER_BY_ID);
-            pstmt.setLong(1, id);
-            rs = pstmt.executeQuery();
+            preparedStatement = con.prepareStatement(SQL__FIND_USER_BY_ID);
+            preparedStatement.setLong(1, id);
+            rs = preparedStatement.executeQuery();
             if (rs.next())
                 user = mapper.mapRow(rs);
             rs.close();
-            pstmt.close();
+            preparedStatement.close();
         } catch (SQLException ex) {
+            assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
         } finally {
+            assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
         return user;
@@ -47,23 +49,25 @@ public class UserDAO {
 
     public User findUserByLogin(String login) {
         User user = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement preparedStatement;
+        ResultSet rs;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
             UserMapper mapper = new UserMapper();
-            pstmt = con.prepareStatement(SQL__FIND_USER_BY_LOGIN);
-            pstmt.setString(1, login);
-            rs = pstmt.executeQuery();
+            preparedStatement = con.prepareStatement(SQL__FIND_USER_BY_LOGIN);
+            preparedStatement.setString(1, login);
+            rs = preparedStatement.executeQuery();
             if (rs.next())
                 user = mapper.mapRow(rs);
             rs.close();
-            pstmt.close();
+            preparedStatement.close();
         } catch (SQLException ex) {
+            assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
         } finally {
+            assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
         return user;

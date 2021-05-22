@@ -25,7 +25,6 @@ public class ProductDAO {
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
             p = con.prepareStatement(SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH);
             pattern = "%" + pattern + "%";
             p.setString(1, pattern);
@@ -38,9 +37,11 @@ public class ProductDAO {
             rs.close();
             p.close();
         } catch (SQLException ex) {
+            assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
         } finally {
+            assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
         return numberOfRows;
@@ -69,9 +70,11 @@ public class ProductDAO {
             rs.close();
             p.close();
         } catch (SQLException ex) {
+            assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
         } finally {
+            assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
         return products;
@@ -93,9 +96,11 @@ public class ProductDAO {
             rs.close();
             p.close();
         } catch (SQLException ex) {
+            assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
             ex.printStackTrace();
         } finally {
+            assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
         return products;

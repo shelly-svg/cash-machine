@@ -22,11 +22,9 @@
             <input type="text" placeholder="Enter product price" name="price" required>
             <input type="text" placeholder="Enter product amount" name="amount" required>
             <input type="text" placeholder="Enter product weight" name="weight" required>
-            <textarea rows="10" cols="100" name="description_ru" placeholder="Enter russian description of product">
-                </textarea>
+            <textarea rows="10" cols="100" name="description_ru" placeholder="Enter russian description of the product"></textarea>
             <hr>
-            <textarea rows="10" cols="100" name="description_en" placeholder="Enter english description of product">
-                </textarea>
+            <textarea rows="10" cols="100" name="description_en" placeholder="Enter english description of the product"></textarea>
             <hr>
             <c:if test="${not empty requestScope.categories}">
                 <select name="category_id">

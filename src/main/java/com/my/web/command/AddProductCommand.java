@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 public class AddProductCommand extends Command {
@@ -26,10 +25,10 @@ public class AddProductCommand extends Command {
         logger.debug("Add product command is started");
         logger.debug("REQUEST METHOD IS => " + request.getMethod());
         if (request.getMethod().equals("GET")) {
-            forward = doGet(request, response);
+            forward = doGet(request);
         } else {
             if (request.getMethod().equals("POST")) {
-                forward = doPost(request, response);
+                forward = doPost(request);
             }
         }
         if (forward == null) {
@@ -39,7 +38,7 @@ public class AddProductCommand extends Command {
         return forward;
     }
 
-    private String doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private String doGet(HttpServletRequest request)  {
         logger.debug("Add product command started at GET method");
         CategoryDAO categoryDAO = new CategoryDAO();
         Map<Integer, Category> categories = categoryDAO.findAllCategories();
@@ -47,12 +46,9 @@ public class AddProductCommand extends Command {
         return Path.ADD_PRODUCT_PAGE;
     }
 
-    private String doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private String doPost(HttpServletRequest request) {
         logger.debug("Add product command started at POST method");
         Product product = new Product();
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; encoding=UTF-8");
-        response.setCharacterEncoding("UTF-8");
         String nameRu = request.getParameter("name_ru");
         String nameEn = request.getParameter("name_en");
         String code = request.getParameter("code");
