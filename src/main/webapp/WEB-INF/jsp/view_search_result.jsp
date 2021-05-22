@@ -63,38 +63,41 @@
                 </c:forEach>
             </table>
             <hr>
-            <nav aria-label="Navigation for products">
-                <ul class="pagination">
-                    <c:if test="${requestScope.currentPage != 1}">
-                        <li class="page_item">
-                            <a class="page_link"
-                               href="controller?command=search&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage-1}">Previous</a>
-                        </li>
-                    </c:if>
-                    <c:forEach begin="1" end="${requestScope.nOfPages}" var="i">
-                        <c:choose>
-                            <c:when test="${requestScope.currentPage eq i}">
-                                <li class="page_item_active"><a class="page_link">
-                                        ${i} <span class="sr_only">(Current)</span>
-                                </a>
-                                </li>
-                            </c:when>
-                            <c:otherwise>
-                                <li class="page_item">
-                                    <a class="page_link"
-                                       href="controller?command=search&pattern=${sessionScope.lastSearchPattern}&currentPage=${i}">${i}</a>
-                                </li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                    <c:if test="${requestScope.currentPage lt requestScope.nOfPages}">
-                        <li class="page_item">
-                            <a class="page_link"
-                               href="controller?command=search&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage+1}">Next</a>
-                        </li>
-                    </c:if>
-                </ul>
-            </nav>
+            <c:if test="${requestScope.nOfPages>1}">
+                <nav aria-label="Navigation for products">
+                    <ul class="pagination">
+                        <c:if test="${requestScope.currentPage != 1}">
+                            <li class="page_item">
+                                <a class="page_link"
+                                   href="controller?command=search&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage-1}">Previous</a>
+                            </li>
+                        </c:if>
+                        <c:forEach begin="1" end="${requestScope.nOfPages}" var="i">
+                            <c:choose>
+                                <c:when test="${requestScope.currentPage eq i}">
+                                    <li class="page_item_active"><a class="page_link">
+                                            ${i} <span class="sr_only">(Current)</span>
+                                    </a>
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li class="page_item">
+                                        <a class="page_link"
+                                           href="controller?command=search&pattern=${sessionScope.lastSearchPattern}&currentPage=${i}">${i}</a>
+                                    </li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                        <c:if test="${requestScope.currentPage lt requestScope.nOfPages}">
+                            <li class="page_item">
+                                <a class="page_link"
+                                   href="controller?command=search&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage+1}">Next</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
+            </c:if>
+
         </c:if>
 
 
