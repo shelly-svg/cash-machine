@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CategoryDAO {
 
@@ -72,8 +72,8 @@ public class CategoryDAO {
         return category;
     }
 
-    public List<Category> findAllCategories() {
-        List<Category> categories = new ArrayList<>();
+    public Map<Integer, Category> findAllCategories() {
+        Map<Integer, Category> categories = new HashMap<>();
         PreparedStatement preparedStatement;
         ResultSet rs;
         Connection con = null;
@@ -83,7 +83,8 @@ public class CategoryDAO {
             preparedStatement = con.prepareStatement(SQL__FIND_ALL_CATEGORIES);
             rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                categories.add(mapper.mapRow(rs));
+                Category category = mapper.mapRow(rs);
+                categories.put(category.getId(), category);
             }
             rs.close();
             preparedStatement.close();

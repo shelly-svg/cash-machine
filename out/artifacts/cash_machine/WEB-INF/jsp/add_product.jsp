@@ -32,10 +32,10 @@
                 <select name="category_id">
                     <c:forEach items="${requestScope.categories}" var="category">
                         <c:if test="${sessionScope.lang == 'ru'}">
-                            <option><c:out value="${category.nameRu}"/></option>
+                            <option><c:out value="${category.value.nameRu}"/></option>
                         </c:if>
                         <c:if test="${sessionScope.lang == 'en'}">
-                            <option><c:out value="${category.nameEn}"/></option>
+                            <option><c:out value="${category.value.nameEn}"/></option>
                         </c:if>
                     </c:forEach>
                 </select>

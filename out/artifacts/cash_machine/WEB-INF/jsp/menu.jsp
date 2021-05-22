@@ -16,15 +16,7 @@
         <h2><a href="?command=logout">Log out</a></h2>
     </div>
     <div id="content">
-        <h2><h2><fmt:message key="settings_jsp.label.localization"/></h2></h2>
-        <c:forEach items="${sessionScope.products}" var="product">
-            <c:if test="${sessionScope.lang=='ru'}">
-                <h6>PRODUCT: <c:out value="${product.nameRu}"/></h6>
-            </c:if>
-            <c:if test="${sessionScope.lang=='en'}">
-                <h6>PRODUCT: <c:out value="${product.nameEn}"/></h6>
-            </c:if>
-        </c:forEach>
+        <h1>MENU PAGE</h1>
     </div>
     <div id="clear">
 

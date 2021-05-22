@@ -250,3 +250,22 @@ hr {
 .add_product_btn:hover {
     opacity: 1;
 }
+
+/* search result block */
+
+#search_result_table{
+    width: 95%;
+    padding: 5px;
+    border: black 1px solid;
+    margin: auto auto;
+}
+
+#search_result_table tr {
+    text-align: center;
+    border: black 1px solid;
+}
+
+#search_result_table td {
+    border: black 1px solid;
+}
+

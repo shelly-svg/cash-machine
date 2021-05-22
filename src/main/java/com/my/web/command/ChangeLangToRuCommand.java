@@ -24,9 +24,13 @@ public class ChangeLangToRuCommand extends Command {
             session.setAttribute("lang", "ru");
             return Path.LOGIN_PAGE;
         }
-        if (forward.equals(Path.VIEW_PRODUCT_PAGE)) {
+        if (Path.VIEW_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=viewProduct&id=" + request.getSession().getAttribute("lastViewedProductId");
         }
+        if (Path.VIEW_SEARCH_RESULT_PAGE.equals(forward)) {
+            forward = "controller?command=search&pattern=" + request.getSession().getAttribute("lastSearchString");
+        }
+
         logger.trace("CHANGE LANG TO RU COMMAND");
         session.setAttribute("lang", "ru");
         return forward;

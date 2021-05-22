@@ -53,7 +53,7 @@
         </init-param>
         <init-param>
             <param-name>common</param-name>
-            <param-value>viewMenu logout noCommand viewSettings updateSettings viewProduct</param-value>
+            <param-value>search viewMenu logout noCommand viewSettings viewAllProducts viewProduct</param-value>
         </init-param>
         <init-param>
             <param-name>out-of-control</param-name>

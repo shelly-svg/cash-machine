@@ -41,8 +41,6 @@ public class DBManager {
         try {
             Context initContext = new InitialContext();
             Context envContext = (Context) initContext.lookup("java:/comp/env");
-
-            // ST4DB - the name of data source
             DataSource ds = (DataSource) envContext.lookup("jdbc/cash_machine");
             con = ds.getConnection();
         } catch (NamingException ex) {

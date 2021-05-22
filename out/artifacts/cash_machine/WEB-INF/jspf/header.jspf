@@ -12,7 +12,7 @@
                         <li><a href="?command=addProduct">Add product</a></li>
                     </c:if>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
-                        <li><a href="#">Edit product</a></li>
+                        <li><a href="?command=viewAllProducts">Edit product</a></li>
                     </c:if>
                     <li><a href="?command=logout">Log out</a></li>
                     <li><a href="#">...</a></li>

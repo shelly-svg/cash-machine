@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class AddProductCommand extends Command {
 
@@ -41,7 +42,7 @@ public class AddProductCommand extends Command {
     private String doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Add product command started at GET method");
         CategoryDAO categoryDAO = new CategoryDAO();
-        List<Category> categories = categoryDAO.findAllCategories();
+        Map<Integer, Category> categories = categoryDAO.findAllCategories();
         request.setAttribute("categories", categories);
         return Path.ADD_PRODUCT_PAGE;
     }

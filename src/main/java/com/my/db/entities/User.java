@@ -70,4 +70,5 @@ public class User {
     public String toString() {
         return id + " " + login + " " + firstName + " " + lastName + " " + localeName + " " + roleId;
     }
+
 }

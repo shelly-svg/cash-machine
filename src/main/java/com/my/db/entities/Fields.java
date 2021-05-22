@@ -28,5 +28,4 @@ public final class Fields {
     public static final String CATEGORY__NAME_RU = "name_ru";
     public static final String CATEGORY__NAME_EN = "name_en";
 
-
 }

@@ -13,7 +13,70 @@ public class ProductDAO {
 
     private static final String SQL__FIND_PRODUCT_BY_ID = "SELECT * FROM product WHERE id=?;";
 
-    public List<Product> findAllProducts(String localeName) {
+    private static final String SQL__FIND_PRODUCT_BY_SEARCH = "SELECT * FROM product WHERE name_ru LIKE ? OR name_en LIKE ? OR code LIKE ? LIMIT ?,?;";
+
+    private static final String SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH = "SELECT COUNT(*) FROM product WHERE name_ru " +
+            "LIKE ? OR name_en LIKE ? OR code LIKE ?;";
+
+    public int countOfRowsAffectedBySearch(String pattern) {
+        int numberOfRows = 0;
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
+            p = con.prepareStatement(SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH);
+            pattern = "%" + pattern + "%";
+            p.setString(1, pattern);
+            p.setString(2, pattern);
+            p.setString(3, pattern);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                numberOfRows = rs.getInt(1);
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return numberOfRows;
+    }
+
+    public List<Product> searchProducts(String pattern, int currentPage, int recordsPerPage) {
+        List<Product> products = new ArrayList<>();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
+            p = con.prepareStatement(SQL__FIND_PRODUCT_BY_SEARCH);
+            pattern = "%" + pattern + "%";
+            p.setString(1, pattern);
+            p.setString(2, pattern);
+            p.setString(3, pattern);
+            p.setInt(4, currentPage);
+            p.setInt(5, recordsPerPage);
+            rs = p.executeQuery();
+            while (rs.next()) {
+                products.add(mapper.mapRow(rs));
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return products;
+    }
+
+    public List<Product> findAllProducts() {
         List<Product> products = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
