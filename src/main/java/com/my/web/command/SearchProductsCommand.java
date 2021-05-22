@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class SearchCommand extends Command {
+public class SearchProductsCommand extends Command {
 
     private static final long serialVersionUID = 2394193249932294933L;
     private static final Logger logger = Logger.getLogger(AddProductCommand.class);

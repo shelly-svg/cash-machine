@@ -49,7 +49,7 @@
         </init-param>
         <init-param>
             <param-name>commodity-expert</param-name>
-            <param-value>addProduct updateProduct</param-value>
+            <param-value>addProduct editProduct</param-value>
         </init-param>
         <init-param>
             <param-name>common</param-name>

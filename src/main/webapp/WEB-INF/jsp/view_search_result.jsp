@@ -45,7 +45,7 @@
                             <td><c:out value="${product.amount}"/></td>
                             <td><c:out value="${product.weight}"/></td>
                             <td><c:out value="${requestScope.categories.get(product.categoryId).nameRu}"/></td>
-                            <td><a href="controller?command=updateProduct&id=${product.id}">Edit</a></td>
+                            <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
                         </tr>
                     </c:if>
                     <c:if test="${sessionScope.lang=='en'}">
@@ -57,7 +57,7 @@
                             <td><c:out value="${product.amount}"/></td>
                             <td><c:out value="${product.weight}"/></td>
                             <td><c:out value="${requestScope.categories.get(product.categoryId).nameEn}"/></td>
-                            <td><a href="controller?command=updateProduct&id=${product.id}">Edit</a></td>
+                            <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
                         </tr>
                     </c:if>
                 </c:forEach>

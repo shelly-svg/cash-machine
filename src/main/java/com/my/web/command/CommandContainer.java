@@ -21,7 +21,8 @@ public class CommandContainer {
         commands.put("addProduct", new AddProductCommand());
         commands.put("viewProduct", new ViewProductCommand());
         commands.put("viewAllProducts", new ViewAllProductsCommand());
-        commands.put("search", new SearchCommand());
+        commands.put("search", new SearchProductsCommand());
+        commands.put("editProduct", new EditProductCommand());
     }
 
     public static Command get(String commandName) {

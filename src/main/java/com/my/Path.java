@@ -8,6 +8,7 @@ public final class Path {
     public static final String VIEW_ALL_PRODUCTS_PAGE = "/WEB-INF/jsp/view_all_products.jsp";
 
     public static final String ADD_PRODUCT_PAGE = "/WEB-INF/jsp/add_product.jsp";
+    public static final String EDIT_PRODUCT_PAGE = "/WEB-INF/jsp/edit_product.jsp";
     public static final String VIEW_PRODUCT_PAGE = "/WEB-INF/jsp/view_product.jsp";
     public static final String VIEW_SEARCH_RESULT_PAGE = "/WEB-INF/jsp/view_search_result.jsp";
 
