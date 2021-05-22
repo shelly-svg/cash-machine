@@ -23,13 +23,13 @@ public class SearchCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Search command is started");
 
-        int recordsPerPage = 5;
+        int recordsPerPage = 3;
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
         logger.debug("Current page => " + currentPage);
 
         String pattern = request.getParameter("pattern");
         logger.debug("Pattern is => " + pattern);
-        request.getSession().setAttribute("lastSearchString", pattern);
+        request.getSession().setAttribute("lastSearchPattern", pattern);
         ProductDAO productDAO = new ProductDAO();
 
         Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
@@ -47,6 +47,7 @@ public class SearchCommand extends Command {
 
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
+        request.getSession().setAttribute("currentPagPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
 
         logger.debug("Search command is finished");

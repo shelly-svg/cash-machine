@@ -269,3 +269,22 @@ hr {
     border: black 1px solid;
 }
 
+.pagination ul{
+    height: 50px;
+    padding: 1em 0;
+    margin: auto auto;
+}
+
+.pagination a{
+    display: inline-block;
+    float: left;
+    padding: 1em;
+    color: black;
+    width: 70px;
+    height: 50px;
+    text-align: center;
+}
+
+.pagination a:hover{
+    background: #b5c190;
+}
