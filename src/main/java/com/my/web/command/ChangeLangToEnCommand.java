@@ -29,7 +29,7 @@ public class ChangeLangToEnCommand extends Command {
             forward = "controller?command=viewProduct&id=" + request.getSession().getAttribute("lastViewedProductId");
         }
         if (Path.VIEW_SEARCH_RESULT_PAGE.equals(forward)) {
-            forward = "controller?command=search&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage" + request.getSession().getAttribute("currentPagPage");
+            forward = "controller?command=search&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" + request.getSession().getAttribute("currentPagPage");
         }
         logger.trace("CHANGE LANG TO EN COMMAND");
         session.setAttribute("lang", "en");
