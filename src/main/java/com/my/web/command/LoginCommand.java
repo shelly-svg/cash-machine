@@ -19,7 +19,7 @@ public class LoginCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.trace("Login command is start");
+        logger.debug("Login command is start");
 
         HttpSession session = request.getSession();
         String login = request.getParameter("login");
@@ -27,7 +27,7 @@ public class LoginCommand extends Command {
 
         String password = request.getParameter("password");
 
-        String errorMessage = null;
+        String errorMessage;
         String forward = Path.ERROR_PAGE;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
@@ -47,7 +47,8 @@ public class LoginCommand extends Command {
             return forward;
         } else {
             Role userRole = Role.getRole(user);
-            logger.trace("User role --> " + userRole);
+            logger.debug("User role --> " + userRole);
+
                     /*if (userRole == Role.ADMIN)
             forward = Path.COMMAND__LIST_ORDERS;
 
@@ -60,22 +61,20 @@ public class LoginCommand extends Command {
 
             forward = "controller?command=viewMenu";
 
-            // work with i18n
-            /*String userLocaleName = user.getLocaleName();
-            log.trace("userLocalName --> " + userLocaleName);
-
+            //work with i18n
+            String userLocaleName = user.getLocaleName();
+            logger.debug("userLocalName --> " + userLocaleName);
             if (userLocaleName != null && !userLocaleName.isEmpty()) {
-                Config.set(session, "javax.servlet.jsp.jstl.fmt.locale", userLocaleName);
+                session.setAttribute("lang", userLocaleName);
+                logger.debug("Set the session attribute: user locale Name -> " + userLocaleName);
+            } else {
+                session.setAttribute("lang", "ru");
+                logger.debug("Set the session attribute: default lang - ru ");
+            }
 
-                session.setAttribute("defaultLocale", userLocaleName);
-                log.trace("Set the session attribute: defaultLocaleName --> " + userLocaleName);
-
-                log.info("Locale for user: defaultLocale --> " + userLocaleName);
-            }*/
         }
 
         logger.debug("Login command is finished");
-        request.getSession().setAttribute("lang", "ru");
         return forward;
     }
 

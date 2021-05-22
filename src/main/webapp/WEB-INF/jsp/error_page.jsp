@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page isErrorPage="true" %>
 <html>
@@ -9,14 +10,11 @@
     <h3>Error message: ${errorMessage}</h3>
 </c:if>
 <hr>
-<c:if test="%${not empty sessionScope.user}">
-    <p>Get back to the main menu? </p><a href="?command=menu">Menu</a>
+<c:if test="${not empty sessionScope.user}">
+    <p>Get back to the main menu? </p><a href="?command=viewMenu">Menu</a>
 </c:if>
-<p>Get back to the login? <a href="${pageContext.request.contextPath}/login.jsp">Login page</a>.</p>
+<c:if test="${empty sessionScope.user}">
+    <p>Get back to the login? <a href="${pageContext.request.contextPath}/login.jsp">Login page</a>.</p>
+</c:if>
 </body>
 </html>
-<%--<div class="container signin">
-            <p>Already have an account? <a href="#">Sign in</a>.</p>
-        </div>--%>
-
-<%--<p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>--%>

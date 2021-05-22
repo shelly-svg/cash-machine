@@ -22,7 +22,7 @@ public class ViewAllProductsCommand extends Command {
         List<Product> productList = new ProductDAO().findAllProducts();
         request.setAttribute("products", productList);
         logger.debug("All products container => " + productList);
-        return Path.VIEW_ALL_PRODUCTS_PAGE;
+        return Path.VIEW_SEARCH_PRODUCTS_PAGE;
     }
 
 }

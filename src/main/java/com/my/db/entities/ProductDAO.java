@@ -18,6 +18,28 @@ public class ProductDAO {
     private static final String SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH = "SELECT COUNT(*) FROM product WHERE name_ru " +
             "LIKE ? OR name_en LIKE ? OR code LIKE ?;";
 
+    private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
+
+    public void updateProductsAmount(int id, int newAmount) {
+        PreparedStatement preparedStatement;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            preparedStatement = con.prepareStatement(SQL__UPDATE_PRODUCT_AMOUNT_BY_ID);
+            preparedStatement.setInt(1, newAmount);
+            preparedStatement.setInt(2, id);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+
     public int countOfRowsAffectedBySearch(String pattern) {
         int numberOfRows = 0;
         PreparedStatement p;

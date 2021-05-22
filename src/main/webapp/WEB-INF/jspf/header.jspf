@@ -15,8 +15,6 @@
                         <li><a href="?command=viewAllProducts">Edit product</a></li>
                     </c:if>
                     <li><a href="?command=logout">Log out</a></li>
-                    <li><a href="#">...</a></li>
-                    <li><a href="#">....</a></li>
                 </ul>
             </nav>
         </div>

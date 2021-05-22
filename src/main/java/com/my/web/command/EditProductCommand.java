@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 public class EditProductCommand extends Command {
 
@@ -38,7 +37,18 @@ public class EditProductCommand extends Command {
     }
 
     private String doPost(HttpServletRequest request) {
-        return "controller?command=viewMenu";
+        logger.debug("Edit product command started at POST method");
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        logger.debug("Received product => " + id);
+        int newAmount = Integer.parseInt(request.getParameter("amount"));
+
+        new ProductDAO().updateProductsAmount(id, newAmount);
+        logger.debug("Received new amount => " + newAmount);
+
+        logger.debug("Edit product command is finished at POST method, forwarding to view product");
+        request.getSession().setAttribute("lastAction", "controller?command=editProduct&id=" + id);
+        return "controller?command=viewProduct&id=" + id;
     }
 
     private String doGet(HttpServletRequest request) {

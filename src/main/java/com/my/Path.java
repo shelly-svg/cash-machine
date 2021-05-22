@@ -5,7 +5,7 @@ public final class Path {
     public static final String LOGIN_PAGE = "/login.jsp";
     public static final String MENU_PAGE = "/WEB-INF/jsp/menu.jsp";
     public static final String SETTINGS_PAGE = "/WEB-INF/jsp/settings.jsp";
-    public static final String VIEW_ALL_PRODUCTS_PAGE = "/WEB-INF/jsp/view_all_products.jsp";
+    public static final String VIEW_SEARCH_PRODUCTS_PAGE = "/WEB-INF/jsp/search.jsp";
 
     public static final String ADD_PRODUCT_PAGE = "/WEB-INF/jsp/add_product.jsp";
     public static final String EDIT_PRODUCT_PAGE = "/WEB-INF/jsp/edit_product.jsp";

@@ -36,31 +36,23 @@
                     <td>Category</td>
                 </tr>
                 <c:forEach items="${requestScope.searchResult}" var="product">
-                    <c:if test="${sessionScope.lang=='ru'}">
-                        <tr>
-                            <td><c:out value="${product.nameRu}"/></td>
-                            <td><c:out value="${product.nameEn}"/></td>
-                            <td><c:out value="${product.price}"/></td>
-                            <td><c:out value="${product.code}"/></td>
-                            <td><c:out value="${product.amount}"/></td>
-                            <td><c:out value="${product.weight}"/></td>
+                    <tr>
+                        <td><c:out value="${product.nameRu}"/></td>
+                        <td><c:out value="${product.nameEn}"/></td>
+                        <td><c:out value="${product.price}"/></td>
+                        <td><c:out value="${product.code}"/></td>
+                        <td><c:out value="${product.amount}"/></td>
+                        <td><c:out value="${product.weight}"/></td>
+                        <c:if test="${sessionScope.lang=='ru'}">
                             <td><c:out value="${requestScope.categories.get(product.categoryId).nameRu}"/></td>
-                            <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
-                        </tr>
-                    </c:if>
-                    <c:if test="${sessionScope.lang=='en'}">
-                        <tr>
-                            <td><c:out value="${product.nameRu}"/></td>
-                            <td><c:out value="${product.nameEn}"/></td>
-                            <td><c:out value="${product.price}"/></td>
-                            <td><c:out value="${product.code}"/></td>
-                            <td><c:out value="${product.amount}"/></td>
-                            <td><c:out value="${product.weight}"/></td>
+                        </c:if>
+                        <c:if test="${sessionScope.lang=='en'}">
                             <td><c:out value="${requestScope.categories.get(product.categoryId).nameEn}"/></td>
-                            <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
-                        </tr>
-                    </c:if>
+                        </c:if>
+                        <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
+                    </tr>
                 </c:forEach>
+
             </table>
             <hr>
             <c:if test="${requestScope.nOfPages>1}">

@@ -4,7 +4,7 @@
 
 <html>
 
-<c:set var="title" value="Добавить товар"/>
+<c:set var="title" value="Редактировать товар"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
@@ -33,6 +33,7 @@
             <br/>
             <form action="controller" method="post">
                 <input type="hidden" name="command" value="editProduct">
+                <input type="hidden" name="id" value="${requestScope.product.id}">
                 <input type="text" placeholder="Enter new amount of product" name="amount" required>
                 <button type="submit" class="add_product_btn" name="submit">Accept</button>
             </form>
