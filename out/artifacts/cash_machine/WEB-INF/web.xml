@@ -41,7 +41,7 @@
         </init-param>
         <init-param>
             <param-name>cashier</param-name>
-            <param-value></param-value>
+            <param-value>createReceipt</param-value>
         </init-param>
         <init-param>
             <param-name>senior-cashier</param-name>
@@ -53,7 +53,7 @@
         </init-param>
         <init-param>
             <param-name>common</param-name>
-            <param-value>search viewMenu logout noCommand viewSettings viewAllProducts viewProduct</param-value>
+            <param-value>searchProduct viewMenu logout noCommand viewSettings viewSearchProductPage viewProduct</param-value>
         </init-param>
         <init-param>
             <param-name>out-of-control</param-name>

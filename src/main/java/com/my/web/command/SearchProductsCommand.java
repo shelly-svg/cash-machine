@@ -17,7 +17,7 @@ import java.util.Map;
 public class SearchProductsCommand extends Command {
 
     private static final long serialVersionUID = 2394193249932294933L;
-    private static final Logger logger = Logger.getLogger(AddProductCommand.class);
+    private static final Logger logger = Logger.getLogger(SearchProductsCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

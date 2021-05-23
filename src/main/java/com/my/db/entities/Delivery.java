@@ -1,6 +1,6 @@
 package com.my.db.entities;
 
-public class Category {
+public class Delivery {
 
     private int id;
     private String nameRu;
@@ -32,7 +32,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
+        return "Delivery{" +
                 "id=" + id +
                 ", nameRu='" + nameRu + '\'' +
                 ", nameEn='" + nameEn + '\'' +

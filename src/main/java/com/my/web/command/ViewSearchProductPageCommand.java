@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ViewSearchPageCommand extends Command {
+public class ViewSearchProductPageCommand extends Command {
 
     private static final long serialVersionUID = 2348934726283494344L;
-    private static final Logger logger = Logger.getLogger(ViewSearchPageCommand.class);
+    private static final Logger logger = Logger.getLogger(ViewSearchProductPageCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

@@ -41,7 +41,7 @@
         </init-param>
         <init-param>
             <param-name>cashier</param-name>
-            <param-value></param-value>
+            <param-value>createReceipt</param-value>
         </init-param>
         <init-param>
             <param-name>senior-cashier</param-name>

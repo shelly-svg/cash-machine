@@ -7,7 +7,7 @@ import java.util.List;
 public class ProductDAO {
 
     private static final String SQL__ADD_NEW_PRODUCT = "INSERT INTO product(name_ru, name_en, code, price, amount, " +
-            "weight, description_ru, description_en, category_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            "weight, description_ru, description_en, category_id) value (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     private static final String SQL__SHOW_ALL_PRODUCTS = "SELECT * FROM product ORDER BY id;";
 

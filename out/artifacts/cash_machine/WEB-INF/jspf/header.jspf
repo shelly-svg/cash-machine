@@ -14,6 +14,9 @@
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
                         <li><a href="?command=viewSearchProductPage">Edit product</a></li>
                     </c:if>
+                    <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
+                        <li><a href="?command=createReceipt">Create receipt</a></li>
+                    </c:if>
                     <li><a href="?command=logout">Log out</a></li>
                 </ul>
             </nav>

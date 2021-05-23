@@ -20,9 +20,10 @@ public class CommandContainer {
         commands.put("viewSettings", new ViewSettingsCommand());
         commands.put("addProduct", new AddProductCommand());
         commands.put("viewProduct", new ViewProductCommand());
-        commands.put("viewSearchProductPage", new ViewSearchPageCommand());
+        commands.put("viewSearchProductPage", new ViewSearchProductPageCommand());
         commands.put("searchProduct", new SearchProductsCommand());
         commands.put("editProduct", new EditProductCommand());
+        commands.put("createReceipt", new CreateReceiptCommand());
     }
 
     public static Command get(String commandName) {

@@ -28,4 +28,21 @@ public final class Fields {
     public static final String CATEGORY__NAME_RU = "name_ru";
     public static final String CATEGORY__NAME_EN = "name_en";
 
+    //receipt
+    public static final String RECEIPT_CREATION_TIME = "creation_time";
+    public static final String RECEIPT_NAME_RU = "name_ru";
+    public static final String RECEIPT_NAME_EN = "name_en";
+    public static final String RECEIPT_ADDRESS_RU = "address_ru";
+    public static final String RECEIPT_ADDRESS_EN = "address_en";
+    public static final String RECEIPT_DESCRIPTION_RU = "description_ru";
+    public static final String RECEIPT_DESCRIPTION_EN = "description_en";
+    public static final String RECEIPT_PHONE_NUMBER = "phone_number";
+    public static final String RECEIPT_DELIVERY_ID = "delivery_id";
+    public static final String RECEIPT_RECEIPT_STATUS_ID = "receipt_status_id";
+    public static final String RECEIPT_USER_ID = "receipt_user_id";
+
+    //delivery
+    public static final String DELIVERY_NAME_RU = "name_ru";
+    public static final String DELIVERY_NAME_EN = "name_en";
+
 }

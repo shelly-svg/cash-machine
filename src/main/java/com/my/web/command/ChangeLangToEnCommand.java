@@ -3,6 +3,8 @@ package com.my.web.command;
 import com.my.Path;
 import com.my.db.entities.Category;
 import com.my.db.entities.CategoryDAO;
+import com.my.db.entities.Delivery;
+import com.my.db.entities.DeliveryDAO;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class ChangeLangToEnCommand extends Command {
@@ -40,9 +43,12 @@ public class ChangeLangToEnCommand extends Command {
             Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
             request.setAttribute("categories", categories);
         }
+        if (Path.CREATE_RECEIPT_PAGE.equals(forward)){
+            List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
+            request.setAttribute("deliveries", deliveries);
+        }
         if (Path.EDIT_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=editProduct&id=" + request.getSession().getAttribute("lastEditedProductId");
-            logger.debug("KEKW => " + "controller?command=editProduct&id=" + request.getSession().getAttribute("lastEditedProductId"));
         }
         logger.debug("Change lang to english command is finished");
         return forward;
