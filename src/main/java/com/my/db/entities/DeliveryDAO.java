@@ -11,6 +11,66 @@ public class DeliveryDAO {
 
     private static final String SQL__GET_ALL_DELIVERIES = "SELECT * FROM delivery ORDER BY id;";
 
+    private static final String SQL__GET_DELIVERY_BY_NAME = "SELECT * FROM delivery WHERE name_ru LIKE ? OR name_en LIKE ?;";
+
+    private static final String SQL__GET_DELIVERY_BY_ID = "SELECT * FROM delivery WHERE id=?";
+
+    public Delivery findDeliveryById(int id) {
+        Delivery delivery = new Delivery();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            DeliveryDAO.DeliveryMapper mapper = new DeliveryDAO.DeliveryMapper();
+            p = con.prepareStatement(SQL__GET_DELIVERY_BY_ID);
+            p.setInt(1, id);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                delivery = mapper.mapRow(rs);
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return delivery;
+    }
+
+    public Delivery findDeliveryByName(String name) {
+        Delivery delivery = new Delivery();
+        name = "%" + name + "%";
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            DeliveryDAO.DeliveryMapper mapper = new DeliveryDAO.DeliveryMapper();
+            p = con.prepareStatement(SQL__GET_DELIVERY_BY_NAME);
+            p.setString(1, name);
+            p.setString(2, name);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                delivery = mapper.mapRow(rs);
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return delivery;
+    }
+
     public List<Delivery> getAllDeliveries() {
         List<Delivery> deliveries = new ArrayList<>();
         PreparedStatement p;

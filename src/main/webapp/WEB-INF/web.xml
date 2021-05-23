@@ -41,11 +41,11 @@
         </init-param>
         <init-param>
             <param-name>cashier</param-name>
-            <param-value>createReceipt</param-value>
+            <param-value>createReceipt viewCurrentReceipt addProductsIntoCurrentReceipt</param-value>
         </init-param>
         <init-param>
             <param-name>senior-cashier</param-name>
-            <param-value></param-value>
+            <param-value>viewCurrentReceipt</param-value>
         </init-param>
         <init-param>
             <param-name>commodity-expert</param-name>
@@ -53,7 +53,8 @@
         </init-param>
         <init-param>
             <param-name>common</param-name>
-            <param-value>searchProduct viewMenu logout noCommand viewSettings viewSearchProductPage viewProduct</param-value>
+            <param-value>searchProduct viewMenu logout noCommand viewSettings viewSearchProductPage viewProduct
+            </param-value>
         </init-param>
         <init-param>
             <param-name>out-of-control</param-name>

@@ -41,6 +41,10 @@ public final class Fields {
     public static final String RECEIPT_RECEIPT_STATUS_ID = "receipt_status_id";
     public static final String RECEIPT_USER_ID = "receipt_user_id";
 
+    //receipt_has_products
+    public static final String RECEIPT_HAS_PRODUCT_PRODUCT_ID = "product_id";
+
+
     //delivery
     public static final String DELIVERY_NAME_RU = "name_ru";
     public static final String DELIVERY_NAME_EN = "name_en";

@@ -49,7 +49,14 @@
                         <c:if test="${sessionScope.lang=='en'}">
                             <td><c:out value="${requestScope.categories.get(product.categoryId).nameEn}"/></td>
                         </c:if>
-                        <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
+                        <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
+                            <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
+                        </c:if>
+                        <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
+                            <c:if test="${not empty sessionScope.currentReceipt}">
+                                <td><a href="controller?command=addProductsIntoCurrentReceipt&id=${product.id}">Add to receipt</a></td>
+                            </c:if>
+                        </c:if>
                     </tr>
                 </c:forEach>
 

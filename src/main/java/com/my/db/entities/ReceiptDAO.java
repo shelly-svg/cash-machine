@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReceiptDAO {
 
@@ -11,7 +13,64 @@ public class ReceiptDAO {
             "description_ru, description_en, phone_number, delivery_id, receipt_status_id, user_id) value \n" +
             "(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
+    private static final String SQL__ADD_PRODUCT_INTO_RECEIPT = "INSERT INTO receipt_has_product(receipt_id, product_id, amount, price) value" +
+            " (?,?,1,(SELECT price FROM product WHERE id=?));";
 
+    private static final String SQL__FIND_PRODUCTS_FROM_RECEIPT = "SELECT product_id FROM receipt_has_product WHERE receipt_id=?;";
+
+    public List<Product> getAllProductsFromReceipt(int receiptId) {
+        List<Product> products = new ArrayList<>();
+        List<Integer> productsIds = new ArrayList<>();
+        ProductDAO productDAO = new ProductDAO();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__FIND_PRODUCTS_FROM_RECEIPT);
+            p.setInt(1, receiptId);
+            rs = p.executeQuery();
+            while (rs.next()) {
+                productsIds.add(rs.getInt(Fields.RECEIPT_HAS_PRODUCT_PRODUCT_ID));
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+
+        for (Integer id : productsIds) {
+            products.add(productDAO.findProduct(id));
+        }
+        return products;
+    }
+
+    public void addProductIntoReceipt(int productId, int receiptId) {
+        PreparedStatement preparedStatement;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            preparedStatement = con.prepareStatement(SQL__ADD_PRODUCT_INTO_RECEIPT);
+            preparedStatement.setInt(1, receiptId);
+            preparedStatement.setInt(2, productId);
+            preparedStatement.setInt(3, productId);
+            preparedStatement.execute();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
 
     public int createReceipt(Receipt receipt) {
         int generatedKey = 0;

@@ -1,10 +1,7 @@
 package com.my.web.command;
 
 import com.my.Path;
-import com.my.db.entities.Category;
-import com.my.db.entities.CategoryDAO;
-import com.my.db.entities.Delivery;
-import com.my.db.entities.DeliveryDAO;
+import com.my.db.entities.*;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -48,6 +45,17 @@ public class ChangeLangToRuCommand extends Command {
         }
         if (Path.EDIT_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=editProduct&id=" + request.getSession().getAttribute("lastEditedProductId");
+        }
+        if (Path.VIEW_RECEIPT_PAGE.equals(forward)) {
+            Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
+            Delivery delivery = new DeliveryDAO().findDeliveryById(currentReceipt.getDeliveryId());
+            request.setAttribute("delivery", delivery);
+
+            ReceiptStatus receiptStatus = ReceiptStatus.getReceiptStatus(currentReceipt);
+            request.setAttribute("receiptStatus", receiptStatus);
+
+            User user = new UserDAO().findUser(currentReceipt.getUserId());
+            request.setAttribute("creator", user);
         }
         logger.debug("Change lang to russian command is finished");
         return forward;

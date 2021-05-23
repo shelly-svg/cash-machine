@@ -19,7 +19,7 @@
             <input type="text" placeholder="Enter customers name at russian" name="name_ru" required>
             <input type="text" placeholder="Enter customers name at english" name="name_en" required>
             <input type="text" placeholder="Enter customers ru address" name="address_ru" required>
-            <input type="text" placeholder="Enter customers en address" name="address_en" required>
+            <input type="text" placeholder="Enter customers en address" name="address_en">
             <textarea rows="10" cols="100" name="description_ru"
                       placeholder="Enter russian description of the receipt"></textarea>
             <hr>
@@ -28,6 +28,7 @@
             <hr>
             <input type="text" placeholder="Enter customers phone number" name="phone_number" required>
             <hr>
+            <h5>Choose delivery</h5>
             <c:if test="${not empty requestScope.deliveries}">
                 <select name="delivery_id">
                     <c:forEach items="${requestScope.deliveries}" var="delivery">

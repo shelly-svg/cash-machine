@@ -10,12 +10,16 @@
                     <li><a href="?command=viewSettings">Profile</a></li>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
                         <li><a href="?command=addProduct">Add product</a></li>
-                    </c:if>
-                    <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
                         <li><a href="?command=viewSearchProductPage">Edit product</a></li>
                     </c:if>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
                         <li><a href="?command=createReceipt">Create receipt</a></li>
+                        <c:if test="${not empty sessionScope.currentReceipt}">
+                            <li><a href="?command=viewCurrentReceipt">Current receipt</a></li>
+                            <li><a href="?command=viewSearchProductPage">Add products</a></li>
+                            <li><a href="?command=editReceiptProducts">Edit products</a></li>
+                        </c:if>
+                        <li><a href="?command=chooseReceipt">Choose receipt</a></li>
                     </c:if>
                     <li><a href="?command=logout">Log out</a></li>
                 </ul>
