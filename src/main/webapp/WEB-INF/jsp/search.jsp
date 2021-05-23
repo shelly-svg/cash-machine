@@ -15,7 +15,7 @@
     <div id="add_product_form">
         <h2>VIEW ALL PRODUCTS</h2>
         <form action="controller" name="find_product_by_name_or_code">
-            <input type="hidden" name="command" value="search"/>
+            <input type="hidden" name="command" value="searchProduct"/>
             <input type="hidden" name="currentPage" value="1"/>
             <input type="text" placeholder="Enter product name or code" name="pattern" required>
             <button type="submit" class="add_product_btn" name="submit">Search</button>

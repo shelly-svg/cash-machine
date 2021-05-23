@@ -15,11 +15,12 @@ public class NoCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.debug("NoCommand starts");
+        logger.debug("NoCommand is started");
         String errorMessage = "No such command";
         request.setAttribute("errorMessage", errorMessage);
         logger.error("Set the request attribute: errorMessage -> " + errorMessage);
         logger.debug("NoCommand is finished");
         return Path.ERROR_PAGE;
     }
+
 }

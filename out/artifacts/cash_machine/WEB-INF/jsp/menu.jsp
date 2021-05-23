@@ -16,7 +16,8 @@
         <h2><a href="?command=logout">Log out</a></h2>
     </div>
     <div id="content">
-        <h1>MENU PAGE</h1>
+        <h1>Здравствуйте, ${sessionScope.user.firstName}, вы зашли как ${sessionScope.userRole.name()}!</h1>
+        <h1><c:out value="${sessionScope.lang}"/></h1>
     </div>
     <div id="clear">
 

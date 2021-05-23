@@ -17,11 +17,11 @@ public class CommandContainer {
         commands.put("viewMenu", new ViewMenuCommand());
         commands.put("changeLocaleToRu", new ChangeLangToRuCommand());
         commands.put("changeLocaleToEn", new ChangeLangToEnCommand());
-        commands.put("viewSettings", new SettingsCommand());
+        commands.put("viewSettings", new ViewSettingsCommand());
         commands.put("addProduct", new AddProductCommand());
         commands.put("viewProduct", new ViewProductCommand());
-        commands.put("viewAllProducts", new ViewAllProductsCommand());
-        commands.put("search", new SearchProductsCommand());
+        commands.put("viewSearchProductPage", new ViewSearchPageCommand());
+        commands.put("searchProduct", new SearchProductsCommand());
         commands.put("editProduct", new EditProductCommand());
     }
 

@@ -21,8 +21,8 @@ public class AddProductCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String forward = null;
         logger.debug("Add product command is started");
+        String forward = null;
         logger.debug("REQUEST METHOD IS => " + request.getMethod());
         if (request.getMethod().equals("GET")) {
             forward = doGet(request);
@@ -40,8 +40,7 @@ public class AddProductCommand extends Command {
 
     private String doGet(HttpServletRequest request)  {
         logger.debug("Add product command started at GET method");
-        CategoryDAO categoryDAO = new CategoryDAO();
-        Map<Integer, Category> categories = categoryDAO.findAllCategories();
+        Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
         request.setAttribute("categories", categories);
         return Path.ADD_PRODUCT_PAGE;
     }

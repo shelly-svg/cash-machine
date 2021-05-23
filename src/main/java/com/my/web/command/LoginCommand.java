@@ -19,7 +19,7 @@ public class LoginCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.debug("Login command is start");
+        logger.debug("Login command is started");
 
         HttpSession session = request.getSession();
         String login = request.getParameter("login");

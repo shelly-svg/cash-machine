@@ -19,8 +19,8 @@ public class EditProductCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String forward = null;
         logger.debug("Edit product command is started");
+        String forward = null;
         logger.debug("REQUEST METHOD =>  " + request.getMethod());
         if (request.getMethod().equals("GET")) {
             forward = doGet(request);
@@ -41,6 +41,7 @@ public class EditProductCommand extends Command {
 
         int id = Integer.parseInt(request.getParameter("id"));
         logger.debug("Received product => " + id);
+        logger.trace("Set session attribute id => " + id);
         int newAmount = Integer.parseInt(request.getParameter("amount"));
 
         new ProductDAO().updateProductsAmount(id, newAmount);
@@ -58,6 +59,8 @@ public class EditProductCommand extends Command {
         request.setAttribute("product", product);
         Category category = new CategoryDAO().findCategoryById(product.getCategoryId());
         request.setAttribute("category", category);
+        request.getSession().setAttribute("lastEditedProductId", id);
         return Path.EDIT_PRODUCT_PAGE;
     }
+
 }

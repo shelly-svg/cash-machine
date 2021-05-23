@@ -23,6 +23,7 @@ public class SearchProductsCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Search command is started");
 
+        //set the number of products displayed per page
         int recordsPerPage = 3;
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
         logger.debug("Current page => " + currentPage);
@@ -42,9 +43,11 @@ public class SearchProductsCommand extends Command {
         logger.debug("Number of rows affected by search " + numberOfRows);
         int nOfPages = numberOfRows / recordsPerPage;
         logger.debug("nOfPages ===>>> " + nOfPages);
+
         if (numberOfRows % recordsPerPage > 0) {
             nOfPages++;
         }
+
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
         request.getSession().setAttribute("currentPagPage", currentPage);
