@@ -36,10 +36,6 @@ public class ChangeLangToEnCommand extends Command {
         if (Path.VIEW_SEARCH_RESULT_PAGE.equals(forward)) {
             forward = "controller?command=searchProduct&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" + request.getSession().getAttribute("currentPagPage");
         }
-        if (Path.ADD_PRODUCT_PAGE.equals(forward)) {
-            Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
-            request.setAttribute("categories", categories);
-        }
         if (Path.CREATE_RECEIPT_PAGE.equals(forward)) {
             List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
             request.setAttribute("deliveries", deliveries);

@@ -143,7 +143,7 @@ public class ProductDAO {
             preparedStatement.setBigDecimal(6, product.getWeight());
             preparedStatement.setString(7, product.getDescriptionRu());
             preparedStatement.setString(8, product.getDescriptionEn());
-            preparedStatement.setInt(9, product.getCategoryId());
+            preparedStatement.setInt(9, product.getCategory().getId());
             preparedStatement.execute();
 
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -209,7 +209,7 @@ public class ProductDAO {
                 product.setWeight(rs.getBigDecimal(Fields.PRODUCT__WEIGHT));
                 product.setDescriptionRu(rs.getString(Fields.PRODUCT__DESCRIPTION_RU));
                 product.setDescriptionEn(rs.getString(Fields.PRODUCT__DESCRIPTION_EN));
-                product.setCategoryId(rs.getInt(Fields.PRODUCT__CATEGORY_ID));
+                product.setCategory(new CategoryDAO().findCategoryById(rs.getInt(Fields.PRODUCT__CATEGORY_ID)));
                 return product;
             } catch (SQLException e) {
                 throw new IllegalStateException(e);

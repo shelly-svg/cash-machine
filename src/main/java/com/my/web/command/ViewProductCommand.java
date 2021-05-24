@@ -24,9 +24,6 @@ public class ViewProductCommand extends Command {
         Product product = new ProductDAO().findProduct(id);
         logger.trace("Received product => " + product);
         request.setAttribute("product", product);
-        Category category = new CategoryDAO().findCategoryById(product.getCategoryId());
-        logger.debug("Received category => " + category);
-        request.setAttribute("category", category);
         request.getSession().setAttribute("lastViewedProductId", id);
         logger.debug("View Product command is finished");
         return Path.VIEW_PRODUCT_PAGE;

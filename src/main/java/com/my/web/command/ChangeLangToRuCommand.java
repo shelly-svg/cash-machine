@@ -39,10 +39,6 @@ public class ChangeLangToRuCommand extends Command {
             List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
             request.setAttribute("deliveries", deliveries);
         }
-        if (Path.ADD_PRODUCT_PAGE.equals(forward)) {
-            Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
-            request.setAttribute("categories", categories);
-        }
         if (Path.EDIT_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=editProduct&id=" + request.getSession().getAttribute("lastEditedProductId");
         }

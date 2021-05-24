@@ -14,7 +14,7 @@ public class Product implements Serializable {
     private BigDecimal weight;
     private String descriptionRu;
     private String descriptionEn;
-    private int categoryId;
+    private Category category;
 
     public int getId() {
         return id;
@@ -88,12 +88,12 @@ public class Product implements Serializable {
         this.descriptionEn = descriptionEn;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class Product implements Serializable {
                 ", weight=" + weight +
                 ", descriptionRu='" + descriptionRu + '\'' +
                 ", descriptionEn='" + descriptionEn + '\'' +
-                ", categoryId=" + categoryId +
+                ", category=" + category +
                 '}';
     }
 

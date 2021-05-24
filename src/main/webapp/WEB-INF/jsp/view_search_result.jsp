@@ -44,10 +44,10 @@
                         <td><c:out value="${product.amount}"/></td>
                         <td><c:out value="${product.weight}"/></td>
                         <c:if test="${sessionScope.lang=='ru'}">
-                            <td><c:out value="${requestScope.categories.get(product.categoryId).nameRu}"/></td>
+                            <td><c:out value="${product.category.nameRu}"/></td>
                         </c:if>
                         <c:if test="${sessionScope.lang=='en'}">
-                            <td><c:out value="${requestScope.categories.get(product.categoryId).nameEn}"/></td>
+                            <td><c:out value="${product.category.nameEn}"/></td>
                         </c:if>
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
                             <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>

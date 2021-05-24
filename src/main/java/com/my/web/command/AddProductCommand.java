@@ -38,7 +38,7 @@ public class AddProductCommand extends Command {
         return forward;
     }
 
-    private String doGet(HttpServletRequest request)  {
+    private String doGet(HttpServletRequest request) {
         logger.debug("Add product command started at GET method");
         Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
         request.setAttribute("categories", categories);
@@ -67,7 +67,7 @@ public class AddProductCommand extends Command {
         product.setWeight(weight);
         product.setDescriptionRu(descriptionRu);
         product.setDescriptionEn(descriptionEn);
-        product.setCategoryId(categoryId);
+        product.setCategory(new CategoryDAO().findCategoryById(categoryId));
 
         logger.trace("Got product => " + product);
         int id = new ProductDAO().addProduct(product);

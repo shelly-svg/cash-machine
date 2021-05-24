@@ -33,8 +33,6 @@ public class SearchProductsCommand extends Command {
         request.getSession().setAttribute("lastSearchPattern", pattern);
         ProductDAO productDAO = new ProductDAO();
 
-        Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
-        request.setAttribute("categories", categories);
         List<Product> result = productDAO.searchProducts(pattern, currentPage, recordsPerPage);
         logger.debug("Search result is => " + result);
         request.setAttribute("searchResult", result);

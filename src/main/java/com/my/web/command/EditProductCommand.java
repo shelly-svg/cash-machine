@@ -57,8 +57,6 @@ public class EditProductCommand extends Command {
         int id = Integer.parseInt(request.getParameter("id"));
         Product product = new ProductDAO().findProduct(id);
         request.setAttribute("product", product);
-        Category category = new CategoryDAO().findCategoryById(product.getCategoryId());
-        request.setAttribute("category", category);
         request.getSession().setAttribute("lastEditedProductId", id);
         return Path.EDIT_PRODUCT_PAGE;
     }

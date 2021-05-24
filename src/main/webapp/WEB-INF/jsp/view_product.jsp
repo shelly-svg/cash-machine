@@ -42,10 +42,10 @@
             <hr>
             <h6>Product category</h6>
             <c:if test="${sessionScope.lang == 'ru'}">
-                <option><c:out value="${requestScope.category.nameRu}"/></option>
+                <option><c:out value="${requestScope.product.category.nameRu}"/></option>
             </c:if>
             <c:if test="${sessionScope.lang == 'en'}">
-                <option><c:out value="${requestScope.category.nameEn}"/></option>
+                <option><c:out value="${requestScope.product.category.nameEn}"/></option>
             </c:if>
         </c:if>
     </div>
