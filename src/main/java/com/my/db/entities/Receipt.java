@@ -13,8 +13,8 @@ public class Receipt {
     private String descriptionRu;
     private String descriptionEn;
     private String phoneNumber;
-    private int deliveryId;
-    private int receiptStatusId;
+    private Delivery delivery;
+    private ReceiptStatus receiptStatus;
     private int userId;
 
     public int getId() {
@@ -89,20 +89,20 @@ public class Receipt {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getDeliveryId() {
-        return deliveryId;
+    public Delivery getDelivery() {
+        return delivery;
     }
 
-    public void setDeliveryId(int deliveryId) {
-        this.deliveryId = deliveryId;
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
     }
 
-    public int getReceiptStatusId() {
-        return receiptStatusId;
+    public ReceiptStatus getReceiptStatus() {
+        return receiptStatus;
     }
 
-    public void setReceiptStatusId(int receiptStatusId) {
-        this.receiptStatusId = receiptStatusId;
+    public void setReceiptStatus(ReceiptStatus receiptStatus) {
+        this.receiptStatus = receiptStatus;
     }
 
     public int getUserId() {
@@ -125,8 +125,8 @@ public class Receipt {
                 ", descriptionRu='" + descriptionRu + '\'' +
                 ", descriptionEn='" + descriptionEn + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", deliveryId=" + deliveryId +
-                ", receiptStatusId=" + receiptStatusId +
+                ", delivery=" + delivery +
+                ", receiptStatus=" + receiptStatus +
                 ", userId=" + userId +
                 '}';
     }

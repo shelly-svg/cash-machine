@@ -120,8 +120,8 @@ public class ReceiptDAO {
             preparedStatement.setString(5, receipt.getDescriptionRu());
             preparedStatement.setString(6, receipt.getDescriptionEn());
             preparedStatement.setString(7, receipt.getPhoneNumber());
-            preparedStatement.setInt(8, receipt.getDeliveryId());
-            preparedStatement.setInt(9, receipt.getReceiptStatusId());
+            preparedStatement.setInt(8, receipt.getDelivery().getId());
+            preparedStatement.setInt(9, receipt.getReceiptStatus().getId());
             preparedStatement.setInt(10, receipt.getUserId());
             preparedStatement.execute();
 
@@ -160,8 +160,8 @@ public class ReceiptDAO {
                 receipt.setDescriptionRu(rs.getString(Fields.RECEIPT_DESCRIPTION_RU));
                 receipt.setDescriptionEn(rs.getString(Fields.RECEIPT_DESCRIPTION_EN));
                 receipt.setPhoneNumber(rs.getString(Fields.RECEIPT_PHONE_NUMBER));
-                receipt.setDeliveryId(rs.getInt(Fields.RECEIPT_DELIVERY_ID));
-                receipt.setReceiptStatusId(rs.getInt(Fields.RECEIPT_RECEIPT_STATUS_ID));
+                receipt.setDelivery(new DeliveryDAO().findDeliveryById(rs.getInt(Fields.RECEIPT_DELIVERY_ID)));
+                receipt.setReceiptStatus(ReceiptStatus.getReceiptStatus(rs.getInt(Fields.RECEIPT_RECEIPT_STATUS_ID)));
                 receipt.setUserId(rs.getInt(Fields.RECEIPT_USER_ID));
                 return receipt;
             } catch (SQLException e) {

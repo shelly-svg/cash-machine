@@ -30,6 +30,10 @@ public class ChangeLangToEnCommand extends Command {
         if (forward == null) {
             return Path.LOGIN_PAGE;
         }
+        if (Path.ADD_PRODUCT_PAGE.equals(forward)){
+            Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
+            request.setAttribute("categories", categories);
+        }
         if (Path.VIEW_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=viewProduct&id=" + request.getSession().getAttribute("lastViewedProductId");
         }
@@ -45,13 +49,8 @@ public class ChangeLangToEnCommand extends Command {
         }
         if (Path.VIEW_RECEIPT_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-            Delivery delivery = new DeliveryDAO().findDeliveryById(currentReceipt.getDeliveryId());
-            request.setAttribute("delivery", delivery);
 
-            ReceiptStatus receiptStatus = ReceiptStatus.getReceiptStatus(currentReceipt);
-            request.setAttribute("receiptStatus", receiptStatus);
-
-            User user = new UserDAO().findUser(currentReceipt.getUserId());
+            String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
             request.setAttribute("creator", user);
         }
 

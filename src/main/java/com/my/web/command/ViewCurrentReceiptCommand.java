@@ -23,13 +23,7 @@ public class ViewCurrentReceiptCommand extends Command {
         List<Product> products = new ReceiptDAO().getAllProductsFromReceipt(currentReceipt.getId());
         request.getSession().setAttribute("currentReceiptProducts", products);
 
-        Delivery delivery = new DeliveryDAO().findDeliveryById(currentReceipt.getDeliveryId());
-        request.setAttribute("delivery", delivery);
-
-        ReceiptStatus receiptStatus = ReceiptStatus.getReceiptStatus(currentReceipt);
-        request.setAttribute("receiptStatus", receiptStatus);
-
-        User user = new UserDAO().findUser(currentReceipt.getUserId());
+        String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
         request.setAttribute("creator", user);
 
         logger.debug("View current receipt command is finished");

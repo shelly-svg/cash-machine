@@ -51,11 +51,11 @@ public class CreateReceiptCommand extends Command {
         receipt.setDescriptionRu(request.getParameter("description_ru"));
         receipt.setDescriptionEn(request.getParameter("description_en"));
         receipt.setPhoneNumber(request.getParameter("phone_number"));
-        receipt.setReceiptStatusId(ReceiptStatus.NEW_RECEIPT.getId());
+        receipt.setReceiptStatus(ReceiptStatus.NEW_RECEIPT);
         User currentUser = (User) session.getAttribute("user");
         receipt.setUserId(currentUser.getId());
         Delivery delivery = new DeliveryDAO().findDeliveryByName(request.getParameter("delivery_id"));
-        receipt.setDeliveryId(delivery.getId());
+        receipt.setDelivery(delivery);
 
         int id = new ReceiptDAO().createReceipt(receipt);
         receipt.setId(id);

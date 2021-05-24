@@ -4,14 +4,13 @@ public enum ReceiptStatus {
 
     NEW_RECEIPT(1), CLOSED(2), CANCELED(3);
 
-    private int id;
+    private final int id;
 
     ReceiptStatus(int i) {
         this.id = i;
     }
 
-    public static ReceiptStatus getReceiptStatus(Receipt receipt) {
-        int receiptStatusId = receipt.getReceiptStatusId();
+    public static ReceiptStatus getReceiptStatus(int receiptStatusId) {
         return ReceiptStatus.values()[receiptStatusId - 1];
     }
 

@@ -17,7 +17,36 @@ public class UserDAO {
             "UPDATE user SET password=?, first_name=?, last_name=?, locale_name=?" +
                     "	WHERE id=?";
 
-    public User findUser(Integer id) {
+    private static final String SQL_FIND_USERS_FNAME_LNAME_BY_ID = "SELECT first_name,last_name FROM user WHERE id=?";
+
+    public String findUsersFNameLName(int id) {
+        String result = null;
+        PreparedStatement preparedStatement;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            UserMapper mapper = new UserMapper();
+            preparedStatement = con.prepareStatement(SQL_FIND_USERS_FNAME_LNAME_BY_ID);
+            preparedStatement.setInt(1, id);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                result = rs.getString(Fields.USER__FIRST_NAME) + " " + rs.getString(Fields.USER__LAST_NAME);
+            }
+            rs.close();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return result;
+    }
+
+    public User findUser(int id) {
         User user = null;
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -26,10 +55,11 @@ public class UserDAO {
             con = DBManager.getInstance().getConnection();
             UserMapper mapper = new UserMapper();
             preparedStatement = con.prepareStatement(SQL__FIND_USER_BY_ID);
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
-            if (rs.next())
+            if (rs.next()) {
                 user = mapper.mapRow(rs);
+            }
             rs.close();
             preparedStatement.close();
         } catch (SQLException ex) {

@@ -51,17 +51,17 @@
             <hr>
             <h6>Delivery</h6>
             <c:if test="${sessionScope.lang == 'ru'}">
-                <option><c:out value="${requestScope.delivery.nameRu}"/></option>
+                <option><c:out value="${sessionScope.currentReceipt.delivery.nameRu}"/></option>
             </c:if>
             <c:if test="${sessionScope.lang == 'en'}">
-                <option><c:out value="${requestScope.delivery.nameEn}"/></option>
+                <option><c:out value="${sessionScope.currentReceipt.delivery.nameEn}"/></option>
             </c:if>
             <hr>
             <h6>Receipt status</h6>
-            <c:out value="${requestScope.receiptStatus.name().toLowerCase()}"/>
+            <c:out value="${sessionScope.currentReceipt.receiptStatus.name().toLowerCase()}"/>
             <hr>
             <h6>Created by user</h6>
-            <c:out value="${requestScope.creator.firstName}"/> <c:out value="${requestScope.creator.lastName}"/>
+            <c:out value="${requestScope.creator}"/>
             <hr>
             <c:if test="${empty sessionScope.currentReceiptProducts}}"><h6>Receipt has no products yet</h6></c:if>
             <c:if test="${not empty sessionScope.currentReceiptProducts}">
