@@ -39,7 +39,7 @@ public final class Fields {
     public static final String RECEIPT_PHONE_NUMBER = "phone_number";
     public static final String RECEIPT_DELIVERY_ID = "delivery_id";
     public static final String RECEIPT_RECEIPT_STATUS_ID = "receipt_status_id";
-    public static final String RECEIPT_USER_ID = "receipt_user_id";
+    public static final String RECEIPT_USER_ID = "user_id";
 
     //receipt_has_products
     public static final String RECEIPT_HAS_PRODUCT_PRODUCT_ID = "product_id";

@@ -18,10 +18,10 @@ public class SearchReceiptCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        /*logger.debug("Search receipt command is started");
+        logger.debug("Search receipt command is started");
 
         //set the number of receipts displayed per page
-        int recordsPerPage = 2;
+        int recordsPerPage = 5;
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
         logger.debug("Current page => " + currentPage);
 
@@ -32,12 +32,10 @@ public class SearchReceiptCommand extends Command {
         ReceiptDAO receiptDAO = new ReceiptDAO();
         List<Receipt> result = receiptDAO.searchReceipts(pattern, currentPage, recordsPerPage);
 
-        Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
-        request.setAttribute("categories", categories);
         logger.debug("Search result is => " + result);
-        request.setAttribute("searchResult", result);
+        request.setAttribute("searchReceiptResult", result);
 
-        int numberOfRows = productDAO.countOfRowsAffectedBySearch(pattern);
+        int numberOfRows = receiptDAO.countOfRowsAffectedBySearch(pattern);
         logger.debug("Number of rows affected by search " + numberOfRows);
         int nOfPages = numberOfRows / recordsPerPage;
         logger.debug("nOfPages ===>>> " + nOfPages);
@@ -48,12 +46,11 @@ public class SearchReceiptCommand extends Command {
 
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
-        request.getSession().setAttribute("currentPagPage", currentPage);
+        request.getSession().setAttribute("currentRecPagPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
 
         logger.debug("Search command is finished");
-        return Path.VIEW_SEARCH_RESULT_PAGE;*/
-        return null;
+        return Path.VIEW_SEARCH_RECEIPT_RESULT_PAGE;
     }
 
 }

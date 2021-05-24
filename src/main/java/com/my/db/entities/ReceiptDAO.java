@@ -20,6 +20,36 @@ public class ReceiptDAO {
 
     private static final String SQL__FIND_RECEIPT_BY_SEARCH = "SELECT * FROM receipt WHERE id LIKE ? OR creation_time LIKE ? LIMIT ?,?;";
 
+    private static final String SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_RECEIPT = "SELECT COUNT(*) FROM receipt WHERE id LIKE ? OR creation_time LIKE ?;";
+
+    public int countOfRowsAffectedBySearch(String pattern) {
+        int numberOfRows = 0;
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_RECEIPT);
+            pattern = "%" + pattern + "%";
+            p.setString(1, pattern);
+            p.setString(2, pattern);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                numberOfRows = rs.getInt(1);
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return numberOfRows;
+    }
+
     public List<Receipt> searchReceipts(String pattern, int currentPage, int recordsPerPage) {
         List<Receipt> receipts = new ArrayList<>();
         PreparedStatement p;

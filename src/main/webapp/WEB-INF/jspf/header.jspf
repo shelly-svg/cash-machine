@@ -19,7 +19,7 @@
                             <li><a href="?command=viewSearchProductPage">Add products</a></li>
                             <li><a href="?command=editReceiptProducts">Edit products</a></li>
                         </c:if>
-                        <li><a href="?command=searchReceipt">Choose receipt</a></li>
+                        <li><a href="?command=viewSearchReceiptPage">Choose receipt</a></li>
                     </c:if>
                     <li><a href="?command=logout">Log out</a></li>
                 </ul>

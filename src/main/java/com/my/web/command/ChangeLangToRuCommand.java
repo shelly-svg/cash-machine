@@ -29,12 +29,16 @@ public class ChangeLangToRuCommand extends Command {
         if (forward == null) {
             return Path.LOGIN_PAGE;
         }
-        if (Path.ADD_PRODUCT_PAGE.equals(forward)){
+        if (Path.ADD_PRODUCT_PAGE.equals(forward)) {
             Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
             request.setAttribute("categories", categories);
         }
         if (Path.VIEW_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=viewProduct&id=" + request.getSession().getAttribute("lastViewedProductId");
+        }
+        if (Path.VIEW_SEARCH_RECEIPT_RESULT_PAGE.equals(forward)) {
+            forward = "controller?command=searchReceipt&receipt_pattern=" + request.getSession().getAttribute("lastSearchReceiptPattern") +
+                    "&currentPage=" + request.getSession().getAttribute("currentRecPagPage");
         }
         if (Path.VIEW_SEARCH_RESULT_PAGE.equals(forward)) {
             forward = "controller?command=searchProduct&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" + request.getSession().getAttribute("currentPagPage");

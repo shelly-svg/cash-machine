@@ -14,6 +14,8 @@ public final class Path {
 
     public static final String CREATE_RECEIPT_PAGE = "/WEB-INF/jsp/create_receipt.jsp";
     public static final String VIEW_RECEIPT_PAGE = "/WEB-INF/jsp/view_receipt.jsp";
+    public static final String SEARCH_RECEIPT_PAGE = "/WEB-INF/jsp/search_receipt.jsp";
+    public static final String VIEW_SEARCH_RECEIPT_RESULT_PAGE = "/WEB-INF/jsp/view_search_receipt_result.jsp";
 
     public static final String ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
 
