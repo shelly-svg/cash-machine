@@ -13,11 +13,11 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>SEARCH FOR PRODUCT</h2>
-        <form action="controller" name="find_product_by_name_or_code">
-            <input type="hidden" name="command" value="searchProduct"/>
+        <h2>SEARCH FOR RECEIPT</h2>
+        <form action="controller" name="find_receipt_by_id_or_date">
+            <input type="hidden" name="command" value="searchReceipt"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter product name or code" name="pattern" required>
+            <input type="text" placeholder="Enter receipt id or creation date" name="receipt_pattern" required>
             <button type="submit" class="add_product_btn" name="submit">Search</button>
         </form>
         <hr>

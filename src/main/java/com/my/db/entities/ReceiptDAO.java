@@ -18,6 +18,40 @@ public class ReceiptDAO {
 
     private static final String SQL__FIND_PRODUCTS_FROM_RECEIPT = "SELECT product_id FROM receipt_has_product WHERE receipt_id=?;";
 
+    private static final String SQL__FIND_RECEIPT_BY_SEARCH = "SELECT * FROM receipt WHERE id LIKE ? OR creation_time LIKE ? LIMIT ?,?;";
+
+    public List<Receipt> searchReceipts(String pattern, int currentPage, int recordsPerPage) {
+        List<Receipt> receipts = new ArrayList<>();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
+            p = con.prepareStatement(SQL__FIND_RECEIPT_BY_SEARCH);
+            pattern = "%" + pattern + "%";
+            p.setString(1, pattern);
+            p.setString(2, pattern);
+            p.setInt(3, start);
+            p.setInt(4, recordsPerPage);
+            rs = p.executeQuery();
+            while (rs.next()) {
+                receipts.add(mapper.mapRow(rs));
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return receipts;
+    }
+
     public List<Product> getAllProductsFromReceipt(int receiptId) {
         List<Product> products = new ArrayList<>();
         List<Integer> productsIds = new ArrayList<>();

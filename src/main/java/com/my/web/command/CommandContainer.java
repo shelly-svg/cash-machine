@@ -26,6 +26,7 @@ public class CommandContainer {
         commands.put("createReceipt", new CreateReceiptCommand());
         commands.put("viewCurrentReceipt", new ViewCurrentReceiptCommand());
         commands.put("addProductsIntoCurrentReceipt", new AddProductsIntoCurrentReceiptCommand());
+        commands.put("searchReceipt", new SearchReceiptCommand());
     }
 
     public static Command get(String commandName) {
