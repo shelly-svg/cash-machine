@@ -4,6 +4,7 @@ import com.my.web.command.cashier.AddProductsIntoCurrentReceiptCommand;
 import com.my.web.command.cashier.CreateReceiptCommand;
 import com.my.web.command.cashier.SetReceiptStatusClosedCommand;
 import com.my.web.command.commodity_expert.AddProductCommand;
+import com.my.web.command.senior_cashier.SetReceiptStatusCanceledCommand;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -38,6 +39,8 @@ public class CommandContainer {
         commands.put("editReceiptProducts", new EditReceiptProductsCommand());
         commands.put("viewReceiptProductsPage", new ViewReceiptProductsPageCommand());
         commands.put("setReceiptStatusClosed", new SetReceiptStatusClosedCommand());
+
+        commands.put("setReceiptStatusCanceled", new SetReceiptStatusCanceledCommand());
     }
 
     public static Command get(String commandName) {

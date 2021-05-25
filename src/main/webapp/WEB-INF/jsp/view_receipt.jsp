@@ -83,6 +83,14 @@
                     <button type="submit" class="close_receipt_btn" name="submit">Close receipt</button>
                 </form>
             </c:if>
+            <c:if test="${sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'
+            and sessionScope.userRole.name().toLowerCase() == 'senior_cashier'}">
+                <hr>
+                <form action="controller" method="post">
+                    <input type="hidden" name="command" value="setReceiptStatusCanceled">
+                    <button type="submit" class="close_receipt_btn" name="submit">Cancel receipt</button>
+                </form>
+            </c:if>
         </c:if>
     </div>
 

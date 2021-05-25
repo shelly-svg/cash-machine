@@ -56,7 +56,8 @@
                         <c:if test="${sessionScope.lang == 'en'}">
                             <td><c:out value="${receipt.receiptStatus.nameEn}"/></td>
                         </c:if>
-                        <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
+                        <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'
+                        or sessionScope.userRole.name().toLowerCase() == 'senior_cashier'}">
                             <td><a href="controller?command=chooseReceipt&id=${receipt.id}">Choose</a></td>
                         </c:if>
                     </tr>
