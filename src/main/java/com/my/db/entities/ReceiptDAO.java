@@ -1,5 +1,7 @@
 package com.my.db.entities;
 
+import com.my.web.exception.ApplicationException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +28,27 @@ public class ReceiptDAO {
     private static final String SQL__FIND_PRODUCT_AMOUNT_AT_THE_RECEIPT = "SELECT amount FROM receipt_has_product WHERE receipt_id=? AND product_id=?;";
 
     private static final String SQL__SET_AMOUNT_OF_PRODUCT_AT_THE_RECEIPT = "UPDATE receipt_has_product SET amount=? WHERE receipt_id=? and product_id=?;";
+
+    private static final String SQL__SET_RECEIPT_STATUS = "UPDATE receipt SET receipt_status_id=? WHERE id=?;";
+
+    public void setReceiptStatus(int receiptId, ReceiptStatus receiptStatus) {
+        PreparedStatement p;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__SET_RECEIPT_STATUS);
+            p.setInt(1, receiptStatus.getId());
+            p.setInt(2, receiptId);
+            p.execute();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
 
     public void setAmountOfProductAtTheReceipt(int amount, int receiptId, int productId) {
         PreparedStatement p;
@@ -193,7 +216,7 @@ public class ReceiptDAO {
         return products;
     }
 
-    public void addProductIntoReceipt(int productId, int receiptId) {
+    public void addProductIntoReceipt(int productId, int receiptId) throws ApplicationException {
         PreparedStatement preparedStatement;
         Connection con = null;
         try {
@@ -204,13 +227,11 @@ public class ReceiptDAO {
             preparedStatement.setInt(3, productId);
             preparedStatement.execute();
             preparedStatement.close();
+            DBManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
-        } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            throw new ApplicationException(ex.getMessage());
         }
     }
 

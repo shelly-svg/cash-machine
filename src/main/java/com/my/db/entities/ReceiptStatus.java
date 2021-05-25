@@ -6,6 +6,7 @@ public enum ReceiptStatus {
 
     private final int id;
 
+
     ReceiptStatus(int i) {
         this.id = i;
     }

@@ -2,13 +2,13 @@ package com.my.web.command;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 public class AddProductsIntoCurrentReceiptCommand extends Command {
     private static final long serialVersionUID = -2348237473492349742L;
@@ -17,48 +17,29 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Add products into current receipt command is started");
-        String forward = null;
-        logger.debug("REQUEST METHOD =>  " + request.getMethod());
-        if (request.getMethod().equals("GET")) {
-            forward = doGet(request);
-        } else {
-            if (request.getMethod().equals("POST")) {
-                forward = doPost(request);
-            }
-        }
-        if (forward == null) {
-            forward = Path.MENU_PAGE;
-        }
-        logger.debug("Add products into current receipt command is finished, forwarding to -> " + forward);
-        return forward;
-    }
-
-    private String doPost(HttpServletRequest request) {
-        /*logger.debug("Add products into current receipt command started at POST method");
-
-        int id = Integer.parseInt(request.getParameter("id"));
-        logger.debug("Received product => " + id);
-        logger.trace("Set session attribute id => " + id);
-        int newAmount = Integer.parseInt(request.getParameter("amount"));
-
-        new ProductDAO().updateProductsAmount(id, newAmount);
-        logger.debug("Received new amount => " + newAmount);
-
-        logger.debug("Edit product command is finished at POST method, forwarding to view product");
-        request.getSession().setAttribute("lastAction", "controller?command=editProduct&id=" + id);*/
-        return "controller?command=viewSearchProductPage";
-    }
-
-    private String doGet(HttpServletRequest request) {
-        logger.debug("Add products into current receipt command started at GET method");
         int id = Integer.parseInt(request.getParameter("id"));
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
 
-        ReceiptDAO receiptDAO = new ReceiptDAO();
-        receiptDAO.addProductIntoReceipt(id, currentReceipt.getId());
+        if (currentReceipt.getReceiptStatus().equals(ReceiptStatus.CLOSED) || currentReceipt.getReceiptStatus().equals(ReceiptStatus.CANCELED)) {
+            String errorMessage = "You cannot add products into closed and canceled receipts";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR_PAGE;
+        }
 
+        ReceiptDAO receiptDAO = new ReceiptDAO();
+        try {
+            receiptDAO.addProductIntoReceipt(id, currentReceipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "This product is already exist at this receipt";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR_PAGE;
+        }
         logger.debug("RECEIVED PRODUCT ID => " + id);
+        logger.debug("Add products into current receipt command is finished, forwarding to search for products page");
 
         return Path.VIEW_SEARCH_PRODUCTS_PAGE;
     }
+
 }
