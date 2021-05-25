@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ReceiptDAO {
 
@@ -21,6 +20,85 @@ public class ReceiptDAO {
     private static final String SQL__FIND_RECEIPT_BY_SEARCH = "SELECT * FROM receipt WHERE id LIKE ? OR creation_time LIKE ? LIMIT ?,?;";
 
     private static final String SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_RECEIPT = "SELECT COUNT(*) FROM receipt WHERE id LIKE ? OR creation_time LIKE ?;";
+
+    private static final String SQL__FIND_RECEIPT_BY_ID = "SELECT * FROM receipt WHERE id=?;";
+
+    private static final String SQL__FIND_PRODUCT_AMOUNT_AT_THE_RECEIPT = "SELECT amount FROM receipt_has_product WHERE receipt_id=? AND product_id=?;";
+
+    private static final String SQL__SET_AMOUNT_OF_PRODUCT_AT_THE_RECEIPT = "UPDATE receipt_has_product SET amount=? WHERE receipt_id=? and product_id=?;";
+
+    public void setAmountOfProductAtTheReceipt(int amount, int receiptId, int productId) {
+        PreparedStatement p;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__SET_AMOUNT_OF_PRODUCT_AT_THE_RECEIPT);
+            p.setInt(1, amount);
+            p.setInt(2, receiptId);
+            p.setInt(3, productId);
+            p.execute();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+
+    public Map<Product, Integer> getMapOfAmountsAndProductsFromReceipt(Receipt receipt) {
+        Map<Product, Integer> productMap = new HashMap<>();
+        List<Product> products = new ReceiptDAO().getAllProductsFromReceipt(receipt.getId());
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            for (Product product : products) {
+                p = con.prepareStatement(SQL__FIND_PRODUCT_AMOUNT_AT_THE_RECEIPT);
+                p.setInt(1, receipt.getId());
+                p.setInt(2, product.getId());
+                rs = p.executeQuery();
+                if (rs.next()) {
+                    productMap.put(product, rs.getInt(Fields.RECEIPT_HAS_PRODUCT_AMOUNT));
+                }
+            }
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return productMap;
+    }
+
+    public Receipt findReceipt(int id) {
+        Receipt receipt = new Receipt();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
+            p = con.prepareStatement(SQL__FIND_RECEIPT_BY_ID);
+            p.setInt(1, id);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                receipt = mapper.mapRow(rs);
+            }
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return receipt;
+    }
 
     public int countOfRowsAffectedBySearch(String pattern) {
         int numberOfRows = 0;

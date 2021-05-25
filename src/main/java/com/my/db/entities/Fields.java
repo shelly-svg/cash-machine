@@ -43,6 +43,7 @@ public final class Fields {
 
     //receipt_has_products
     public static final String RECEIPT_HAS_PRODUCT_PRODUCT_ID = "product_id";
+    public static final String RECEIPT_HAS_PRODUCT_AMOUNT = "amount";
 
 
     //delivery

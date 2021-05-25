@@ -248,12 +248,12 @@ hr {
 }
 
 .add_product_btn:hover {
-    opacity: 1;
+    opacity: 5;
 }
 
 /* search result block */
 
-#search_result_table{
+#search_result_table {
     width: 95%;
     padding: 5px;
     border: black 1px solid;
@@ -269,13 +269,13 @@ hr {
     border: black 1px solid;
 }
 
-.pagination ul{
+.pagination ul {
     height: 50px;
     padding: 1em 0;
     margin: auto auto;
 }
 
-.pagination a{
+.pagination a {
     display: inline-block;
     float: left;
     padding: 1em;
@@ -285,6 +285,20 @@ hr {
     text-align: center;
 }
 
-.pagination a:hover{
+.pagination a:hover {
     background: #b5c190;
+}
+
+/* change amount form */
+#change_receipt_product_amount {
+    display: inline;
+}
+
+#change_receipt_product_amount input[type=text] {
+    width: 60%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline;
+    border: none;
+    background: #f1f1f1;
 }

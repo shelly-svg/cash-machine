@@ -1,8 +1,9 @@
 package com.my.db.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Receipt {
+public class Receipt implements Serializable {
 
     private int id;
     private Date createTime;

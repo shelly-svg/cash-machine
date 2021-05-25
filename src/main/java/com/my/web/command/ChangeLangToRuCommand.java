@@ -56,6 +56,12 @@ public class ChangeLangToRuCommand extends Command {
             String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
             request.setAttribute("creator", user);
         }
+        if (Path.VIEW_RECEIPT_PRODUCTS_PAGE.equals(forward)){
+            Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
+            Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            request.setAttribute("receiptProductMap", productMap);
+        }
+
         logger.debug("Change lang to russian command is finished");
         return forward;
     }
