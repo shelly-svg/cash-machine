@@ -1,6 +1,7 @@
 package com.my.db.entities;
 
 public enum Role {
+
     ADMIN, CASHIER, SENIOR_CASHIER, COMMODITY_EXPERT;
 
     public static Role getRole(User user) {

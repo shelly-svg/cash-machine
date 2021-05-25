@@ -1,5 +1,9 @@
 package com.my.web.command;
 
+import com.my.web.command.cashier.AddProductsIntoCurrentReceiptCommand;
+import com.my.web.command.cashier.CreateReceiptCommand;
+import com.my.web.command.cashier.SetReceiptStatusClosedCommand;
+import com.my.web.command.commodity_expert.AddProductCommand;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -18,11 +22,13 @@ public class CommandContainer {
         commands.put("changeLocaleToRu", new ChangeLangToRuCommand());
         commands.put("changeLocaleToEn", new ChangeLangToEnCommand());
         commands.put("viewSettings", new ViewSettingsCommand());
+
         commands.put("addProduct", new AddProductCommand());
         commands.put("viewProduct", new ViewProductCommand());
         commands.put("viewSearchProductPage", new ViewSearchProductPageCommand());
         commands.put("searchProduct", new SearchProductsCommand());
         commands.put("editProduct", new EditProductCommand());
+
         commands.put("createReceipt", new CreateReceiptCommand());
         commands.put("viewCurrentReceipt", new ViewCurrentReceiptCommand());
         commands.put("addProductsIntoCurrentReceipt", new AddProductsIntoCurrentReceiptCommand());
@@ -31,6 +37,7 @@ public class CommandContainer {
         commands.put("chooseReceipt", new ChooseReceiptCommand());
         commands.put("editReceiptProducts", new EditReceiptProductsCommand());
         commands.put("viewReceiptProductsPage", new ViewReceiptProductsPageCommand());
+        commands.put("setReceiptStatusClosed", new SetReceiptStatusClosedCommand());
     }
 
     public static Command get(String commandName) {

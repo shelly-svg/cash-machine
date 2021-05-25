@@ -1,7 +1,8 @@
-package com.my.web.command;
+package com.my.web.command.cashier;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class CreateReceiptCommand extends Command {
 

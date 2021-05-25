@@ -1,10 +1,11 @@
-package com.my.web.command;
+package com.my.web.command.commodity_expert;
 
 import com.my.Path;
 import com.my.db.entities.Category;
 import com.my.db.entities.CategoryDAO;
 import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
+import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

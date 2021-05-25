@@ -42,7 +42,7 @@
         <init-param>
             <param-name>cashier</param-name>
             <param-value>createReceipt viewCurrentReceipt addProductsIntoCurrentReceipt searchReceipt
-                viewSearchReceiptPage chooseReceipt editReceiptProducts viewReceiptProductsPage
+                viewSearchReceiptPage chooseReceipt editReceiptProducts viewReceiptProductsPage setReceiptStatusClosed
             </param-value>
         </init-param>
         <init-param>
