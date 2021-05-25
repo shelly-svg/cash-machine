@@ -58,7 +58,12 @@
             </c:if>
             <hr>
             <h6>Receipt status</h6>
-            <c:out value="${sessionScope.currentReceipt.receiptStatus.name().toLowerCase()}"/>
+            <c:if test="${sessionScope.lang == 'ru'}">
+                <option><c:out value="${sessionScope.currentReceipt.receiptStatus.nameRu}"/></option>
+            </c:if>
+            <c:if test="${sessionScope.lang == 'en'}">
+                <option><c:out value="${sessionScope.currentReceipt.receiptStatus.nameEn}"/></option>
+            </c:if>
             <hr>
             <h6>Created by user</h6>
             <c:out value="${requestScope.creator}"/>

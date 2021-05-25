@@ -50,7 +50,12 @@
                         <c:if test="${sessionScope.lang=='en'}">
                             <td><c:out value="${receipt.delivery.nameEn}"/></td>
                         </c:if>
-                        <td><c:out value="${receipt.receiptStatus.name().toLowerCase()}"/></td>
+                        <c:if test="${sessionScope.lang == 'ru'}">
+                            <td><c:out value="${receipt.receiptStatus.nameRu}"/></td>
+                        </c:if>
+                        <c:if test="${sessionScope.lang == 'en'}">
+                            <td><c:out value="${receipt.receiptStatus.nameEn}"/></td>
+                        </c:if>
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
                             <td><a href="controller?command=chooseReceipt&id=${receipt.id}">Choose</a></td>
                         </c:if>

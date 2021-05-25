@@ -2,13 +2,18 @@ package com.my.db.entities;
 
 public enum ReceiptStatus {
 
-    NEW_RECEIPT(1), CLOSED(2), CANCELED(3);
+    NEW_RECEIPT(1, "new receipt", "новый заказ"),
+    CLOSED(2, "closed", "закрыт"),
+    CANCELED(3, "canceled", "отменён");
 
     private final int id;
+    private final String nameEn;
+    private final String nameRu;
 
-
-    ReceiptStatus(int i) {
-        this.id = i;
+    ReceiptStatus(int id, String nameEn, String nameRu) {
+        this.id = id;
+        this.nameEn = nameEn;
+        this.nameRu = nameRu;
     }
 
     public static ReceiptStatus getReceiptStatus(int receiptStatusId) {
@@ -23,4 +28,11 @@ public enum ReceiptStatus {
         return id;
     }
 
+    public String getNameEn() {
+        return nameEn;
+    }
+
+    public String getNameRu() {
+        return nameRu;
+    }
 }
