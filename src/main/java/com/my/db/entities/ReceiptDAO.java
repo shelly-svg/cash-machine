@@ -31,6 +31,27 @@ public class ReceiptDAO {
 
     private static final String SQL__SET_RECEIPT_STATUS = "UPDATE receipt SET receipt_status_id=? WHERE id=?;";
 
+    private static final String SQL__DELETE_PRODUCT_FROM_RECEIPT = "DELETE FROM receipt_has_product WHERE receipt_id=? AND product_id=?;";
+
+    public void deleteProductFromReceipt(int receiptId, int productId) {
+        PreparedStatement p;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__DELETE_PRODUCT_FROM_RECEIPT);
+            p.setInt(1, receiptId);
+            p.setInt(2, productId);
+            p.execute();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+
     public void setReceiptStatus(int receiptId, ReceiptStatus receiptStatus) {
         PreparedStatement p;
         Connection con = null;
@@ -71,7 +92,7 @@ public class ReceiptDAO {
     }
 
     public Map<Product, Integer> getMapOfAmountsAndProductsFromReceipt(Receipt receipt) {
-        Map<Product, Integer> productMap = new HashMap<>();
+        Map<Product, Integer> productMap = new TreeMap<>();
         List<Product> products = new ReceiptDAO().getAllProductsFromReceipt(receipt.getId());
         PreparedStatement p;
         ResultSet rs;

@@ -1,9 +1,10 @@
-package com.my.web.command;
+package com.my.web.command.cashier;
 
 import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
+import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -44,7 +45,7 @@ public class EditReceiptProductsCommand extends Command {
         logger.debug("===>>>>>" + productId + " " + receiptId + " , new Amount = " + newAmount);
 
         new ReceiptDAO().setAmountOfProductAtTheReceipt(newAmount, receiptId, productId);
-        return "controller?command=viewReceiptProductsPage";
+        return "controller?command=viewReceiptProducts";
     }
 
     private String doGet(HttpServletRequest request) {

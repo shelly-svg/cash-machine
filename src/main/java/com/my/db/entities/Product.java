@@ -3,7 +3,7 @@ package com.my.db.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Product implements Serializable {
+public class Product implements Serializable, Comparable<Product> {
 
     private int id;
     private String nameRu;
@@ -110,6 +110,11 @@ public class Product implements Serializable {
                 ", descriptionEn='" + descriptionEn + '\'' +
                 ", category=" + category +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Product o) {
+        return id - o.getId();
     }
 
 }

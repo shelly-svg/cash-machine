@@ -42,7 +42,8 @@
                         <td><c:out value="${product.key.category.nameEn}"/></td>
                     </c:if>
                     <td><c:out value="${product.key.price}"/></td>
-                    <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
+                    <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'
+                    and sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
                         <td>
                             <form action="controller" method="post" id="change_receipt_product_amount">
                                 <input type="hidden" name="command" value="editReceiptProducts">
@@ -50,6 +51,17 @@
                                 <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
                                 <input type="text" name="newAmount" placeholder="New amount" required>
                                 <button type="submit" class="add_product_btn" name="submit">Accept</button>
+                            </form>
+                        </td>
+                    </c:if>
+                    <c:if test="${sessionScope.userRole.name().toLowerCase() == 'senior_cashier'
+                    and sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
+                        <td>
+                            <form action="controller" method="post">
+                                <input type="hidden" name="command" value="removeProductFromReceipt">
+                                <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
+                                <input type="hidden" name="product_id" value="${product.key.id}">
+                                <button type="submit" class="remove_product_btn" name="submit">Remove product</button>
                             </form>
                         </td>
                     </c:if>

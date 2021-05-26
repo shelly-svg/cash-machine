@@ -319,3 +319,20 @@ hr {
 .close_receipt_btn:hover {
     opacity: 5;
 }
+
+/* remove product btn */
+
+.remove_product_btn {
+    background-color: #fc5353;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 80%;
+    opacity: 0.9;
+}
+
+.remove_product_btn:hover {
+    opacity: 5;
+}

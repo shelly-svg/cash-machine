@@ -42,13 +42,13 @@
         <init-param>
             <param-name>cashier</param-name>
             <param-value>createReceipt viewCurrentReceipt addProductsIntoCurrentReceipt searchReceipt
-                viewSearchReceiptPage chooseReceipt editReceiptProducts viewReceiptProductsPage setReceiptStatusClosed
+                viewSearchReceiptPage chooseReceipt editReceiptProducts viewReceiptProducts setReceiptStatusClosed
             </param-value>
         </init-param>
         <init-param>
             <param-name>senior-cashier</param-name>
             <param-value>viewCurrentReceipt searchReceipt viewSearchReceiptPage chooseReceipt editReceiptProducts
-                viewReceiptProductsPage setReceiptStatusCanceled
+                viewReceiptProducts setReceiptStatusCanceled removeProductFromReceipt
             </param-value>
         </init-param>
         <init-param>
