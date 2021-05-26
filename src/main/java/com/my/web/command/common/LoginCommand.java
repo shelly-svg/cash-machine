@@ -1,9 +1,10 @@
-package com.my.web.command;
+package com.my.web.command.common;
 
 import com.my.Path;
 import com.my.db.entities.Role;
 import com.my.db.entities.User;
 import com.my.db.entities.UserDAO;
+import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

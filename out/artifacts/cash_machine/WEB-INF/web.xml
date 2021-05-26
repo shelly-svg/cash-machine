@@ -48,7 +48,7 @@
         <init-param>
             <param-name>senior-cashier</param-name>
             <param-value>viewCurrentReceipt searchReceipt viewSearchReceiptPage chooseReceipt editReceiptProducts
-                viewReceiptProducts setReceiptStatusCanceled removeProductFromReceipt
+                viewReceiptProducts setReceiptStatusCanceled removeProductFromReceipt viewReportsMenu
             </param-value>
         </init-param>
         <init-param>

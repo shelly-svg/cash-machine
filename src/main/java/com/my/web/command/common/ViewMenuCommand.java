@@ -1,6 +1,7 @@
-package com.my.web.command;
+package com.my.web.command.common;
 
 import com.my.Path;
+import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

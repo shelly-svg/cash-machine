@@ -41,7 +41,8 @@ public class ChangeLangToRuCommand extends Command {
                     "&currentPage=" + request.getSession().getAttribute("currentRecPagPage");
         }
         if (Path.VIEW_SEARCH_RESULT_PAGE.equals(forward)) {
-            forward = "controller?command=searchProduct&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" + request.getSession().getAttribute("currentPagPage");
+            forward = "controller?command=searchProduct&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" +
+                    request.getSession().getAttribute("currentPagPage");
         }
         if (Path.CREATE_RECEIPT_PAGE.equals(forward)) {
             List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
@@ -56,7 +57,7 @@ public class ChangeLangToRuCommand extends Command {
             String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
             request.setAttribute("creator", user);
         }
-        if (Path.VIEW_RECEIPT_PRODUCTS_PAGE.equals(forward)){
+        if (Path.VIEW_RECEIPT_PRODUCTS_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
             Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
             request.setAttribute("receiptProductMap", productMap);
