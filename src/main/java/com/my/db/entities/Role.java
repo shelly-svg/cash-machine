@@ -1,6 +1,8 @@
 package com.my.db.entities;
 
-public enum Role {
+import java.io.Serializable;
+
+public enum Role implements Serializable {
 
     ADMIN, CASHIER, SENIOR_CASHIER, COMMODITY_EXPERT;
 

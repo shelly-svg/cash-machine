@@ -8,8 +8,10 @@ import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class ViewCurrentReceiptCommand extends Command {
 
@@ -20,12 +22,17 @@ public class ViewCurrentReceiptCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("View current receipt command is started");
 
-        Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
-        List<Product> products = new ReceiptDAO().getAllProductsFromReceipt(currentReceipt.getId());
-        request.getSession().setAttribute("currentReceiptProducts", products);
+        HttpSession session = request.getSession();
+        Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
+
+        currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+
+        Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        request.setAttribute("currentReceiptProductMap", productMap);
 
         String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
         request.setAttribute("creator", user);
+        session.setAttribute("currentReceipt", currentReceipt);
 
         logger.debug("View current receipt command is finished");
         return Path.VIEW_RECEIPT_PAGE;

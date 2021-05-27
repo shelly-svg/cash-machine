@@ -1,6 +1,8 @@
 package com.my.db.entities;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private int id;
     private String login;

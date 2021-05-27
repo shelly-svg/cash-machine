@@ -1,6 +1,8 @@
 package com.my.db.entities;
 
-public enum ReceiptStatus {
+import java.io.Serializable;
+
+public enum ReceiptStatus implements Serializable {
 
     NEW_RECEIPT(1, "new receipt", "новый заказ"),
     CLOSED(2, "closed", "закрыт"),

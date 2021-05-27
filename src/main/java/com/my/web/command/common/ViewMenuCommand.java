@@ -1,6 +1,8 @@
 package com.my.web.command.common;
 
 import com.my.Path;
+import com.my.db.entities.Receipt;
+import com.my.db.entities.ReceiptDAO;
 import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
@@ -17,6 +19,11 @@ public class ViewMenuCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("View menu command is started");
+        Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
+        if (currentReceipt != null) {
+            currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+            request.getSession().setAttribute("currentReceipt", currentReceipt);
+        }
         logger.debug("View menu command is finished");
         return Path.MENU_PAGE;
     }

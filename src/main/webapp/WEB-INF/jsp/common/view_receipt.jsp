@@ -68,11 +68,17 @@
             <h6>Created by user</h6>
             <c:out value="${requestScope.creator}"/>
             <hr>
-            <c:if test="${empty sessionScope.currentReceiptProducts}}"><h6>Receipt has no products yet</h6></c:if>
-            <c:if test="${not empty sessionScope.currentReceiptProducts}">
+            <c:if test="${empty requestScope.currentReceiptProductMap}}"><h6>Receipt has no products yet</h6></c:if>
+            <c:if test="${not empty requestScope.currentReceiptProductMap}">
                 <h6>Products at this receipt: </h6>
-                <c:forEach items="${sessionScope.currentReceiptProducts}" var="product">
-                    <c:out value="${product.nameRu}"/><br/>
+                <c:forEach items="${requestScope.currentReceiptProductMap}" var="product">
+                    <c:if test="${sessionScope.lang == 'ru'}">
+                        <h5><c:out value="${product.key.nameRu}"/>
+                    </c:if>
+                    <c:if test="${sessionScope.lang == 'en'}">
+                        <h5><c:out value="${product.key.nameEn}"/>
+                    </c:if>
+                         ; count = <c:out value="${product.value.toString()}"/></h5>
                 </c:forEach>
             </c:if>
             <c:if test="${sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'

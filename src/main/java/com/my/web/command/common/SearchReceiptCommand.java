@@ -20,6 +20,11 @@ public class SearchReceiptCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Search receipt command is started");
 
+        Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
+        if (currentReceipt != null) {
+            currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+            request.getSession().setAttribute("currentReceipt", currentReceipt);
+        }
         //set the number of receipts displayed per page
         int recordsPerPage = 5;
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));

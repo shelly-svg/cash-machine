@@ -22,12 +22,27 @@ public class SetReceiptStatusCanceledCommand extends Command {
         logger.debug("Set receipt status canceled command is started");
 
         HttpSession session = request.getSession();
+        ReceiptDAO receiptDAO = new ReceiptDAO();
+        String errorMessage;
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         if (currentReceipt != null) {
-            new ReceiptDAO().setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CANCELED);
-            currentReceipt.setReceiptStatus(ReceiptStatus.CANCELED);
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
+                receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CANCELED);
+                currentReceipt.setReceiptStatus(ReceiptStatus.CANCELED);
+            }else{
+                errorMessage = "This receipt is closed already, you cannot cancel";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + errorMessage);
+                return "controller?command=noCommand";
+            }
             session.setAttribute("currentReceipt", currentReceipt);
+        } else {
+            errorMessage = "You didnt chose receipt";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return "controller?command=noCommand";
         }
 
         logger.debug("Set receipt status canceled command is finished");

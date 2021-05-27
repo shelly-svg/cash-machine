@@ -26,6 +26,8 @@ public class ChangeLangToRuCommand extends Command {
         logger.trace("Received session attribute => " + forward);
         session.setAttribute("lang", "ru");
         logger.trace("Set session attribute lang => ru");
+        
+        ReceiptDAO receiptDAO = new ReceiptDAO();
         if (forward == null) {
             return Path.LOGIN_PAGE;
         }
@@ -41,8 +43,7 @@ public class ChangeLangToRuCommand extends Command {
                     "&currentPage=" + request.getSession().getAttribute("currentRecPagPage");
         }
         if (Path.VIEW_SEARCH_RESULT_PAGE.equals(forward)) {
-            forward = "controller?command=searchProduct&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" +
-                    request.getSession().getAttribute("currentPagPage");
+            forward = "controller?command=searchProduct&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" + request.getSession().getAttribute("currentPagPage");
         }
         if (Path.CREATE_RECEIPT_PAGE.equals(forward)) {
             List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
@@ -53,12 +54,17 @@ public class ChangeLangToRuCommand extends Command {
         }
         if (Path.VIEW_RECEIPT_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+
+            Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            request.setAttribute("currentReceiptProductMap", productMap);
 
             String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
             request.setAttribute("creator", user);
         }
         if (Path.VIEW_RECEIPT_PRODUCTS_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
             Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
             request.setAttribute("receiptProductMap", productMap);
         }

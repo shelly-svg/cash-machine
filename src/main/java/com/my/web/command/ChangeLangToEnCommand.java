@@ -27,6 +27,7 @@ public class ChangeLangToEnCommand extends Command {
         logger.trace("Received session attribute => " + forward);
         session.setAttribute("lang", "en");
         logger.trace("Set session attribute lang => en");
+        ReceiptDAO receiptDAO = new ReceiptDAO();
         if (forward == null) {
             return Path.LOGIN_PAGE;
         }
@@ -53,12 +54,17 @@ public class ChangeLangToEnCommand extends Command {
         }
         if (Path.VIEW_RECEIPT_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+
+            Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            request.setAttribute("currentReceiptProductMap", productMap);
 
             String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
             request.setAttribute("creator", user);
         }
         if (Path.VIEW_RECEIPT_PRODUCTS_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
             Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
             request.setAttribute("receiptProductMap", productMap);
         }

@@ -21,6 +21,7 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
         logger.debug("Add products into current receipt command is started");
         int id = Integer.parseInt(request.getParameter("id"));
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
+        currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
 
         if (currentReceipt.getReceiptStatus().equals(ReceiptStatus.CLOSED) || currentReceipt.getReceiptStatus().equals(ReceiptStatus.CANCELED)) {
             String errorMessage = "You cannot add products into closed and canceled receipts";
