@@ -4,7 +4,7 @@
 
 <html>
 
-<c:set var="title" value="Все товары"/>
+<c:set var="title" value="Поиск кассиров"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
@@ -13,11 +13,12 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>SEARCH FOR RECEIPT</h2>
-        <form action="controller" name="find_receipt_by_id_or_date">
-            <input type="hidden" name="command" value="searchReceipt"/>
+        <h2>SEARCH FOR CASHIER</h2>
+        <form action="controller">
+            <input type="hidden" name="command" value="viewSearchCashierResult"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter receipt id or creation date" name="receipt_pattern" required>
+            <input type="text" placeholder="Enter cashiers first name" name="cashier_first_name" required>
+            <input type="text" placeholder="Enter cashiers last name" name="cashier_last_name" required>
             <button type="submit" class="add_product_btn">Search</button>
         </form>
         <hr>

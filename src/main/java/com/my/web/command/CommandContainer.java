@@ -6,9 +6,7 @@ import com.my.web.command.cashier.EditReceiptProductsCommand;
 import com.my.web.command.cashier.SetReceiptStatusClosedCommand;
 import com.my.web.command.commodity_expert.AddProductCommand;
 import com.my.web.command.common.*;
-import com.my.web.command.senior_cashier.RemoveProductFromReceiptCommand;
-import com.my.web.command.senior_cashier.SetReceiptStatusCanceledCommand;
-import com.my.web.command.senior_cashier.ViewReportsMenuCommand;
+import com.my.web.command.senior_cashier.*;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -47,6 +45,8 @@ public class CommandContainer {
         commands.put("setReceiptStatusCanceled", new SetReceiptStatusCanceledCommand());
         commands.put("removeProductFromReceipt", new RemoveProductFromReceiptCommand());
         commands.put("viewReportsMenu", new ViewReportsMenuCommand());
+        commands.put("searchCashier", new SearchCashierCommand());
+        commands.put("viewSearchCashierResult", new ViewSearchCashierResultCommand());
     }
 
     public static Command get(String commandName) {

@@ -19,6 +19,8 @@ public final class Path {
     public static final String VIEW_RECEIPT_PRODUCTS_PAGE = "/WEB-INF/jsp/common/view_receipt_products.jsp";
 
     public static final String VIEW_REPORTS_MENU = "/WEB-INF/jsp/senior_cashier/view_reports_menu.jsp";
+    public static final String VIEW_SEARCH_CASHIER_PAGE = "/WEB-INF/jsp/senior_cashier/search_cashier.jsp";
+    public static final String VIEW_SEARCH_CASHIER_RESULT_PAGE = "/WEB-INF/jsp/senior_cashier/search_cashier_result.jsp";
 
     public static final String ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
 

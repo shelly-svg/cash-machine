@@ -18,7 +18,7 @@
             <input type="hidden" name="command" value="searchProduct"/>
             <input type="hidden" name="currentPage" value="1"/>
             <input type="text" placeholder="Enter product name or code" name="pattern" required>
-            <button type="submit" class="add_product_btn" name="submit">Search</button>
+            <button type="submit" class="add_product_btn">Search</button>
         </form>
         <hr>
     </div>

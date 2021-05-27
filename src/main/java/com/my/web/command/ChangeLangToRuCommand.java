@@ -26,7 +26,7 @@ public class ChangeLangToRuCommand extends Command {
         logger.trace("Received session attribute => " + forward);
         session.setAttribute("lang", "ru");
         logger.trace("Set session attribute lang => ru");
-        
+
         ReceiptDAO receiptDAO = new ReceiptDAO();
         if (forward == null) {
             return Path.LOGIN_PAGE;
@@ -37,6 +37,10 @@ public class ChangeLangToRuCommand extends Command {
         }
         if (Path.VIEW_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=viewProduct&id=" + request.getSession().getAttribute("lastViewedProductId");
+        }
+        if (Path.VIEW_SEARCH_CASHIER_RESULT_PAGE.equals(forward)) {
+            forward = "controller?command=viewSearchCashierResult&cashier_first_name=" + request.getSession().getAttribute("lastSearchCashierFName") +
+                    "&cashier_last_name=" + request.getSession().getAttribute("lastSearchCashierLName") + "&currentPage=" + request.getSession().getAttribute("currentCashierPagPage");
         }
         if (Path.VIEW_SEARCH_RECEIPT_RESULT_PAGE.equals(forward)) {
             forward = "controller?command=searchReceipt&receipt_pattern=" + request.getSession().getAttribute("lastSearchReceiptPattern") +

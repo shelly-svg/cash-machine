@@ -33,7 +33,7 @@ public class ReceiptDAO {
 
     private static final String SQL__DELETE_PRODUCT_FROM_RECEIPT = "DELETE FROM receipt_has_product WHERE receipt_id=? AND product_id=?;";
 
-    private static final String SQL__GET_LAST_WEEK_CLOSED_RECEIPTS = "SELECT * FROM receipt WHERE week(creation_time, 1) = week(now(),1);";// AND receipt_status_id=2;";
+    private static final String SQL__GET_LAST_WEEK_CLOSED_RECEIPTS = "SELECT * FROM receipt WHERE week(creation_time, 1) = week(now(),1) AND receipt_status_id=2;";
 
     public List<Receipt> getLastWeekClosedReceipts() {
         List<Receipt> receiptList = new ArrayList<>();

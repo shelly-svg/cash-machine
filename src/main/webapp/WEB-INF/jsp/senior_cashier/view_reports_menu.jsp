@@ -13,12 +13,17 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
     <div id="sidebar">
         <form action="generateWeeklyReport" method="post">
-            <input type="submit" value="Weekly report">
+            <button type="submit" class="weekly_report_btn">Generate weekly report</button>
+        </form>
+        <hr>
+        <form action="controller">
+            <input type="hidden" name="command" value="searchCashier">
+            <button type="submit" class="cashier_report_btn">Make cashier report</button>
         </form>
     </div>
     <div id="content">
-        <h1>Здравствуйте, ${sessionScope.user.firstName}, вы зашли как ${sessionScope.userRole.name()}!</h1>
-        <h1>Выберите отчет</h1>
+        <h3>Здравствуйте, ${sessionScope.user.firstName}, вы зашли как ${sessionScope.userRole.name()}!</h3>
+        <h3>Выберите отчет</h3>
     </div>
     <div id="clear">
 

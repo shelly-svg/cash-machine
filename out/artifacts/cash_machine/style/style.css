@@ -336,3 +336,37 @@ hr {
 .remove_product_btn:hover {
     opacity: 5;
 }
+
+/* reports buttons */
+
+.weekly_report_btn {
+    background-color: #93a8cd;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 90%;
+    opacity: 0.9;
+    transition: .3s linear;
+}
+
+.weekly_report_btn:hover {
+    background-color: #1d64de;
+}
+
+.cashier_report_btn {
+    background-color: #93a8cd;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 90%;
+    opacity: 0.9;
+    transition: .3s linear;
+}
+
+.cashier_report_btn:hover {
+    background-color: #1d64de;
+}

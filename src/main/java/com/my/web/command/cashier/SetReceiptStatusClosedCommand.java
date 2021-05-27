@@ -29,6 +29,12 @@ public class SetReceiptStatusClosedCommand extends Command {
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         if (currentReceipt != null) {
             currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            if (receiptDAO.getAllProductsFromReceipt(currentReceipt.getId()).isEmpty()){
+                errorMessage = "You cannot close empty receipts";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + errorMessage);
+                return "controller?command=noCommand";
+            }
             if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
                 receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CLOSED);
                 currentReceipt.setReceiptStatus(ReceiptStatus.CLOSED);

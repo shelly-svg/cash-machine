@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -52,8 +50,10 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         if (o != null) {
             lang = o.toString();
         }
-
+        logger.debug("creating weekly report is started");
         createWeeklyReport(lang);
+
+        logger.debug("getting weekly report and setting attachment");
         getWeeklyReport(resp);
 
         logger.debug("generateWeeklyReport servlet is finished at the POST method");
@@ -70,9 +70,8 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
                     "\\logs\\final-task-reports\\fonts\\times.ttf", "cp1251", BaseFont.EMBEDDED);
 
             Font catFont = new Font(baseFont, 18, Font.BOLD);
-            Font redFont = new Font(baseFont, 12, Font.NORMAL, BaseColor.RED);
             Font subFont = new Font(baseFont, 16, Font.BOLD);
-            Font tableHeaderFont = new Font(baseFont, 12, Font.NORMAL);
+            Font tableHeaderFont = new Font(baseFont, 10, Font.NORMAL);
             Font smallBold = new Font(baseFont, 8, Font.NORMAL);
 
             Locale locale;
@@ -97,7 +96,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
 
     private void createTable(Document document, Font smallBold, Font tableHeaderFont, ResourceBundle rb) throws DocumentException {
         Paragraph tableParagraph = new Paragraph();
-        tableParagraph.add(new Paragraph("Закрытые заказы за неделю", tableHeaderFont));
+        tableParagraph.add(new Paragraph(rb.getString("weekly.report.table.title"), tableHeaderFont));
         addEmptyLine(tableParagraph, 1);
         PdfPTable table = new PdfPTable(9);
         table.setWidthPercentage(100);
@@ -108,42 +107,42 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("creation time", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.creation.date"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("Ru customers name", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.name.ru"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("En customers name", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.name.en"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("Address", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.address"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("phone number", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.phone.number"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("Delivery", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.delivery"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("Receipt status", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.receipt.status"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
 
-        c1 = new PdfPCell(new Phrase("price", tableHeaderFont));
+        c1 = new PdfPCell(new Phrase(rb.getString("weekly.report.table.column.price"), tableHeaderFont));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_CENTER);
         table.addCell(c1);
@@ -154,6 +153,10 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         double lastWeekIncome = 0d;
         List<Receipt> lastWeekClosedReceipts = receiptDAO.getLastWeekClosedReceipts();
         for (Receipt receipt : lastWeekClosedReceipts) {
+            Map<Product, Integer> receiptsProducts = receiptDAO.getMapOfAmountsAndProductsFromReceipt(receipt);
+            if (receiptsProducts.isEmpty()){
+                continue;
+            }
             table.addCell(new Phrase(String.valueOf(receipt.getId()), smallBold));
             String pattern = "MM-dd HH:mm";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -172,7 +175,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
             } else {
                 table.addCell(new Phrase(receipt.getReceiptStatus().getNameEn(), smallBold));
             }
-            Map<Product, Integer> receiptsProducts = receiptDAO.getMapOfAmountsAndProductsFromReceipt(receipt);
+
             double price = 0d;
             for (Product product : receiptsProducts.keySet()) {
                 price += product.getPrice().doubleValue() * receiptsProducts.get(product);
@@ -182,9 +185,9 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
             table.completeRow();
         }
 
-        addEmptyLine(tableParagraph, 2);
         Paragraph summary = new Paragraph();
-        summary.add(new Phrase("SUMMARY: " + lastWeekIncome));
+        addEmptyLine(summary, 2);
+        summary.add(new Phrase(rb.getString("weekly.report.summary") + ": " + lastWeekIncome, tableHeaderFont));
         tableParagraph.add(table);
         tableParagraph.add(summary);
 
@@ -195,8 +198,10 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
     private void createTitle(Document document, Font catFont, Font subFont, ResourceBundle rb) throws DocumentException {
         String name = rb.getString("weekly.report.name");
         Chunk reportName = new Chunk(name, catFont);
+        String pattern = "EEEEE MMMMM yyyy HH:mm:ss";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, rb.getLocale());
         String creationText = rb.getString("weekly.report.creation.date");
-        Chunk creationDate = new Chunk(creationText + ": " + new Date(), subFont);
+        Chunk creationDate = new Chunk(creationText + ": " + simpleDateFormat.format(new Date()), subFont);
 
         Paragraph preface = new Paragraph();
         preface.add(reportName);
@@ -204,7 +209,6 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         preface.add(creationDate);
         addEmptyLine(preface, 1);
         document.add(preface);
-        document.newPage();
     }
 
     private void getWeeklyReport(HttpServletResponse resp) throws IOException {
@@ -227,10 +231,6 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
             if (fis != null)
                 fis.close();
         }
-    }
-
-    private static void addMetaData(Document document) {
-        document.addTitle("My Title");
     }
 
     private static void addEmptyLine(Paragraph paragraph, int number) {

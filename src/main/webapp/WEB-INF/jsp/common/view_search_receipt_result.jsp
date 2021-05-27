@@ -18,7 +18,7 @@
             <input type="hidden" name="command" value="searchReceipt"/>
             <input type="hidden" name="currentPage" value="1"/>
             <input type="text" placeholder="Enter receipt id or creation date" name="receipt_pattern" required>
-            <button type="submit" class="add_product_btn" name="submit">Search</button>
+            <button type="submit" class="add_product_btn">Search</button>
         </form>
         <hr>
         <c:if test="${empty requestScope.searchReceiptResult}">
