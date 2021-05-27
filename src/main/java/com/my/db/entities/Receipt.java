@@ -1,12 +1,13 @@
 package com.my.db.entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Receipt implements Serializable {
 
     private int id;
-    private Date createTime;
+    private Timestamp createTime;
     private String nameRu;
     private String nameEn;
     private String addressRu;
@@ -30,7 +31,7 @@ public class Receipt implements Serializable {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
 

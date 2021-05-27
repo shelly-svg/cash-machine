@@ -6,9 +6,12 @@
     <title>ERROR</title>
 </head>
 <body>
+
 <c:if test="${not empty errorMessage and empty exception and empty code}">
     <h3>Error message: ${errorMessage}</h3>
+    <c:remove var="errorMessage"/>
 </c:if>
+
 <hr>
 <c:if test="${not empty sessionScope.user}">
     <p>Get back to the main menu? </p><a href="?command=viewMenu">Menu</a>

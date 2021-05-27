@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class CreateReceiptCommand extends Command {
         Receipt receipt = new Receipt();
 
 
-        receipt.setCreateTime(new Date());
+        receipt.setCreateTime(new Timestamp(System.currentTimeMillis()));
         receipt.setNameRu(request.getParameter("name_ru"));
         receipt.setNameEn(request.getParameter("name_en"));
         receipt.setAddressRu(request.getParameter("address_ru"));

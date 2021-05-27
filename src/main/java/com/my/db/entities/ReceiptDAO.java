@@ -33,6 +33,33 @@ public class ReceiptDAO {
 
     private static final String SQL__DELETE_PRODUCT_FROM_RECEIPT = "DELETE FROM receipt_has_product WHERE receipt_id=? AND product_id=?;";
 
+    private static final String SQL__GET_LAST_WEEK_CLOSED_RECEIPTS = "SELECT * FROM receipt WHERE week(creation_time, 1) = week(now(),1);";// AND receipt_status_id=2;";
+
+    public List<Receipt> getLastWeekClosedReceipts() {
+        List<Receipt> receiptList = new ArrayList<>();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
+            p = con.prepareStatement(SQL__GET_LAST_WEEK_CLOSED_RECEIPTS);
+            rs = p.executeQuery();
+            while (rs.next()) {
+                receiptList.add(mapper.mapRow(rs));
+            }
+            p.execute();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return receiptList;
+    }
+
     public void deleteProductFromReceipt(int receiptId, int productId) {
         PreparedStatement p;
         Connection con = null;
@@ -302,7 +329,7 @@ public class ReceiptDAO {
             try {
                 Receipt receipt = new Receipt();
                 receipt.setId(rs.getInt(Fields.ENTITY__ID));
-                receipt.setCreateTime(rs.getTime(Fields.RECEIPT_CREATION_TIME));
+                receipt.setCreateTime(rs.getTimestamp(Fields.RECEIPT_CREATION_TIME));
                 receipt.setNameRu(rs.getString(Fields.RECEIPT_NAME_RU));
                 receipt.setNameEn(rs.getString(Fields.RECEIPT_NAME_EN));
                 receipt.setAddressRu(rs.getString(Fields.RECEIPT_ADDRESS_RU));

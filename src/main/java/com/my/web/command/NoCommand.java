@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class NoCommand extends Command {
@@ -16,7 +17,17 @@ public class NoCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("NoCommand is started");
-        String errorMessage = request.getSession().getAttribute("errorMessage").toString();
+
+        HttpSession session = request.getSession();
+        String errorMessage;
+
+        Object o = session.getAttribute("errorMessage");
+        if (o != null) {
+            errorMessage = o.toString();
+        } else {
+            errorMessage = "Something went wrong";
+        }
+
         request.setAttribute("errorMessage", errorMessage);
         logger.error("Set the request attribute: errorMessage -> " + errorMessage);
         logger.debug("NoCommand is finished");
