@@ -7,7 +7,7 @@ import java.util.Date;
 public class Receipt implements Serializable {
 
     private int id;
-    private Timestamp createTime;
+    private Date createTime;
     private String nameRu;
     private String nameEn;
     private String addressRu;
@@ -31,7 +31,7 @@ public class Receipt implements Serializable {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

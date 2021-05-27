@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -154,8 +155,9 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         List<Receipt> lastWeekClosedReceipts = receiptDAO.getLastWeekClosedReceipts();
         for (Receipt receipt : lastWeekClosedReceipts) {
             table.addCell(new Phrase(String.valueOf(receipt.getId()), smallBold));
-            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, rb.getLocale());
-            table.addCell(new Phrase(dateFormat.format(receipt.getCreateTime()), smallBold));
+            String pattern = "MM-dd HH:mm";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            table.addCell(new Phrase(simpleDateFormat.format(receipt.getCreateTime()), smallBold));
             table.addCell(new Phrase(receipt.getNameRu(), smallBold));
             table.addCell(new Phrase(receipt.getNameEn(), smallBold));
             table.addCell(new Phrase(receipt.getAddressRu(), smallBold));
