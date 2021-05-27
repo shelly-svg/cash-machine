@@ -43,7 +43,12 @@
                         <td><c:out value="${user.lastName}"/></td>
                         <td><c:out value="${Role.getRole(user)}"/></td>
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'senior_cashier'}">
-                            <td><a href="#####&id=${user.id}">Choose</a></td>
+                            <td>
+                                <form action="generateCashierReport" method="post">
+                                    <input type="hidden" name="id" value="${user.id}">
+                                    <button type="submit" class="cashier_report_btn">Choose</button>
+                                </form>
+                            </td>
                         </c:if>
                     </tr>
                 </c:forEach>

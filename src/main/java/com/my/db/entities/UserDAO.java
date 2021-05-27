@@ -23,6 +23,37 @@ public class UserDAO {
     private static final String SQL__NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_USERS = "SELECT count(*) FROM user WHERE first_name " +
             "LIKE ? AND last_name LIKE ? AND role_id=?;";
 
+    private static final String SQL__FIND_USER_FOR_REPORT_BY_ID = "SELECT id, first_name, last_name, role_id FROM user WHERE id=?;";
+
+    public User getUserForReport(int id) {
+        User user = new User();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__FIND_USER_FOR_REPORT_BY_ID);
+            p.setInt(1, id);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                user.setId(rs.getInt(Fields.ENTITY__ID));
+                user.setFirstName(rs.getString(Fields.USER__FIRST_NAME));
+                user.setLastName(rs.getString(Fields.USER__LAST_NAME));
+                user.setRoleId(rs.getInt(Fields.USER__ROLE_ID));
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return user;
+    }
+
     public int countOfRowsAffectedBySearchCashiers(String firstName, String lastName) {
         int numberOfRows = 0;
         PreparedStatement p;
@@ -61,7 +92,6 @@ public class UserDAO {
         int start = currentPage * recordsPerPage - recordsPerPage;
         try {
             con = DBManager.getInstance().getConnection();
-            UserDAO.UserMapper mapper = new UserDAO.UserMapper();
             p = con.prepareStatement(SQL__SEARCH_USERS_BY_NAME);
             firstName = "%" + firstName + "%";
             lastName = "%" + lastName + "%";
@@ -99,7 +129,6 @@ public class UserDAO {
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            UserMapper mapper = new UserMapper();
             preparedStatement = con.prepareStatement(SQL_FIND_USERS_FNAME_LNAME_BY_ID);
             preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();

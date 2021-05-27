@@ -35,6 +35,34 @@ public class ReceiptDAO {
 
     private static final String SQL__GET_LAST_WEEK_CLOSED_RECEIPTS = "SELECT * FROM receipt WHERE week(creation_time, 1) = week(now(),1) AND receipt_status_id=2;";
 
+    private static final String SQL__GET_CURRENT_DAY_CLOSED_RECEIPTS_FOR_USER = "SELECT * FROM receipt WHERE creation_time >= curdate() AND user_id = ? AND receipt_status_id=2;";
+
+    public List<Receipt> getCurrentDayClosedReceiptsForUser(User user) {
+        List<Receipt> receipts = new ArrayList<>();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
+            p = con.prepareStatement(SQL__GET_CURRENT_DAY_CLOSED_RECEIPTS_FOR_USER);
+            p.setInt(1, user.getId());
+            rs = p.executeQuery();
+            while (rs.next()) {
+                receipts.add(mapper.mapRow(rs));
+            }
+            p.execute();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            ex.printStackTrace();
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return receipts;
+    }
+
     public List<Receipt> getLastWeekClosedReceipts() {
         List<Receipt> receiptList = new ArrayList<>();
         PreparedStatement p;
