@@ -198,7 +198,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
     private void createTitle(Document document, Font catFont, Font subFont, ResourceBundle rb) throws DocumentException {
         String name = rb.getString("weekly.report.name");
         Chunk reportName = new Chunk(name, catFont);
-        String pattern = "EEEEE MMMMM yyyy HH:mm:ss";
+        String pattern = "EEEEE d MMMMM yyyy HH:mm:ss";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, rb.getLocale());
         String creationText = rb.getString("weekly.report.creation.date");
         Chunk creationDate = new Chunk(creationText + ": " + simpleDateFormat.format(new Date()), subFont);

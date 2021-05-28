@@ -107,7 +107,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
         String title = rb.getString("cashier.report.name.first") + " " + user.getFirstName() + " " + user.getLastName() + " "
                 + rb.getString("cashier.report.name.second");
         Chunk reportName = new Chunk(title, catFont);
-        String pattern = "EEEEE MMMMM yyyy HH:mm:ss";
+        String pattern = "EEEEE d MMMMM yyyy HH:mm:ss";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, rb.getLocale());
         String creationText = rb.getString("cashier.report.title");
         Chunk creationDate = new Chunk(creationText + ": " + simpleDateFormat.format(new Date()), subFont);
