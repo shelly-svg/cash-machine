@@ -1,7 +1,6 @@
 package com.my.db.entities;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 public class Receipt implements Serializable {

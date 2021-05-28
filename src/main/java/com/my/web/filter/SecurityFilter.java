@@ -13,12 +13,12 @@ import java.util.*;
 public class SecurityFilter implements Filter {
 
     private static final Logger logger = Logger.getLogger(SecurityFilter.class);
-    private static Map<Role, List<String>> accessMap = new HashMap<>();
+    private static final Map<Role, List<String>> accessMap = new HashMap<>();
     private static List<String> commons = new ArrayList<>();
     private static List<String> outOfControl = new ArrayList<>();
 
     @Override
-    public void init(FilterConfig config) throws ServletException {
+    public void init(FilterConfig config) {
         logger.debug("Security filter initialization is started");
 
         accessMap.put(Role.ADMIN, asList(config.getInitParameter("admin")));

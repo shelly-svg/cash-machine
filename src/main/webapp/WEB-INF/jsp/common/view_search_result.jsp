@@ -54,7 +54,14 @@
                         </c:if>
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
                             <c:if test="${not empty sessionScope.currentReceipt}">
-                                <td><a href="controller?command=addProductsIntoCurrentReceipt&id=${product.id}">Add to receipt</a></td>
+                                <td>
+                                    <form action="controller" method="post">
+                                        <input type="hidden" name="command" value="addProductsIntoCurrentReceipt">
+                                        <input type="hidden" name="id" value="${product.id}">
+                                        <button type="submit" class="add_product_receipt_btn">Add to receipt</button>
+                                    </form>
+                                </td>
+                                <%--<td><a href="controller?command=addProductsIntoCurrentReceipt&id=${product.id}">Add to receipt</a></td>--%>
                             </c:if>
                         </c:if>
                     </tr>

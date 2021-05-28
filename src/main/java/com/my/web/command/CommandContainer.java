@@ -15,7 +15,7 @@ import java.util.TreeMap;
 public class CommandContainer {
 
     private static final Logger logger = Logger.getLogger(CommandContainer.class);
-    private static final Map<String, Command> commands = new TreeMap<String, Command>();
+    private static final Map<String, Command> commands = new TreeMap<>();
 
     static {
         commands.put("login", new LoginCommand());

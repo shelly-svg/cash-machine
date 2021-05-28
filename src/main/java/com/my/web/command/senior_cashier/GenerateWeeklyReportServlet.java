@@ -11,7 +11,6 @@ import com.my.db.entities.ReceiptDAO;
 import com.my.db.entities.Role;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +29,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
     private static final String FILE = System.getProperty("catalina.home") + "\\logs\\final-task-reports\\WeeklyReport.pdf";
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         logger.debug("generateWeeklyReport servlet is started at the POST method");
         HttpSession session = req.getSession(false);
         logger.debug("SESSION => " + session);
@@ -221,7 +220,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
             DataOutputStream os = new DataOutputStream(resp.getOutputStream());
             resp.setHeader("Content-Length", String.valueOf(f.length()));
             byte[] buffer = new byte[1024];
-            int len = 0;
+            int len;
             while ((len = fis.read(buffer)) >= 0) {
                 os.write(buffer, 0, len);
             }

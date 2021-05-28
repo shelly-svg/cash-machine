@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+<%@ taglib prefix="my" uri="/WEB-INF/mytags/price.tld" %>
 <%@ page pageEncoding="UTF-8" %>
 
 <html>
@@ -78,9 +79,12 @@
                     <c:if test="${sessionScope.lang == 'en'}">
                         <h5><c:out value="${product.key.nameEn}"/>
                     </c:if>
-                         ; count = <c:out value="${product.value.toString()}"/></h5>
+                    ; count = <c:out value="${product.value.toString()}"/></h5>
                 </c:forEach>
             </c:if>
+            <hr>
+            <h5>Price: </h5>
+            <my:price receiptId="${sessionScope.currentReceipt.id}"/>
             <c:if test="${sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'
             and sessionScope.userRole.name().toLowerCase() == 'cashier'}">
                 <hr>

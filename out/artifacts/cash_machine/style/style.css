@@ -370,3 +370,18 @@ hr {
 .cashier_report_btn:hover {
     background-color: #1d64de;
 }
+
+.add_product_receipt_btn {
+    background-color: #6fce74;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 80%;
+    opacity: 0.9;
+}
+
+.add_product_receipt_btn:hover {
+    opacity: 5;
+}

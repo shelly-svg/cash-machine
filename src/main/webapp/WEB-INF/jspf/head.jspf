@@ -18,9 +18,12 @@
     ===========================================================================--%>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <%--<fmt:setLocale value="${param.lang}" />--%>
-
-    <fmt:setLocale value="${sessionScope.lang}"/>
+    <c:if test="${empty sessionScope.lang}">
+        <fmt:setLocale value="en"/>
+    </c:if>
+    <c:if test="${not empty sessionScope.lang}">
+        <fmt:setLocale value="${sessionScope.lang}"/>
+    </c:if>
     <fmt:setBundle basename="resources"/>
 
 </head>

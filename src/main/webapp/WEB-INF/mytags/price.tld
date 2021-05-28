@@ -1,0 +1,18 @@
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>pag</short-name>
+
+    <tag>
+        <name>price</name>
+        <tag-class>com.my.web.mytags.Price</tag-class>
+        <body-content>empty</body-content>
+        
+        <attribute>
+            <name>receiptId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+    </tag>
+</taglib>

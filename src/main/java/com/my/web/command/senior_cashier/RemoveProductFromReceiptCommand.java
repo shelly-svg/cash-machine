@@ -1,6 +1,5 @@
 package com.my.web.command.senior_cashier;
 
-import com.my.Path;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
 import com.my.db.entities.ReceiptStatus;

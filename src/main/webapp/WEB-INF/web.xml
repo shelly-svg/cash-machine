@@ -37,7 +37,7 @@
         <filter-class>com.my.web.filter.SecurityFilter</filter-class>
         <init-param>
             <param-name>admin</param-name>
-            <param-value></param-value>
+            <param-value>searchUser</param-value>
         </init-param>
         <init-param>
             <param-name>cashier</param-name>
@@ -58,12 +58,12 @@
         </init-param>
         <init-param>
             <param-name>common</param-name>
-            <param-value>searchProduct viewMenu logout noCommand viewSettings viewSearchProductPage viewProduct
+            <param-value>searchProduct viewMenu logout viewSettings viewSearchProductPage viewProduct
             </param-value>
         </init-param>
         <init-param>
             <param-name>out-of-control</param-name>
-            <param-value>login changeLocaleToRu changeLocaleToEn</param-value>
+            <param-value>login changeLocaleToRu changeLocaleToEn noCommand</param-value>
         </init-param>
     </filter>
 

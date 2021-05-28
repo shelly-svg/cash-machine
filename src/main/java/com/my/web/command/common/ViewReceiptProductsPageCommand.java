@@ -4,7 +4,6 @@ import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
-import com.my.db.entities.ReceiptStatus;
 import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 

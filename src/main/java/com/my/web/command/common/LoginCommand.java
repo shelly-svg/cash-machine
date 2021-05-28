@@ -1,10 +1,10 @@
 package com.my.web.command.common;
 
-import com.my.Path;
 import com.my.db.entities.Role;
 import com.my.db.entities.User;
 import com.my.db.entities.UserDAO;
 import com.my.web.command.Command;
+import com.my.web.recaptcha.VerifyUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -29,32 +29,42 @@ public class LoginCommand extends Command {
         String password = request.getParameter("password");
 
         String errorMessage;
-        String forward = Path.ERROR_PAGE;
+        String forward;
+        boolean valid;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
             errorMessage = "Login/Password cannot be empty";
-            request.setAttribute("errorMessage", errorMessage);
+            session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return forward;
+            return "?command=noCommand";
         }
+
+        String gCaptchaResponse = request.getParameter("g-recaptcha-response");
+
+        logger.debug("gRecaptchaResponse = " + gCaptchaResponse);
+
+        valid = VerifyUtils.verify(gCaptchaResponse);
+
+        if (!valid) {
+            errorMessage = "Captcha is entered wrong";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return "?command=noCommand";
+        }
+
 
         User user = new UserDAO().findUserByLogin(login);
         logger.trace("Found user at DB: user-> " + user);
 
         if (user == null || !password.equals(user.getPassword())) {
             errorMessage = "Cannot find user with such login/password";
-            request.setAttribute("errorMessage", errorMessage);
+            session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return forward;
+            return "?command=noCommand";
         } else {
             Role userRole = Role.getRole(user);
             logger.debug("User role --> " + userRole);
 
-                    /*if (userRole == Role.ADMIN)
-            forward = Path.COMMAND__LIST_ORDERS;
-
-        if (userRole == Role.CLIENT)
-            forward = Path.COMMAND__LIST_MENU;*/
             session.setAttribute("user", user);
             logger.trace("Set the session attribute: user --> " + user);
             session.setAttribute("userRole", userRole);

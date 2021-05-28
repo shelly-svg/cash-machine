@@ -31,6 +31,9 @@ public class ChangeLangToRuCommand extends Command {
         if (forward == null) {
             return Path.LOGIN_PAGE;
         }
+        if (Path.ERROR_PAGE.equals(forward) && session.getAttribute("user") == null) {
+            return Path.LOGIN_PAGE;
+        }
         if (Path.ADD_PRODUCT_PAGE.equals(forward)) {
             Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
             request.setAttribute("categories", categories);

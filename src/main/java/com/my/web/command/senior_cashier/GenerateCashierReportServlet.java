@@ -8,7 +8,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.my.db.entities.*;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +26,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
     private static final String FILE = System.getProperty("catalina.home") + "\\logs\\final-task-reports\\UserReport";
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         logger.debug("generate cashier report servlet is started at the POST method");
         HttpSession session = req.getSession(false);
         logger.debug("SESSION => " + session);
@@ -127,14 +126,14 @@ public class GenerateCashierReportServlet extends HttpServlet {
         List<Receipt> userReceipts = receiptDAO.getCurrentDayClosedReceiptsForUser(user);
         if (!userReceipts.isEmpty()) {
             Paragraph tableParagraph = new Paragraph();
-            tableParagraph.add(new Paragraph("Все созданные заказы", tableHeaderFont));
+            tableParagraph.add(new Paragraph(rb.getString("cashier.report.table.title"), tableHeaderFont));
             addEmptyLine(tableParagraph, 1);
             PdfPTable table = new PdfPTable(9);
             table.setWidthPercentage(100);
 
             createReceiptsTable(tableHeaderFont, rb, table);
 
-            double todaysEarn = 0d;
+            double todayEarn = 0d;
             for (Receipt receipt : userReceipts) {
                 Map<Product, Integer> receiptsProducts = receiptDAO.getMapOfAmountsAndProductsFromReceipt(receipt);
                 if (receiptsProducts.isEmpty()) {
@@ -164,13 +163,13 @@ public class GenerateCashierReportServlet extends HttpServlet {
                     price += product.getPrice().doubleValue() * receiptsProducts.get(product);
                 }
                 table.addCell(new Phrase(String.valueOf(price), smallBold));
-                todaysEarn += price;
+                todayEarn += price;
                 table.completeRow();
             }
 
             Paragraph summary = new Paragraph();
             addEmptyLine(summary, 2);
-            summary.add(new Phrase(rb.getString("weekly.report.summary") + ": " + todaysEarn, tableHeaderFont));
+            summary.add(new Phrase(rb.getString("weekly.report.summary") + ": " + todayEarn, tableHeaderFont));
             tableParagraph.add(table);
             tableParagraph.add(summary);
             document.add(tableParagraph);
@@ -241,7 +240,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
             DataOutputStream os = new DataOutputStream(resp.getOutputStream());
             resp.setHeader("Content-Length", String.valueOf(f.length()));
             byte[] buffer = new byte[1024];
-            int len = 0;
+            int len;
             while ((len = fis.read(buffer)) >= 0) {
                 os.write(buffer, 0, len);
             }

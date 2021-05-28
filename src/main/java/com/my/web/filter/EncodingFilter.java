@@ -13,7 +13,7 @@ public class EncodingFilter implements Filter {
     private String encoding;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         logger.debug("Encoding filter initialization is started");
 
         encoding = filterConfig.getInitParameter("encoding");
