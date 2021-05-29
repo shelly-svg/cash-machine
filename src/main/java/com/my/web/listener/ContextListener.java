@@ -18,13 +18,13 @@ public class ContextListener implements ServletContextListener {
     }
 
     public void contextInitialized(ServletContextEvent event) {
-        log("Servlet context initialization starts");
+        logger.debug("Servlet context initialization starts");
 
         ServletContext servletContext = event.getServletContext();
         initLog4J(servletContext);
         initCommandContainer();
 
-        log("Servlet context initialization finished");
+        logger.debug("Servlet context initialization finished");
     }
 
     /**
@@ -32,7 +32,7 @@ public class ContextListener implements ServletContextListener {
      *
      */
     private void initLog4J(ServletContext servletContext) {
-        log("Log4J initialization started");
+        logger.debug("Log4J initialization started");
         try {
             PropertyConfigurator.configure(servletContext.getRealPath(
                     "WEB-INF/classes/log4j.properties"));
@@ -40,7 +40,7 @@ public class ContextListener implements ServletContextListener {
             ex.printStackTrace();
         }
 
-        log("Log4J initialization finished");
+        logger.debug("Log4J initialization finished");
     }
 
     /**
@@ -59,10 +59,6 @@ public class ContextListener implements ServletContextListener {
         }
 
         logger.debug("Command container initialization finished");
-    }
-
-    private void log(String msg) {
-        System.out.println("[ContextListener] " + msg);
     }
 
 }

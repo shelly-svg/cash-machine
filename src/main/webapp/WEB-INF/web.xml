@@ -89,5 +89,9 @@
         <url-pattern>/WEB-INF/jsp/*</url-pattern>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
+    
+    <listener>
+        <listener-class>com.my.web.listener.ContextListener</listener-class>
+    </listener>
 
 </web-app>

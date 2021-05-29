@@ -37,7 +37,7 @@
         <filter-class>com.my.web.filter.SecurityFilter</filter-class>
         <init-param>
             <param-name>admin</param-name>
-            <param-value></param-value>
+            <param-value>searchUser</param-value>
         </init-param>
         <init-param>
             <param-name>cashier</param-name>
@@ -89,5 +89,9 @@
         <url-pattern>/WEB-INF/jsp/*</url-pattern>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
+    
+    <listener>
+        <listener-class>com.my.web.listener.ContextListener</listener-class>
+    </listener>
 
 </web-app>
