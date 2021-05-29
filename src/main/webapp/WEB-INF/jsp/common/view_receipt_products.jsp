@@ -47,8 +47,7 @@
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'
                     and sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
                         <td>
-                            <form action="controller" method="post" id="change_receipt_product_amount" name="changeAmountForm${product.key.id}" onsubmit="return(validate())">
-                                <c:set var="prodId" scope="request" value="${product.key.id}"/>
+                            <form action="controller" method="post" id="change_receipt_product_amount" name="changeAmountForm" onsubmit="return(validate(this))">
                                 <input type="hidden" name="command" value="editReceiptProducts">
                                 <input type="hidden" name="product_id" value="${product.key.id}">
                                 <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
@@ -89,7 +88,8 @@
 </html>
 
 <script type="text/javascript">
-    function validate() {
-        return true;
+    function validate(obj) {
+        alert (obj.name);
+        alert(obj.newAmount.value);
     }
 </script>
