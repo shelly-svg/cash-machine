@@ -3,6 +3,7 @@ package com.my.web.command.common;
 import com.my.db.entities.Role;
 import com.my.db.entities.User;
 import com.my.db.entities.UserDAO;
+import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.recaptcha.VerifyUtils;
 import org.apache.log4j.Logger;
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoginCommand extends Command {
 
@@ -23,6 +26,19 @@ public class LoginCommand extends Command {
         logger.debug("Login command is started");
 
         HttpSession session = request.getSession();
+
+        String localeName = "en";
+        Object localeObj = session.getAttribute("lang");
+        if (localeObj != null) {
+            localeName = localeObj.toString();
+        }
+        Locale locale;
+        if ("ru".equals(localeName)) {
+            locale = new Locale("ru", "RU");
+        } else {
+            locale = new Locale("en", "EN");
+        }
+        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
         String login = request.getParameter("login");
         logger.trace("Request parameter : logging -> " + login);
 
@@ -33,10 +49,10 @@ public class LoginCommand extends Command {
         boolean valid;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
-            errorMessage = "Login/Password cannot be empty";
+            errorMessage = rb.getString("login.command.values.empty");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return "?command=noCommand";
+            return Commands.ERROR_PAGE_COMMAND;
         }
 
         String gCaptchaResponse = request.getParameter("g-recaptcha-response");
@@ -46,10 +62,10 @@ public class LoginCommand extends Command {
         valid = VerifyUtils.verify(gCaptchaResponse);
 
         if (!valid) {
-            errorMessage = "Captcha is entered wrong";
+            errorMessage = rb.getString("login.command.captcha.invalid");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return "?command=noCommand";
+            return Commands.ERROR_PAGE_COMMAND;
         }
 
 
@@ -57,10 +73,10 @@ public class LoginCommand extends Command {
         logger.trace("Found user at DB: user-> " + user);
 
         if (user == null || !password.equals(user.getPassword())) {
-            errorMessage = "Cannot find user with such login/password";
+            errorMessage = rb.getString("login.command.credentials.invalid");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return "?command=noCommand";
+            return Commands.ERROR_PAGE_COMMAND;
         } else {
             Role userRole = Role.getRole(user);
             logger.debug("User role --> " + userRole);
@@ -70,7 +86,7 @@ public class LoginCommand extends Command {
             session.setAttribute("userRole", userRole);
             logger.info("User " + user + " logged as " + userRole.toString().toLowerCase());
 
-            forward = "controller?command=viewMenu";
+            forward = Commands.VIEW_MENU_COMMAND;
 
             //work with i18n
             String userLocaleName = user.getLocaleName();

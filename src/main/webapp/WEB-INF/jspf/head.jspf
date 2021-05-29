@@ -3,6 +3,14 @@
 
 <head>
 
+    <c:if test="${empty sessionScope.lang}">
+        <fmt:setLocale value="en"/>
+    </c:if>
+    <c:if test="${not empty sessionScope.lang}">
+        <fmt:setLocale value="${sessionScope.lang}"/>
+    </c:if>
+    <fmt:setBundle basename="resources"/>
+
     <title>
         ${title}
     </title>
@@ -18,12 +26,16 @@
     ===========================================================================--%>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <c:if test="${empty sessionScope.lang}">
-        <fmt:setLocale value="en"/>
-    </c:if>
-    <c:if test="${not empty sessionScope.lang}">
-        <fmt:setLocale value="${sessionScope.lang}"/>
-    </c:if>
-    <fmt:setBundle basename="resources"/>
+    <!-- JavaScript -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css"/>
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
 
 </head>

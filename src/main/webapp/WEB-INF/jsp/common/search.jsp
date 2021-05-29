@@ -4,7 +4,7 @@
 
 <html>
 
-<c:set var="title" value="Все товары"/>
+<c:set var="title" value="Search product"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
@@ -13,12 +13,15 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>SEARCH FOR PRODUCT</h2>
-        <form action="controller" name="find_product_by_name_or_code">
+        <h2><fmt:message key="search_jsp.title"/></h2>
+        <form action="controller" name="searchProducts" onsubmit="return(validate())">
             <input type="hidden" name="command" value="searchProduct"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter product name or code" name="pattern" required>
-            <button type="submit" class="add_product_btn">Search</button>
+            <label>
+                <input type="text" placeholder="<fmt:message key="search_jsp.search.placeholder"/>" name="pattern"
+                       required>
+            </label>
+            <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
     </div>
@@ -32,3 +35,13 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function validate() {
+        if (document.searchProducts.pattern.value.length > 100) {
+            alertify.alert("<fmt:message key="search_jsp.search.button"/>", "<fmt:message key="search_jsp.pattern.invalid"/>")
+            return false;
+        }
+        return true;
+    }
+</script>

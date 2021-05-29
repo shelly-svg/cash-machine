@@ -1,15 +1,19 @@
-package com.my.web.command.common;
+package com.my.web.command.commodity_expert;
 
 import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
+import com.my.web.Commands;
 import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class EditProductCommand extends Command {
 
@@ -37,11 +41,39 @@ public class EditProductCommand extends Command {
 
     private String doPost(HttpServletRequest request) {
         logger.debug("Edit product command started at POST method");
+        HttpSession session = request.getSession();
+
+        String localeName = "en";
+        Object localeObj = session.getAttribute("lang");
+        if (localeObj != null) {
+            localeName = localeObj.toString();
+        }
+
+        Locale locale;
+        if ("ru".equals(localeName)) {
+            locale = new Locale("ru", "RU");
+        } else {
+            locale = new Locale("en", "EN");
+        }
+        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
 
         int id = Integer.parseInt(request.getParameter("id"));
         logger.debug("Received product => " + id);
         logger.trace("Set session attribute id => " + id);
-        int newAmount = Integer.parseInt(request.getParameter("amount"));
+        int newAmount = -1;
+        try {
+            newAmount = Integer.parseInt(request.getParameter("amount"));
+        } catch (NumberFormatException exception) {
+            String errorMessage = rb.getString("add.product.invalid.numeric");
+            session.setAttribute("errorMessage", errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
+        if (newAmount < 0 || newAmount > 999999999) {
+            String errorMessage = rb.getString("add.product.amount.invalid");
+            session.setAttribute("errorMessage", errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         new ProductDAO().updateProductsAmount(id, newAmount);
         logger.debug("Received new amount => " + newAmount);

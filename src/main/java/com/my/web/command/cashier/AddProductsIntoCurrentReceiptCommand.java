@@ -2,7 +2,7 @@ package com.my.web.command.cashier;
 
 import com.my.db.entities.*;
 import com.my.web.command.Command;
-import com.my.web.command.common.EditProductCommand;
+import com.my.web.command.commodity_expert.EditProductCommand;
 import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 

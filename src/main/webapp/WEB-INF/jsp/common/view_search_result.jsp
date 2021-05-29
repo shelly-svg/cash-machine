@@ -13,27 +13,30 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>VIEW SEARCH RESULT</h2>
-        <form action="controller">
+        <h2><fmt:message key="view_search_result_jsp.title"/></h2>
+        <form action="controller" name="searchProducts" onsubmit="return(validate())">
             <input type="hidden" name="command" value="searchProduct"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter product name or code" name="pattern" required>
-            <button type="submit" class="add_product_btn">Search</button>
+            <label>
+                <input type="text" placeholder="<fmt:message key="search_jsp.search.placeholder"/>" name="pattern"
+                       required>
+            </label>
+            <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
         <c:if test="${empty requestScope.searchResult}">
-            <h2>Cannot find any product by your request</h2>
+            <h2><fmt:message key="view_search_result_jsp.cannot.find.products"/></h2>
         </c:if>
         <c:if test="${not empty requestScope.searchResult}">
             <table id="search_result_table">
                 <tr>
-                    <td>Russian name</td>
-                    <td>English name</td>
-                    <td>Price</td>
-                    <td>Code</td>
-                    <td>Amount</td>
-                    <td>Weight</td>
-                    <td>Category</td>
+                    <td><fmt:message key="product.name.ru.column"/></td>
+                    <td><fmt:message key="product.name.en.column"/></td>
+                    <td><fmt:message key="product.price.column"/></td>
+                    <td><fmt:message key="product.code.column"/></td>
+                    <td><fmt:message key="product.amount.column"/></td>
+                    <td><fmt:message key="product.weight.column"/></td>
+                    <td><fmt:message key="product.category.column"/></td>
                 </tr>
                 <c:forEach items="${requestScope.searchResult}" var="product">
                     <tr>
@@ -50,7 +53,8 @@
                             <td><c:out value="${product.category.nameEn}"/></td>
                         </c:if>
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
-                            <td><a href="controller?command=editProduct&id=${product.id}">Edit</a></td>
+                            <td><a href="controller?command=editProduct&id=${product.id}"><fmt:message
+                                    key="header.menu.edit.product"/></a></td>
                         </c:if>
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
                             <c:if test="${not empty sessionScope.currentReceipt}">
@@ -58,10 +62,10 @@
                                     <form action="controller" method="post">
                                         <input type="hidden" name="command" value="addProductsIntoCurrentReceipt">
                                         <input type="hidden" name="id" value="${product.id}">
-                                        <button type="submit" class="add_product_receipt_btn">Add to receipt</button>
+                                        <button type="submit" class="add_product_receipt_btn"><fmt:message
+                                                key="view_search_result_jsp.add.to.receipt"/></button>
                                     </form>
                                 </td>
-                                <%--<td><a href="controller?command=addProductsIntoCurrentReceipt&id=${product.id}">Add to receipt</a></td>--%>
                             </c:if>
                         </c:if>
                     </tr>
@@ -75,7 +79,8 @@
                         <c:if test="${requestScope.currentPage != 1}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=searchProduct&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage-1}">Previous</a>
+                                   href="controller?command=searchProduct&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage-1}"><fmt:message
+                                        key="pagination.previous"/></a>
                             </li>
                         </c:if>
                         <c:forEach begin="1" end="${requestScope.nOfPages}" var="i">
@@ -97,7 +102,8 @@
                         <c:if test="${requestScope.currentPage lt requestScope.nOfPages}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=searchProduct&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage+1}">Next</a>
+                                   href="controller?command=searchProduct&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage+1}"><fmt:message
+                                        key="pagination.next"/></a>
                             </li>
                         </c:if>
                     </ul>

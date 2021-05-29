@@ -4,7 +4,8 @@ import com.my.web.command.cashier.AddProductsIntoCurrentReceiptCommand;
 import com.my.web.command.cashier.CreateReceiptCommand;
 import com.my.web.command.cashier.EditReceiptProductsCommand;
 import com.my.web.command.cashier.SetReceiptStatusClosedCommand;
-import com.my.web.command.commodity_expert.AddProductCommand;
+import com.my.web.command.commodity_expert.CreateProductCommand;
+import com.my.web.command.commodity_expert.EditProductCommand;
 import com.my.web.command.common.*;
 import com.my.web.command.senior_cashier.*;
 import org.apache.log4j.Logger;
@@ -26,7 +27,7 @@ public class CommandContainer {
         commands.put("changeLocaleToEn", new ChangeLangToEnCommand());
         commands.put("viewSettings", new ViewSettingsCommand());
 
-        commands.put("addProduct", new AddProductCommand());
+        commands.put("createProduct", new CreateProductCommand());
         commands.put("viewProduct", new ViewProductCommand());
         commands.put("viewSearchProductPage", new ViewSearchProductPageCommand());
         commands.put("searchProduct", new SearchProductsCommand());

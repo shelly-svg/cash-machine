@@ -12,10 +12,9 @@
 <div id="container">
   <%@ include file="/WEB-INF/jspf/header.jspf" %>
   <div id="sidebar">
-    <h2>НАСТРОЕЧКИ</h2>
+    <h2>НАСТРОЙКИ</h2>
   </div>
   <div id="content">
-    <h2><h2><fmt:message key="settings_jsp.label.localization"/></h2></h2>
   </div>
   <div id="clear">
 
