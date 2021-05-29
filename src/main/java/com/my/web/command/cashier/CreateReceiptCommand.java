@@ -2,7 +2,10 @@ package com.my.web.command.cashier;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.validators.ProductValidator;
+import com.my.web.validators.ReceiptValidator;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -12,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class CreateReceiptCommand extends Command {
 
@@ -41,6 +46,19 @@ public class CreateReceiptCommand extends Command {
         logger.debug("Create receipt command started at POST method");
         HttpSession session = request.getSession();
         Receipt receipt = new Receipt();
+        String localeName = "en";
+        Object localeObj = session.getAttribute("lang");
+        if (localeObj != null) {
+            localeName = localeObj.toString();
+        }
+
+        Locale locale;
+        if ("ru".equals(localeName)) {
+            locale = new Locale("ru", "RU");
+        } else {
+            locale = new Locale("en", "EN");
+        }
+        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
 
 
         receipt.setCreateTime(new Date());
@@ -56,6 +74,10 @@ public class CreateReceiptCommand extends Command {
         receipt.setUserId(currentUser.getId());
         Delivery delivery = new DeliveryDAO().findDeliveryByName(request.getParameter("delivery_id"));
         receipt.setDelivery(delivery);
+
+        if (!new ReceiptValidator().validate(receipt, session, rb)) {
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         int id = new ReceiptDAO().createReceipt(receipt);
         receipt.setId(id);

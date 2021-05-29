@@ -13,20 +13,21 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>VIEW RECEIPT PRODUCTS</h2>
+        <h2><fmt:message key="view_receipt_products.title"/></h2>
         <c:if test="${empty requestScope.receiptProductMap}">
-            <h2>Current receipt has no products yet</h2>
+            <h2><fmt:message key="view_receipt_products.has.no.products"/></h2>
         </c:if>
         <c:if test="${not empty requestScope.receiptProductMap}">
         <table id="search_result_table">
             <tr>
-                <td>Russian name</td>
-                <td>English name</td>
-                <td>Code</td>
-                <td>Amount at the receipt</td>
-                <td>Weight</td>
-                <td>Category</td>
-                <td>Price for one</td>
+                <td><fmt:message key="product.name.ru.column"/></td>
+                <td><fmt:message key="product.name.en.column"/></td>
+                <td><fmt:message key="product.code.column"/></td>
+                <td><fmt:message key="view_receipt_products.amount.receipt"/></td>
+                <td><fmt:message key="product.amount.column"/></td>
+                <td><fmt:message key="product.weight.column"/></td>
+                <td><fmt:message key="product.category.column"/></td>
+                <td><fmt:message key="product.price.column"/></td>
             </tr>
             <c:forEach items="${requestScope.receiptProductMap}" var="product">
                 <tr>
@@ -34,6 +35,7 @@
                     <td><c:out value="${product.key.nameEn}"/></td>
                     <td><c:out value="${product.key.code}"/></td>
                     <td><c:out value="${product.value.toString()}"/></td>
+                    <td><c:out value="${product.key.amount}"/></td>
                     <td><c:out value="${product.key.weight}"/></td>
                     <c:if test="${sessionScope.lang=='ru'}">
                         <td><c:out value="${product.key.category.nameRu}"/></td>
@@ -45,23 +47,26 @@
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'
                     and sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
                         <td>
-                            <form action="controller" method="post" id="change_receipt_product_amount">
+                            <form action="controller" method="post" id="change_receipt_product_amount" name="changeAmountForm${product.key.id}" onsubmit="return(validate())">
+                                <c:set var="prodId" scope="request" value="${product.key.id}"/>
                                 <input type="hidden" name="command" value="editReceiptProducts">
                                 <input type="hidden" name="product_id" value="${product.key.id}">
                                 <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
-                                <input type="text" name="newAmount" placeholder="New amount" required>
-                                <button type="submit" class="add_product_btn" name="submit">Accept</button>
+                                <input type="hidden" name="storeAmount" value="${product.key.amount}">
+                                <input type="hidden" name="oldAmount" value="${product.value.toString()}">
+                                <input type="text" name="newAmount" placeholder="<fmt:message key="edit.product.new.amount"/>" required>
+                                <button type="submit" class="add_product_btn" name="submit"><fmt:message key="edit.product.new.amount.submit"/></button>
                             </form>
                         </td>
                     </c:if>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'senior_cashier'
                     and sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
                         <td>
-                            <form action="controller" method="post">
+                            <form action="controller" method="post" name="removeProductFromReceipt">
                                 <input type="hidden" name="command" value="removeProductFromReceipt">
                                 <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
                                 <input type="hidden" name="product_id" value="${product.key.id}">
-                                <button type="submit" class="remove_product_btn" name="submit">Remove product</button>
+                                <button type="submit" class="remove_product_btn" name="submit"><fmt:message key="view_receipt_products.remove.product"/></button>
                             </form>
                         </td>
                     </c:if>
@@ -82,3 +87,9 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function validate() {
+        return true;
+    }
+</script>

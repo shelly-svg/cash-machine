@@ -121,6 +121,7 @@ public class CreateProductCommand extends Command {
         }
 
         int id = new ProductDAO().addProduct(product);
+
         logger.debug("create product command is finished at POST method, forwarding to view product");
         request.getSession().setAttribute("lastAction", "controller?command=viewProduct&id=" + id);
         return "controller?command=viewProduct&id=" + id;

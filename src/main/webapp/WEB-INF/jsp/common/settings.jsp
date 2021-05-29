@@ -10,16 +10,16 @@
 <body>
 
 <div id="container">
-  <%@ include file="/WEB-INF/jspf/header.jspf" %>
-  <div id="sidebar">
-    <h2>НАСТРОЙКИ</h2>
-  </div>
-  <div id="content">
-  </div>
-  <div id="clear">
+    <%@ include file="/WEB-INF/jspf/header.jspf" %>
+    <div id="sidebar">
+        <h2><fmt:message key="header.menu.profile"/></h2>
+    </div>
+    <div id="content">
+    </div>
+    <div id="clear">
 
-  </div>
-  <%@ include file="/WEB-INF/jspf/footer.jspf" %>
+    </div>
+    <%@ include file="/WEB-INF/jspf/footer.jspf" %>
 </div>
 
 </body>

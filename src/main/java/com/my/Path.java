@@ -14,7 +14,7 @@ public final class Path {
     public static final String VIEW_SEARCH_PRODUCTS_PAGE = "/WEB-INF/jsp/common/search.jsp";
     public static final String VIEW_PRODUCT_PAGE = "/WEB-INF/jsp/common/view_product.jsp";
     public static final String VIEW_SEARCH_RESULT_PAGE = "/WEB-INF/jsp/common/view_search_result.jsp";
-    public static final String VIEW_RECEIPT_PAGE = "/WEB-INF/jsp/common/view_receipt.jsp";
+    public static final String VIEW_CURRENT_RECEIPT_PAGE = "/WEB-INF/jsp/common/view_current_receipt.jsp";
     public static final String SEARCH_RECEIPT_PAGE = "/WEB-INF/jsp/common/search_receipt.jsp";
     public static final String VIEW_SEARCH_RECEIPT_RESULT_PAGE = "/WEB-INF/jsp/common/view_search_receipt_result.jsp";
     public static final String VIEW_RECEIPT_PRODUCTS_PAGE = "/WEB-INF/jsp/common/view_receipt_products.jsp";

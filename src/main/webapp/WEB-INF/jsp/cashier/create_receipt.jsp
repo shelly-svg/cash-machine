@@ -13,22 +13,23 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>CREATE RECEIPT</h2>
-        <form action="controller" method="post">
+        <h2><fmt:message key="create_receipt_jsp.title"/></h2>
+        <form action="controller" method="post" name="createReceiptForm" onsubmit="return(validate())">
             <input type="hidden" name="command" value="createReceipt"/>
-            <input type="text" placeholder="Enter customers name at russian" name="name_ru" required>
-            <input type="text" placeholder="Enter customers name at english" name="name_en" required>
-            <input type="text" placeholder="Enter customers ru address" name="address_ru" required>
-            <input type="text" placeholder="Enter customers en address" name="address_en">
+            <input type="text" placeholder="<fmt:message key="receipt.name.ru.column"/>" name="name_ru" required>
+            <input type="text" placeholder="<fmt:message key="receipt.name.en.column"/>" name="name_en" required>
+            <input type="text" placeholder="<fmt:message key="receipt.address.ru.column"/>" name="address_ru" required>
+            <input type="text" placeholder="<fmt:message key="receipt.address.en.column"/>" name="address_en">
             <textarea rows="10" cols="100" name="description_ru"
-                      placeholder="Enter russian description of the receipt"></textarea>
+                      placeholder="<fmt:message key="receipt.description.ru.column"/>"></textarea>
             <hr>
             <textarea rows="10" cols="100" name="description_en"
-                      placeholder="Enter english description of the receipt"></textarea>
+                      placeholder="<fmt:message key="receipt.description.en.column"/>"></textarea>
             <hr>
-            <input type="text" placeholder="Enter customers phone number" name="phone_number" required>
+            <input type="text" placeholder="<fmt:message key="receipt.phone.number.column"/>" name="phone_number"
+                   required>
             <hr>
-            <h5>Choose delivery</h5>
+            <h5><fmt:message key="receipt.delivery.column"/></h5>
             <c:if test="${not empty requestScope.deliveries}">
                 <select name="delivery_id">
                     <c:forEach items="${requestScope.deliveries}" var="delivery">
@@ -42,7 +43,8 @@
                 </select>
             </c:if>
             <hr>
-            <button type="submit" class="add_product_btn" name="submit">Create receipt</button>
+            <button type="submit" class="add_product_btn" name="submit"><fmt:message
+                    key="create_receipt_jsp.title"/></button>
         </form>
     </div>
 
@@ -55,3 +57,40 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function validate() {
+        var cyrillic = /[а-яА-ЯёЁІіЇїЪъ]/g
+        var phoneNumber = /^\d{10}$/g
+
+        if (document.createReceiptForm.name_ru.value.length > 45) {
+            alertify.alert("<fmt:message key="receipt.name.ru.column"/>", "<fmt:message key="add.product.invalid.length"/>");
+            return false;
+        }
+        if (document.createReceiptForm.name_en.value.length > 45) {
+            alertify.alert("<fmt:message key="receipt.name.en.column"/>", "<fmt:message key="add.product.invalid.length"/>");
+            return false;
+        }
+        if (document.createReceiptForm.name_en.value.match(cyrillic)) {
+            alertify.alert("<fmt:message key="receipt.name.en.column"/>", "<fmt:message key="add.product.invalid.cyrillic"/>");
+            return false;
+        }
+        if (document.createReceiptForm.address_ru.value.length > 150) {
+            alertify.alert("<fmt:message key="receipt.address.ru.column"/>", "<fmt:message key="add.product.invalid.length"/>");
+            return false;
+        }
+        if (document.createReceiptForm.address_en.value.match(cyrillic)) {
+            alertify.alert("<fmt:message key="receipt.address.en.column"/>", "<fmt:message key="add.product.invalid.cyrillic"/>");
+            return false;
+        }
+        if (document.createReceiptForm.description_en.value.match(cyrillic)) {
+            alertify.alert("<fmt:message key="receipt.description.en.column"/>", "<fmt:message key="add.product.invalid.cyrillic"/>");
+            return false;
+        }
+        if (!document.createReceiptForm.phone_number.value.match(phoneNumber)) {
+            alertify.alert("<fmt:message key="receipt.phone.number.column"/>", "<fmt:message key="create.receipt.phone.number.invalid"/>");
+            return false;
+        }
+        return true;
+    }
+</script>

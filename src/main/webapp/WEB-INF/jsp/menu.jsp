@@ -14,7 +14,7 @@
     <div id="sidebar">
     </div>
     <div id="content">
-        Главное меню
+        <h2><fmt:message key="header.menu.main.menu"/></h2>
     </div>
     <div id="clear">
 

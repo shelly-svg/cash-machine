@@ -12,12 +12,9 @@
 <div id="container">
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
     <div id="sidebar">
-        <h2><a href="?command=viewSettings">Settings</a></h2>
-        <h2><a href="?command=logout">Log out</a></h2>
     </div>
     <div id="content">
-        <h1>Здравствуйте, ${sessionScope.user.firstName}, вы зашли как ${sessionScope.userRole.name()}!</h1>
-        <h1><c:out value="${sessionScope.lang}"/></h1>
+        <h2><fmt:message key="header.menu.main.menu"/></h2>
     </div>
     <div id="clear">
 

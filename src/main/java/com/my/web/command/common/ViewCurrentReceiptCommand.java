@@ -34,7 +34,7 @@ public class ViewCurrentReceiptCommand extends Command {
         session.setAttribute("currentReceipt", currentReceipt);
 
         logger.debug("View current receipt command is finished");
-        return Path.VIEW_RECEIPT_PAGE;
+        return Path.VIEW_CURRENT_RECEIPT_PAGE;
     }
 
 }

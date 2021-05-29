@@ -59,7 +59,7 @@ public class ChangeLangToEnCommand extends Command {
         if (Path.EDIT_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=editProduct&id=" + request.getSession().getAttribute("lastEditedProductId");
         }
-        if (Path.VIEW_RECEIPT_PAGE.equals(forward)) {
+        if (Path.VIEW_CURRENT_RECEIPT_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
             currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
 
