@@ -15,26 +15,28 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>VIEW SEARCH CASHIER RESULT</h2>
-        <form action="controller">
+        <h2><fmt:message key="search.cashier.result.title"/></h2>
+        <form action="controller" name="searchCashiers" onsubmit="return(validate())">
             <input type="hidden" name="command" value="viewSearchCashierResult"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter cashiers first name" name="cashier_first_name" required>
-            <input type="text" placeholder="Enter cashiers last name" name="cashier_last_name" required>
-            <button type="submit" class="add_product_btn">Search</button>
+            <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.fname"/>"
+                   name="cashier_first_name" required>
+            <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.lname"/>"
+                   name="cashier_last_name" required>
+            <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
 
         <c:if test="${empty requestScope.searchCashiersResult}">
-            <h2>Cannot find any cashier by your request</h2>
+            <h2><fmt:message key="search.cashier.result.not.found"/></h2>
         </c:if>
         <c:if test="${not empty requestScope.searchCashiersResult}">
             <table id="search_result_table">
                 <tr>
-                    <td>id</td>
-                    <td>first name</td>
-                    <td>last name</td>
-                    <td>role</td>
+                    <td>ID</td>
+                    <td><fmt:message key="cashier.fname.column"/></td>
+                    <td><fmt:message key="cashier.lname.column"/></td>
+                    <td><fmt:message key="cashier.role.column"/></td>
                 </tr>
                 <c:forEach items="${requestScope.searchCashiersResult}" var="user">
                     <tr>
@@ -46,7 +48,8 @@
                             <td>
                                 <form action="generateCashierReport" method="post">
                                     <input type="hidden" name="id" value="${user.id}">
-                                    <button type="submit" class="cashier_report_btn">Choose</button>
+                                    <button type="submit" class="cashier_report_btn"><fmt:message
+                                            key="cashier.report.generate.button"/></button>
                                 </form>
                             </td>
                         </c:if>
@@ -61,7 +64,8 @@
                         <c:if test="${requestScope.currentPage != 1}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=viewSearchCashierResult&cashier_first_name=${sessionScope.lastSearchCashierFName}&cashier_last_name=${sessionScope.lastSearchCashierLName}&currentPage=${requestScope.currentPage-1}">Previous</a>
+                                   href="controller?command=viewSearchCashierResult&cashier_first_name=${sessionScope.lastSearchCashierFName}&cashier_last_name=${sessionScope.lastSearchCashierLName}&currentPage=${requestScope.currentPage-1}"><fmt:message
+                                        key="pagination.previous"/></a>
                             </li>
                         </c:if>
                         <c:forEach begin="1" end="${requestScope.nOfPages}" var="i">
@@ -83,7 +87,8 @@
                         <c:if test="${requestScope.currentPage lt requestScope.nOfPages}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=viewSearchCashierResult&cashier_first_name=${sessionScope.lastSearchCashierFName}&cashier_last_name=${sessionScope.lastSearchCashierLName}&currentPage=${requestScope.currentPage+1}">Next</a>
+                                   href="controller?command=viewSearchCashierResult&cashier_first_name=${sessionScope.lastSearchCashierFName}&cashier_last_name=${sessionScope.lastSearchCashierLName}&currentPage=${requestScope.currentPage+1}"><fmt:message
+                                        key="pagination.next"/></a>
                             </li>
                         </c:if>
                     </ul>
@@ -104,3 +109,17 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function validate() {
+        if (document.searchCashiers.cashier_first_name.value.length > 45) {
+            alertify.alert("<fmt:message key="cashier.fname.column"/>", "<fmt:message key="add.product.invalid.length"/>")
+            return false;
+        }
+        if (document.searchCashiers.cashier_last_name.value.length > 45) {
+            alertify.alert("<fmt:message key="cashier.lname.column"/>", "<fmt:message key="add.product.invalid.length"/>")
+            return false;
+        }
+        return true;
+    }
+</script>

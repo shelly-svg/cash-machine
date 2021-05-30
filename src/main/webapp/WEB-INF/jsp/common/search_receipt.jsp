@@ -4,7 +4,7 @@
 
 <html>
 
-<c:set var="title" value="Все товары"/>
+<c:set var="title" value="Поиск заказа"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
@@ -13,12 +13,12 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>SEARCH FOR RECEIPT</h2>
-        <form action="controller" name="find_receipt_by_id_or_date">
+        <h2><fmt:message key="search_receipt_jsp.title"/></h2>
+        <form action="controller" name="searchReceipt" onsubmit="return(validate())">
             <input type="hidden" name="command" value="searchReceipt"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter receipt id or creation date" name="receipt_pattern" required>
-            <button type="submit" class="add_product_btn">Search</button>
+            <input type="text" placeholder="<fmt:message key="search_receipt_jsp.placeholder"/>" name="receipt_pattern" required>
+            <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
     </div>
@@ -32,3 +32,13 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function validate() {
+        if (document.searchReceipt.receipt_pattern.value.length > 100) {
+            alertify.alert("<fmt:message key="search_receipt_jsp.title"/>", "<fmt:message key="add.product.invalid.length"/>")
+            return false;
+        }
+        return true;
+    }
+</script>

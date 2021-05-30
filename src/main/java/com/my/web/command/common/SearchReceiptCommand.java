@@ -25,6 +25,12 @@ public class SearchReceiptCommand extends Command {
             currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
             request.getSession().setAttribute("currentReceipt", currentReceipt);
         }
+
+        /* String errorMessage = rb.getString("edit.receipt.products.command.status.error");
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;*/
+
         //set the number of receipts displayed per page
         int recordsPerPage = 5;
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));

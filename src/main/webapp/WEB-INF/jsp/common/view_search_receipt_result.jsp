@@ -13,28 +13,28 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>VIEW SEARCH RECEIPT RESULT</h2>
-        <form action="controller" name="find_receipt_by_id_or_date">
+        <h2><fmt:message key="view_search_receipt_result_jsp.title"/></h2>
+        <form action="controller" name="searchReceipt" onsubmit="return(validate())">
             <input type="hidden" name="command" value="searchReceipt"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter receipt id or creation date" name="receipt_pattern" required>
-            <button type="submit" class="add_product_btn">Search</button>
+            <input type="text" placeholder="<fmt:message key="search_receipt_jsp.placeholder"/>" name="receipt_pattern" required>
+            <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
         <c:if test="${empty requestScope.searchReceiptResult}">
-            <h2>Cannot find any receipt by your request</h2>
+            <h2><fmt:message key="view_search_receipt_result_jsp.not.found"/></h2>
         </c:if>
         <c:if test="${not empty requestScope.searchReceiptResult}">
             <table id="search_result_table">
                 <tr>
                     <td>ID</td>
-                    <td>Creation time</td>
-                    <td>Ru customers name</td>
-                    <td>En customers name</td>
-                    <td>Address</td>
-                    <td>Phone number</td>
-                    <td>Delivery</td>
-                    <td>Receipt status</td>
+                    <td><fmt:message key="receipt.creation.time.column"/></td>
+                    <td><fmt:message key="receipt.name.ru.column"/></td>
+                    <td><fmt:message key="receipt.name.en.column"/></td>
+                    <td><fmt:message key="receipt.address.ru.column"/></td>
+                    <td><fmt:message key="receipt.phone.number.column"/></td>
+                    <td><fmt:message key="receipt.delivery.column"/></td>
+                    <td><fmt:message key="receipt.status.column"/></td>
                 </tr>
                 <c:forEach items="${requestScope.searchReceiptResult}" var="receipt">
                     <tr>
@@ -58,7 +58,7 @@
                         </c:if>
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'
                         or sessionScope.userRole.name().toLowerCase() == 'senior_cashier'}">
-                            <td><a href="controller?command=chooseReceipt&id=${receipt.id}">Choose</a></td>
+                            <td><a href="controller?command=chooseReceipt&id=${receipt.id}"><fmt:message key="header.menu.choose.receipt"/></a></td>
                         </c:if>
                     </tr>
                 </c:forEach>
@@ -71,7 +71,7 @@
                         <c:if test="${requestScope.currentPage != 1}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=searchReceipt&receipt_pattern=${sessionScope.lastSearchReceiptPattern}&currentPage=${requestScope.currentPage-1}">Previous</a>
+                                   href="controller?command=searchReceipt&receipt_pattern=${sessionScope.lastSearchReceiptPattern}&currentPage=${requestScope.currentPage-1}"><fmt:message key="pagination.previous"/></a>
                             </li>
                         </c:if>
                         <c:forEach begin="1" end="${requestScope.nOfPages}" var="i">
@@ -93,7 +93,7 @@
                         <c:if test="${requestScope.currentPage lt requestScope.nOfPages}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=searchReceipt&receipt_pattern=${sessionScope.lastSearchReceiptPattern}&currentPage=${requestScope.currentPage+1}">Next</a>
+                                   href="controller?command=searchReceipt&receipt_pattern=${sessionScope.lastSearchReceiptPattern}&currentPage=${requestScope.currentPage+1}"><fmt:message key="pagination.next"/></a>
                             </li>
                         </c:if>
                     </ul>
@@ -114,3 +114,13 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function validate() {
+        if (document.searchReceipt.receipt_pattern.value.length > 100) {
+            alertify.alert("<fmt:message key="search_receipt_jsp.title"/>", "<fmt:message key="add.product.invalid.length"/>")
+            return false;
+        }
+        return true;
+    }
+</script>

@@ -13,17 +13,16 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
     <div id="sidebar">
         <form action="generateWeeklyReport" method="post">
-            <button type="submit" class="weekly_report_btn">Generate weekly report</button>
+            <button type="submit" class="weekly_report_btn"><fmt:message key="weekly.report.name"/></button>
         </form>
         <hr>
         <form action="controller">
             <input type="hidden" name="command" value="searchCashier">
-            <button type="submit" class="cashier_report_btn">Make cashier report</button>
+            <button type="submit" class="cashier_report_btn"><fmt:message key="cashier.report.name.first"/></button>
         </form>
     </div>
     <div id="content">
-        <h3>Здравствуйте, ${sessionScope.user.firstName}, вы зашли как ${sessionScope.userRole.name()}!</h3>
-        <h3>Выберите отчет</h3>
+        <h3><fmt:message key="reports.menu.title"/></h3>
     </div>
     <div id="clear">
 

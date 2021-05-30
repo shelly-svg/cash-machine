@@ -1,8 +1,6 @@
 package com.my.web.command.senior_cashier;
 
-import com.my.db.entities.Receipt;
-import com.my.db.entities.ReceiptDAO;
-import com.my.db.entities.ReceiptStatus;
+import com.my.db.entities.*;
 import com.my.web.command.Command;
 import org.apache.log4j.Logger;
 
@@ -11,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class RemoveProductFromReceiptCommand extends Command {
 
@@ -22,11 +22,27 @@ public class RemoveProductFromReceiptCommand extends Command {
         logger.debug("Remove product from receipt command is started");
 
         HttpSession session = request.getSession();
+        ReceiptDAO receiptDAO = new ReceiptDAO();
+        ProductDAO productDAO = new ProductDAO();
+        String localeName = "en";
+        Object localeObj = session.getAttribute("lang");
+        if (localeObj != null) {
+            localeName = localeObj.toString();
+        }
+
+        Locale locale;
+        if ("ru".equals(localeName)) {
+            locale = new Locale("ru", "RU");
+        } else {
+            locale = new Locale("en", "EN");
+        }
+        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-        Receipt updatedReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+        Receipt updatedReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+
         if (!updatedReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
-            String errorMessage = "Receipt is unavailable to removing products";
+            String errorMessage = rb.getString("remove.product.from.receipt.command.invalid.status");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return "controller?command=noCommand";
@@ -34,8 +50,11 @@ public class RemoveProductFromReceiptCommand extends Command {
 
         int productId = Integer.parseInt(request.getParameter("product_id"));
         int receiptId = Integer.parseInt(request.getParameter("receipt_id"));
+        int amount = Integer.parseInt(request.getParameter("amount"));
 
-        new ReceiptDAO().deleteProductFromReceipt(receiptId, productId);
+        Product currentProduct = productDAO.findProduct(productId);
+        productDAO.updateProductsAmount(productId, currentProduct.getAmount() + amount);
+        receiptDAO.deleteProductFromReceipt(receiptId, productId);
 
         logger.debug("Remove product from receipt command is finished");
         return "controller?command=viewReceiptProducts";

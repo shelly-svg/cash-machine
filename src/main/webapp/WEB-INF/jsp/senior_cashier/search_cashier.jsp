@@ -13,13 +13,13 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
     <div id="add_product_form">
-        <h2>SEARCH FOR CASHIER</h2>
-        <form action="controller">
+        <h2><fmt:message key="search.cashier.title"/></h2>
+        <form action="controller" name="searchCashiers" onsubmit="return(validate())">
             <input type="hidden" name="command" value="viewSearchCashierResult"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="Enter cashiers first name" name="cashier_first_name" required>
-            <input type="text" placeholder="Enter cashiers last name" name="cashier_last_name" required>
-            <button type="submit" class="add_product_btn">Search</button>
+            <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.fname"/>" name="cashier_first_name" required>
+            <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.lname"/>" name="cashier_last_name" required>
+            <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
     </div>
@@ -33,3 +33,17 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    function validate() {
+        if (document.searchCashiers.cashier_first_name.value.length > 45) {
+            alertify.alert("<fmt:message key="cashier.fname.column"/>", "<fmt:message key="add.product.invalid.length"/>")
+            return false;
+        }
+        if (document.searchCashiers.cashier_last_name.value.length > 45) {
+            alertify.alert("<fmt:message key="cashier.lname.column"/>", "<fmt:message key="add.product.invalid.length"/>")
+            return false;
+        }
+        return true;
+    }
+</script>

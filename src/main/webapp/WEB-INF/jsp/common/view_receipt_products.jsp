@@ -47,14 +47,17 @@
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'
                     and sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
                         <td>
-                            <form action="controller" method="post" id="change_receipt_product_amount" name="changeAmountForm" onsubmit="return(validate(this))">
+                            <form action="controller" method="post" id="change_receipt_product_amount"
+                                  name="changeAmountForm" onsubmit="return(validate(this))">
                                 <input type="hidden" name="command" value="editReceiptProducts">
                                 <input type="hidden" name="product_id" value="${product.key.id}">
                                 <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
                                 <input type="hidden" name="storeAmount" value="${product.key.amount}">
                                 <input type="hidden" name="oldAmount" value="${product.value.toString()}">
-                                <input type="text" name="newAmount" placeholder="<fmt:message key="edit.product.new.amount"/>" required>
-                                <button type="submit" class="add_product_btn" name="submit"><fmt:message key="edit.product.new.amount.submit"/></button>
+                                <input type="text" name="newAmount"
+                                       placeholder="<fmt:message key="edit.product.new.amount"/>" required>
+                                <button type="submit" class="add_product_btn" name="submit"><fmt:message
+                                        key="edit.product.new.amount.submit"/></button>
                             </form>
                         </td>
                     </c:if>
@@ -65,7 +68,9 @@
                                 <input type="hidden" name="command" value="removeProductFromReceipt">
                                 <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
                                 <input type="hidden" name="product_id" value="${product.key.id}">
-                                <button type="submit" class="remove_product_btn" name="submit"><fmt:message key="view_receipt_products.remove.product"/></button>
+                                <input type="hidden" name="amount" value="${product.value.toString()}">
+                                <button type="submit" class="remove_product_btn" name="submit"><fmt:message
+                                        key="view_receipt_products.remove.product"/></button>
                             </form>
                         </td>
                     </c:if>
@@ -89,7 +94,35 @@
 
 <script type="text/javascript">
     function validate(obj) {
-        alert (obj.name);
-        alert(obj.newAmount.value);
+        if (isNaN(obj.newAmount.value)) {
+            alertify.alert("<fmt:message key="edit.product.new.amount"/>", "<fmt:message key="edit.product.new.amount.invalid.nan"/>");
+            return false;
+        }
+        const newAmount = parseInt(obj.newAmount.value, 10);
+        const oldAmount = parseInt(obj.oldAmount.value, 10);
+        const storeAmount = parseInt(obj.storeAmount.value, 10);
+
+        if (newAmount > 999999999) {
+            alertify.alert("<fmt:message key="edit.product.new.amount"/>", "<fmt:message key="add.product.invalid.length"/>");
+            return false;
+        }
+        if (newAmount <= 0) {
+            alertify.alert("<fmt:message key="edit.product.new.amount"/>", "<fmt:message key="edit.receipt.products.command.amount.error.null"/>");
+            return false;
+        }
+        if (newAmount === oldAmount) {
+            alertify.alert("<fmt:message key="edit.product.new.amount"/>", "<fmt:message key="edit.receipt.products.command.same.amount"/>");
+            return false;
+        }
+
+        if (newAmount < oldAmount) {
+            return true
+        }
+        if ((newAmount > oldAmount) && (newAmount > (oldAmount + storeAmount))) {
+            alertify.alert("<fmt:message key="edit.product.new.amount"/>", "<fmt:message key="edit.receipt.products.command.amount.error"/>");
+            return false;
+        }
+
+        return true;
     }
 </script>
