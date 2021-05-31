@@ -18,8 +18,11 @@ public class PasswordUtility {
 
     private static final Random RANDOM = new SecureRandom();
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final int ITERATIONS = 40000;
+    private static final int NUMBER_OF_ITERATIONS = 40000;
     private static final int KEY_LENGTH = 256;
+
+    private PasswordUtility() {
+    }
 
     /**
      * Generates salt of the declared length
@@ -45,7 +48,7 @@ public class PasswordUtility {
      * @return encoded password with PBKDF2 Algorithm
      */
     public static byte[] hash(char[] password, byte[] salt) {
-        PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
+        PBEKeySpec spec = new PBEKeySpec(password, salt, NUMBER_OF_ITERATIONS, KEY_LENGTH);
         Arrays.fill(password, Character.MIN_VALUE);
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");

@@ -11,6 +11,7 @@ public class User implements Serializable {
     private String salt;
     private String firstName;
     private String lastName;
+    private String email;
     private String localeName;
     private int roleId;
 
@@ -62,6 +63,14 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getLocaleName() {
         return localeName;
     }
@@ -79,23 +88,28 @@ public class User implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && roleId == user.roleId && Objects.equals(login, user.login) && Objects.equals(password, user.password) && Objects.equals(salt, user.salt) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(localeName, user.localeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, login, password, salt, firstName, lastName, email, localeName, roleId);
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
                 ", localeName='" + localeName + '\'' +
                 ", roleId=" + roleId +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && roleId == user.roleId && Objects.equals(login, user.login) && Objects.equals(password, user.password) && Objects.equals(salt, user.salt) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(localeName, user.localeName);
-    }
-
 }

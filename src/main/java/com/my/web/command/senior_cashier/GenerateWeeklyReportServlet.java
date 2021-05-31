@@ -5,12 +5,13 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.my.db.entities.Product;
-import com.my.db.entities.Receipt;
-import com.my.db.entities.ReceiptDAO;
-import com.my.db.entities.Role;
+import com.my.Path;
+import com.my.db.entities.*;
+import com.my.web.Commands;
+import com.my.web.email.EmailUtility;
 import org.apache.log4j.Logger;
 
+import javax.mail.MessagingException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,38 +28,69 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
     private static final long serialVersionUID = -6102934823992349102L;
     private static final Logger logger = Logger.getLogger(GenerateWeeklyReportServlet.class);
     private static final String FILE = System.getProperty("catalina.home") + "\\logs\\final-task-reports\\WeeklyReport.pdf";
+    private static final String SEND_MAIL = "sendMail";
+    private static final String DOWNLOAD = "download";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         logger.debug("generateWeeklyReport servlet is started at the POST method");
         HttpSession session = req.getSession(false);
-        logger.debug("SESSION => " + session);
         if (session == null || session.getAttribute("user") == null || session.getAttribute("userRole") == null
                 || !session.getAttribute("userRole").equals(Role.SENIOR_CASHIER)) {
             String errorMessage = "You are not logged or not have access to the chosen page";
             req.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            resp.sendRedirect("controller?command=noCommand");
+            resp.sendRedirect(Commands.ERROR_PAGE_COMMAND);
             logger.debug("DESTROYING SERVLET");
             return;
         }
 
-        logger.debug("SESSION => " + session);
         String lang = "en";
         Object o = session.getAttribute("lang");
         if (o != null) {
             lang = o.toString();
         }
-        logger.debug("creating weekly report is started");
-        createWeeklyReport(lang);
 
-        logger.debug("getting weekly report and setting attachment");
-        getWeeklyReport(resp);
+        Locale locale;
+        if ("ru".equals(lang)) {
+            locale = new Locale("ru", "RU");
+        } else {
+            locale = new Locale("en", "EN");
+        }
+
+        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
+
+        String action = req.getParameter("action");
+        logger.debug("received action => " + action);
+        logger.debug("creating weekly report is started");
+        createWeeklyReport(rb);
+
+        if (DOWNLOAD.equals(action)) {
+            logger.debug("getting weekly report and setting attachment");
+            getWeeklyReport(resp);
+        }
+        String forward = Commands.VIEW_REPORTS_MENU_COMMAND;
+        if (SEND_MAIL.equals(action)) {
+            logger.debug("sending report via user`s email");
+            User user = (User) session.getAttribute("user");
+            User updatedUser = new UserDAO().findUserByLogin(user.getLogin());
+            logger.debug("received user => " + updatedUser);
+            try {
+                EmailUtility.sendMail(updatedUser.getEmail(), FILE, rb);
+                session.setAttribute("sendMessage", "Sending is completed");
+            } catch (MessagingException exception) {
+                String errorMessage = rb.getString("send.report.error");
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + errorMessage);
+                forward = Commands.ERROR_PAGE_COMMAND;
+            }
+            resp.sendRedirect(forward);
+        }
 
         logger.debug("generateWeeklyReport servlet is finished at the POST method");
     }
 
-    private void createWeeklyReport(String localeName) throws IOException {
+    private void createWeeklyReport(ResourceBundle rb) throws IOException {
         Document document = new Document();
         try {
             File file = new File(FILE);
@@ -72,15 +104,6 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
             Font subFont = new Font(baseFont, 16, Font.BOLD);
             Font tableHeaderFont = new Font(baseFont, 10, Font.NORMAL);
             Font smallBold = new Font(baseFont, 8, Font.NORMAL);
-
-            Locale locale;
-            if ("ru".equals(localeName)) {
-                locale = new Locale("ru", "RU");
-            } else {
-                locale = new Locale("en", "EN");
-            }
-
-            ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
 
             createTitle(document, catFont, subFont, rb);
 
@@ -151,9 +174,10 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
 
         double lastWeekIncome = 0d;
         List<Receipt> lastWeekClosedReceipts = receiptDAO.getLastWeekClosedReceipts();
+
         for (Receipt receipt : lastWeekClosedReceipts) {
             Map<Product, Integer> receiptsProducts = receiptDAO.getMapOfAmountsAndProductsFromReceipt(receipt);
-            if (receiptsProducts.isEmpty()){
+            if (receiptsProducts.isEmpty()) {
                 continue;
             }
             table.addCell(new Phrase(String.valueOf(receipt.getId()), smallBold));

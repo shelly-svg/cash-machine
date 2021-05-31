@@ -253,6 +253,7 @@ public class UserDAO {
                 user.setSalt(rs.getString(Fields.USER__SALT));
                 user.setFirstName(rs.getString(Fields.USER__FIRST_NAME));
                 user.setLastName(rs.getString(Fields.USER__LAST_NAME));
+                user.setEmail(rs.getString(Fields.USER__EMAIL));
                 user.setLocaleName(rs.getString(Fields.USER__LOCALE_NAME));
                 user.setRoleId(rs.getInt(Fields.USER__ROLE_ID));
                 return user;

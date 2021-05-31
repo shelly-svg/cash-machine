@@ -15,6 +15,9 @@
 <c:set var="title" value="Login page"/>
 <%--<fmt:message var="title" key="login_jsp.page.title"/>--%>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
+<c:if test="${not empty sessionScope.user}">
+    <meta http-equiv="refresh" content="0 ; url=controller?command=viewMenu"/>
+</c:if>
 
 <body>
 
