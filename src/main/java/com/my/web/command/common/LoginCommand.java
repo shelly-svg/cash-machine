@@ -5,6 +5,7 @@ import com.my.db.entities.User;
 import com.my.db.entities.UserDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.encryption.PasswordUtility;
 import com.my.web.recaptcha.VerifyUtils;
 import org.apache.log4j.Logger;
 
@@ -57,8 +58,6 @@ public class LoginCommand extends Command {
 
         String gCaptchaResponse = request.getParameter("g-recaptcha-response");
 
-        logger.debug("gRecaptchaResponse = " + gCaptchaResponse);
-
         valid = VerifyUtils.verify(gCaptchaResponse);
 
         if (!valid) {
@@ -67,12 +66,12 @@ public class LoginCommand extends Command {
             logger.error("errorMessage --> " + errorMessage);
             return Commands.ERROR_PAGE_COMMAND;
         }
-
+        logger.debug("captcha is valid");
 
         User user = new UserDAO().findUserByLogin(login);
         logger.trace("Found user at DB: user-> " + user);
 
-        if (user == null || !password.equals(user.getPassword())) {
+        if (user == null || !PasswordUtility.verifyUserPassword(password, user.getPassword(), user.getSalt())) {
             errorMessage = rb.getString("login.command.credentials.invalid");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);

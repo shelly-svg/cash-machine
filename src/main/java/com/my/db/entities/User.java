@@ -1,12 +1,14 @@
 package com.my.db.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class User implements Serializable {
 
     private int id;
     private String login;
     private String password;
+    private String salt;
     private String firstName;
     private String lastName;
     private String localeName;
@@ -34,6 +36,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getFirstName() {
@@ -70,45 +80,22 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return id + " " + login + " " + firstName + " " + lastName + " " + localeName + " " + roleId;
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", localeName='" + localeName + '\'' +
+                ", roleId=" + roleId +
+                '}';
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof User)) {
-            return false;
-        }
-        User anotherUser = (User) obj;
-        if (!(id == anotherUser.getId())) {
-            return false;
-        }
-        if (login != null && !login.equals(anotherUser.getLogin())) {
-            return false;
-        } else {
-            if (login == null && anotherUser.getLogin() == null) {
-                return true;
-            }
-        }
-        if (password != null && !password.equals(anotherUser.getPassword())) {
-            return false;
-        } else {
-            if (password == null && anotherUser.getPassword() == null) {
-                return true;
-            }
-        }
-        if (!firstName.equals(anotherUser.getFirstName())) {
-            return false;
-        }
-        if (!lastName.equals(anotherUser.getLastName())) {
-            return false;
-        }
-        if (!localeName.equals(anotherUser.getLocaleName())) {
-            return false;
-        } else {
-            if (localeName == null){
-                return true;
-            }
-        }
-        return roleId == anotherUser.getRoleId();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && roleId == user.roleId && Objects.equals(login, user.login) && Objects.equals(password, user.password) && Objects.equals(salt, user.salt) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(localeName, user.localeName);
     }
+
 }

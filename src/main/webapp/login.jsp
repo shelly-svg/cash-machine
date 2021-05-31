@@ -60,7 +60,7 @@
             alertify.alert("<fmt:message key="login_jsp.password.invalid"/>", "<fmt:message key="login_jsp.password.invalid.empty"/>");
             return false;
         }
-        if (document.loginForm.login.value.length > 16 || document.loginForm.login.value.length < 6) {
+        if (document.loginForm.login.value.length > 16 || document.loginForm.login.value.length < 5) {
             alertify.alert("<fmt:message key="login_jsp.login.invalid"/>", "<fmt:message key="login_jsp.value.invalid.range"/>");
             return false;
         }
