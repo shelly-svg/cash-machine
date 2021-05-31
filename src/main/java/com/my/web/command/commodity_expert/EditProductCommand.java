@@ -19,6 +19,15 @@ public class EditProductCommand extends Command {
 
     private static final long serialVersionUID = -2348237473492349742L;
     private static final Logger logger = Logger.getLogger(EditProductCommand.class);
+    private final ProductDAO productDAO;
+
+    public EditProductCommand() {
+        productDAO = new ProductDAO();
+    }
+
+    public EditProductCommand(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -60,7 +69,7 @@ public class EditProductCommand extends Command {
         int id = Integer.parseInt(request.getParameter("id"));
         logger.debug("Received product => " + id);
         logger.trace("Set session attribute id => " + id);
-        int newAmount = -1;
+        int newAmount;
         try {
             newAmount = Integer.parseInt(request.getParameter("amount"));
         } catch (NumberFormatException exception) {
@@ -75,18 +84,18 @@ public class EditProductCommand extends Command {
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        new ProductDAO().updateProductsAmount(id, newAmount);
+        productDAO.updateProductsAmount(id, newAmount);
         logger.debug("Received new amount => " + newAmount);
 
         logger.debug("Edit product command is finished at POST method, forwarding to view product");
-        request.getSession().setAttribute("lastAction", "controller?command=editProduct&id=" + id);
+        session.setAttribute("lastAction", "controller?command=editProduct&id=" + id);
         return "controller?command=viewProduct&id=" + id;
     }
 
     private String doGet(HttpServletRequest request) {
         logger.debug("Edit product command started at GET method");
         int id = Integer.parseInt(request.getParameter("id"));
-        Product product = new ProductDAO().findProduct(id);
+        Product product = productDAO.findProduct(id);
         request.setAttribute("product", product);
         request.getSession().setAttribute("lastEditedProductId", id);
         return Path.EDIT_PRODUCT_PAGE;

@@ -7,7 +7,6 @@ import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
 import com.my.web.validators.ProductValidator;
 import org.apache.log4j.Logger;
 
@@ -25,6 +24,21 @@ public class CreateProductCommand extends Command {
 
     private static final long serialVersionUID = 2394193249932294933L;
     private static final Logger logger = Logger.getLogger(CreateProductCommand.class);
+    private final CategoryDAO categoryDAO;
+    private final ProductValidator productValidator;
+    private final ProductDAO productDAO;
+
+    public CreateProductCommand() {
+        categoryDAO = new CategoryDAO();
+        productValidator = new ProductValidator();
+        productDAO = new ProductDAO();
+    }
+
+    public CreateProductCommand(CategoryDAO categoryDAO, ProductValidator productValidator, ProductDAO productDAO) {
+        this.categoryDAO = categoryDAO;
+        this.productValidator = productValidator;
+        this.productDAO = productDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -47,7 +61,7 @@ public class CreateProductCommand extends Command {
 
     private String doGet(HttpServletRequest request) {
         logger.debug("create product command started at GET method");
-        Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
+        Map<Integer, Category> categories = categoryDAO.findAllCategories();
         request.setAttribute("categories", categories);
         return Path.ADD_PRODUCT_PAGE;
     }
@@ -75,9 +89,9 @@ public class CreateProductCommand extends Command {
         String nameRu = request.getParameter("name_ru");
         String nameEn = request.getParameter("name_en");
         String code = request.getParameter("code");
-        BigDecimal price = new BigDecimal(-1);
-        int amount = -1;
-        BigDecimal weight = new BigDecimal(-1);
+        BigDecimal price;
+        int amount;
+        BigDecimal weight;
         try {
             price = new BigDecimal(request.getParameter("price"));
         } catch (NumberFormatException ex) {
@@ -101,8 +115,8 @@ public class CreateProductCommand extends Command {
         }
         String descriptionRu = request.getParameter("description_ru");
         String descriptionEn = request.getParameter("description_en");
-        int categoryId = new CategoryDAO().findCategoryByName(request.getParameter("category_id"),
-                request.getSession().getAttribute("lang").toString()).getId();
+        int categoryId = categoryDAO.findCategoryByName(request.getParameter("category_id"),
+                session.getAttribute("lang").toString()).getId();
 
         product.setNameRu(nameRu);
         product.setNameEn(nameEn);
@@ -112,18 +126,18 @@ public class CreateProductCommand extends Command {
         product.setWeight(weight);
         product.setDescriptionRu(descriptionRu);
         product.setDescriptionEn(descriptionEn);
-        product.setCategory(new CategoryDAO().findCategoryById(categoryId));
+        product.setCategory(categoryDAO.findCategoryById(categoryId));
 
         logger.trace("Got product => " + product);
 
-        if (!new ProductValidator().validate(product, session, rb)) {
+        if (!productValidator.validate(product, session, rb)) {
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        int id = new ProductDAO().addProduct(product);
+        int id = productDAO.addProduct(product);
 
         logger.debug("create product command is finished at POST method, forwarding to view product");
-        request.getSession().setAttribute("lastAction", "controller?command=viewProduct&id=" + id);
+        session.setAttribute("lastAction", "controller?command=viewProduct&id=" + id);
         return "controller?command=viewProduct&id=" + id;
     }
 

@@ -7,7 +7,6 @@ import com.my.web.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
