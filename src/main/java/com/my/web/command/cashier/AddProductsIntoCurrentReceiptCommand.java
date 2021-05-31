@@ -2,6 +2,7 @@ package com.my.web.command.cashier;
 
 import com.my.db.entities.*;
 import com.my.web.Commands;
+import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
 import com.my.web.command.commodity_expert.EditProductCommand;
 import com.my.web.exception.ApplicationException;
@@ -36,22 +37,7 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Add products into current receipt command is started");
         HttpSession session = request.getSession();
-
-        String localeName = "en";
-        Object localeObj = session.getAttribute("lang");
-        if (localeObj != null) {
-            localeName = localeObj.toString();
-        }
-
-        Locale locale;
-        if ("ru".equals(localeName)) {
-            locale = new Locale("ru", "RU");
-        } else {
-            locale = new Locale("en", "EN");
-        }
-        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
-
-
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
         int id = Integer.parseInt(request.getParameter("id"));
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
         currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
@@ -79,8 +65,15 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
             logger.error("errorMessage --> " + errorMessage);
             return Commands.ERROR_PAGE_COMMAND;
         }
-        productDAO.updateProductsAmount(id, product.getAmount() - 1);
-        logger.debug("RECEIVED PRODUCT ID => " + id);
+        try {
+            productDAO.updateProductsAmount(id, product.getAmount() - 1);
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("product.dao.error.update.amount");
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+        logger.debug("Received products ID => " + id);
         logger.debug("Add products into current receipt command is finished, forwarding to search for products page");
 
         return Commands.VIEW_SEARCH_PRODUCT_COMMAND;

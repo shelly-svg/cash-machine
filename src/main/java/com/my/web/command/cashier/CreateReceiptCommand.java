@@ -66,6 +66,7 @@ public class CreateReceiptCommand extends Command {
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("delivery.dao.error");
             session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + errorMessage);
             return Commands.ERROR_PAGE_COMMAND;
         }
 
@@ -91,6 +92,7 @@ public class CreateReceiptCommand extends Command {
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("delivery.dao.error");
             session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + errorMessage);
             return Path.ERROR_PAGE;
         }
         return Path.CREATE_RECEIPT_PAGE;

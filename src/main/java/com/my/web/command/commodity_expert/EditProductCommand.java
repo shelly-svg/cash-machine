@@ -5,6 +5,7 @@ import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -84,7 +85,15 @@ public class EditProductCommand extends Command {
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        productDAO.updateProductsAmount(id, newAmount);
+        try {
+            productDAO.updateProductsAmount(id, newAmount);
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("product.dao.error.update.amount");
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
         logger.debug("Received new amount => " + newAmount);
 
         logger.debug("Edit product command is finished at POST method, forwarding to view product");

@@ -1,7 +1,9 @@
 package com.my.web.command.senior_cashier;
 
 import com.my.db.entities.*;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -53,7 +55,16 @@ public class RemoveProductFromReceiptCommand extends Command {
         int amount = Integer.parseInt(request.getParameter("amount"));
 
         Product currentProduct = productDAO.findProduct(productId);
-        productDAO.updateProductsAmount(productId, currentProduct.getAmount() + amount);
+
+        try {
+            productDAO.updateProductsAmount(productId, currentProduct.getAmount() + amount);
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("product.dao.error.update.amount");
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
         receiptDAO.deleteProductFromReceipt(receiptId, productId);
 
         logger.debug("Remove product from receipt command is finished");

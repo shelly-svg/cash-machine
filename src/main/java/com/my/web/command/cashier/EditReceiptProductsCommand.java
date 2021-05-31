@@ -4,6 +4,7 @@ import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -101,7 +102,14 @@ public class EditReceiptProductsCommand extends Command {
         Product product = productDAO.findProduct(productId);
         if (oldAmount > newAmount && oldAmount + newAmount <= product.getAmount()) {
             receiptDAO.setAmountOfProductAtTheReceipt(newAmount, receiptId, productId);
-            productDAO.updateProductsAmount(productId, product.getAmount() + (oldAmount - newAmount));
+            try {
+                productDAO.updateProductsAmount(productId, product.getAmount() + (oldAmount - newAmount));
+            } catch (ApplicationException exception) {
+                String errorMessage = rb.getString("product.dao.error.update.amount");
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage -> " + errorMessage);
+                return Commands.ERROR_PAGE_COMMAND;
+            }
             return Commands.VIEW_RECEIPT_PRODUCTS_COMMAND;
         }
         if (product.getAmount() + oldAmount < newAmount) {
@@ -114,7 +122,14 @@ public class EditReceiptProductsCommand extends Command {
         logger.debug("===>>>>>" + productId + " " + receiptId + " , new Amount = " + newAmount);
 
         receiptDAO.setAmountOfProductAtTheReceipt(newAmount, receiptId, productId);
-        productDAO.updateProductsAmount(productId, product.getAmount() - (newAmount - oldAmount));
+        try {
+            productDAO.updateProductsAmount(productId, product.getAmount() - (newAmount - oldAmount));
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("product.dao.error.update.amount");
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         return Commands.VIEW_RECEIPT_PRODUCTS_COMMAND;
     }

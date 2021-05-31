@@ -3,6 +3,7 @@ package web;
 import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.command.commodity_expert.EditProductCommand;
+import com.my.web.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class EditProductCommandTest {
     }
 
     @Test
-    public void EditProductCommandPOSTTest() throws ServletException, IOException {
+    public void EditProductCommandPOSTTest() throws ServletException, IOException, ApplicationException {
         when(mockRequest.getMethod()).thenReturn("POST");
         doNothing().when(mockRequest).setAttribute(anyString(), any());
         when(mockRequest.getParameter("amount")).thenReturn("13");

@@ -32,7 +32,7 @@ public class ProductDAO {
 
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
 
-    public void updateProductsAmount(int id, int newAmount) {
+    public void updateProductsAmount(int id, int newAmount) throws ApplicationException {
         PreparedStatement preparedStatement;
         Connection con = null;
         try {
@@ -49,7 +49,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);

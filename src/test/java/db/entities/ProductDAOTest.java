@@ -1,6 +1,7 @@
 package db.entities;
 
 import com.my.db.entities.*;
+import com.my.web.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,7 +79,7 @@ public class ProductDAOTest {
     }
 
     @Test
-    public void testUpdateProductAmount() throws SQLException {
+    public void testUpdateProductAmount() throws SQLException, ApplicationException {
         instance.updateProductsAmount(expectedProduct.getId(), 10);
         verify(mockCon, times(1)).prepareStatement(anyString());
         verify(preparedStatement, times(1)).execute();

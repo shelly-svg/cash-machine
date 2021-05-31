@@ -1,7 +1,9 @@
 package com.my.web.command.senior_cashier;
 
 import com.my.db.entities.*;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -47,7 +49,14 @@ public class SetReceiptStatusCanceledCommand extends Command {
             if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
                 Map<Product, Integer> productAmountsMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
                 for (Product product : productAmountsMap.keySet()) {
-                    productDAO.updateProductsAmount(product.getId(), product.getAmount() + productAmountsMap.get(product));
+                    try {
+                        productDAO.updateProductsAmount(product.getId(), product.getAmount() + productAmountsMap.get(product));
+                    } catch (ApplicationException exception) {
+                        errorMessage = rb.getString("product.dao.error.update.amount");
+                        session.setAttribute("errorMessage", errorMessage);
+                        logger.error("errorMessage -> " + errorMessage);
+                        return Commands.ERROR_PAGE_COMMAND;
+                    }
                 }
                 receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CANCELED);
                 currentReceipt.setReceiptStatus(ReceiptStatus.CANCELED);
