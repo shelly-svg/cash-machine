@@ -3,6 +3,7 @@ package com.my.db.entities;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Product implements Serializable, Comparable<Product> {

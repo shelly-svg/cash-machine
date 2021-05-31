@@ -19,6 +19,18 @@ public class EditReceiptProductsCommand extends Command {
 
     private static final long serialVersionUID = 4912383489123901021L;
     private static final Logger logger = Logger.getLogger(EditReceiptProductsCommand.class);
+    private final ReceiptDAO receiptDAO;
+    private final ProductDAO productDAO;
+
+    public EditReceiptProductsCommand() {
+        receiptDAO = new ReceiptDAO();
+        productDAO = new ProductDAO();
+    }
+
+    public EditReceiptProductsCommand(ReceiptDAO receiptDAO, ProductDAO productDAO) {
+        this.receiptDAO = receiptDAO;
+        this.productDAO = productDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -57,9 +69,7 @@ public class EditReceiptProductsCommand extends Command {
 
         HttpSession session = request.getSession();
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-        currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
-        ReceiptDAO receiptDAO = new ReceiptDAO();
-        ProductDAO productDAO = new ProductDAO();
+        currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
 
         if (currentReceipt == null || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CLOSED.name())
                 || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CANCELED.name())) {
@@ -88,7 +98,7 @@ public class EditReceiptProductsCommand extends Command {
             logger.error("errorMessage --> " + errorMessage);
             return Commands.ERROR_PAGE_COMMAND;
         }
-        Product product = new ProductDAO().findProduct(productId);
+        Product product = productDAO.findProduct(productId);
         if (oldAmount > newAmount && oldAmount + newAmount <= product.getAmount()) {
             receiptDAO.setAmountOfProductAtTheReceipt(newAmount, receiptId, productId);
             productDAO.updateProductsAmount(productId, product.getAmount() + (oldAmount - newAmount));
@@ -114,7 +124,7 @@ public class EditReceiptProductsCommand extends Command {
         HttpSession session = request.getSession();
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-        currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+        currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
 
         if (currentReceipt == null || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CLOSED.name())
                 || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CANCELED.name())) {
@@ -126,7 +136,7 @@ public class EditReceiptProductsCommand extends Command {
 
         session.setAttribute("currentReceipt", currentReceipt);
 
-        Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        Map<Product, Integer> productMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
         request.setAttribute("receiptProductMap", productMap);
 
         return Path.VIEW_RECEIPT_PRODUCTS_PAGE;

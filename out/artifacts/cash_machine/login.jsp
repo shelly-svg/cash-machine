@@ -13,6 +13,7 @@
 <html>
 
 <c:set var="title" value="Login page"/>
+<%--<fmt:message var="title" key="login_jsp.page.title"/>--%>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

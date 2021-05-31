@@ -1,6 +1,7 @@
 package com.my.db.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Delivery implements Serializable {
 
@@ -39,6 +40,14 @@ public class Delivery implements Serializable {
                 ", nameRu='" + nameRu + '\'' +
                 ", nameEn='" + nameEn + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Delivery delivery = (Delivery) o;
+        return id == delivery.id && Objects.equals(nameRu, delivery.nameRu) && Objects.equals(nameEn, delivery.nameEn);
     }
 
 }

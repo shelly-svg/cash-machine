@@ -9,6 +9,18 @@ import java.util.List;
 
 public class DeliveryDAO {
 
+    private final boolean isTest;
+    private Connection connection;
+
+    public DeliveryDAO() {
+        isTest = false;
+    }
+
+    public DeliveryDAO(boolean isTest, Connection connection) {
+        this.isTest = isTest;
+        this.connection = connection;
+    }
+
     private static final String SQL__GET_ALL_DELIVERIES = "SELECT * FROM delivery ORDER BY id;";
 
     private static final String SQL__GET_DELIVERY_BY_NAME = "SELECT * FROM delivery WHERE name_ru LIKE ? OR name_en LIKE ?;";
@@ -21,7 +33,11 @@ public class DeliveryDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             DeliveryDAO.DeliveryMapper mapper = new DeliveryDAO.DeliveryMapper();
             p = con.prepareStatement(SQL__GET_DELIVERY_BY_ID);
             p.setInt(1, id);
@@ -49,7 +65,11 @@ public class DeliveryDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             DeliveryDAO.DeliveryMapper mapper = new DeliveryDAO.DeliveryMapper();
             p = con.prepareStatement(SQL__GET_DELIVERY_BY_NAME);
             p.setString(1, name);
@@ -77,7 +97,11 @@ public class DeliveryDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             DeliveryDAO.DeliveryMapper mapper = new DeliveryDAO.DeliveryMapper();
             p = con.prepareStatement(SQL__GET_ALL_DELIVERIES);
             rs = p.executeQuery();

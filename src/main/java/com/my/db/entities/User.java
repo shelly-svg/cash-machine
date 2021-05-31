@@ -73,4 +73,42 @@ public class User implements Serializable {
         return id + " " + login + " " + firstName + " " + lastName + " " + localeName + " " + roleId;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof User)) {
+            return false;
+        }
+        User anotherUser = (User) obj;
+        if (!(id == anotherUser.getId())) {
+            return false;
+        }
+        if (login != null && !login.equals(anotherUser.getLogin())) {
+            return false;
+        } else {
+            if (login == null && anotherUser.getLogin() == null) {
+                return true;
+            }
+        }
+        if (password != null && !password.equals(anotherUser.getPassword())) {
+            return false;
+        } else {
+            if (password == null && anotherUser.getPassword() == null) {
+                return true;
+            }
+        }
+        if (!firstName.equals(anotherUser.getFirstName())) {
+            return false;
+        }
+        if (!lastName.equals(anotherUser.getLastName())) {
+            return false;
+        }
+        if (!localeName.equals(anotherUser.getLocaleName())) {
+            return false;
+        } else {
+            if (localeName == null){
+                return true;
+            }
+        }
+        return roleId == anotherUser.getRoleId();
+    }
 }

@@ -6,10 +6,20 @@ import java.util.List;
 
 public class ProductDAO {
 
+    private final boolean isTest;
+    private Connection connection;
+
+    public ProductDAO() {
+        isTest = false;
+    }
+
+    public ProductDAO(boolean isTest, Connection connection) {
+        this.isTest = isTest;
+        this.connection = connection;
+    }
+
     private static final String SQL__ADD_NEW_PRODUCT = "INSERT INTO product(name_ru, name_en, code, price, amount, " +
             "weight, description_ru, description_en, category_id) value (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-    private static final String SQL__SHOW_ALL_PRODUCTS = "SELECT * FROM product ORDER BY id;";
 
     private static final String SQL__FIND_PRODUCT_BY_ID = "SELECT * FROM product WHERE id=?;";
 
@@ -24,7 +34,11 @@ public class ProductDAO {
         PreparedStatement preparedStatement;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             preparedStatement = con.prepareStatement(SQL__UPDATE_PRODUCT_AMOUNT_BY_ID);
             preparedStatement.setInt(1, newAmount);
             preparedStatement.setInt(2, id);
@@ -46,7 +60,11 @@ public class ProductDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             p = con.prepareStatement(SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH);
             pattern = "%" + pattern + "%";
             p.setString(1, pattern);
@@ -77,6 +95,7 @@ public class ProductDAO {
         int start = currentPage * recordsPerPage - recordsPerPage;
         try {
             con = DBManager.getInstance().getConnection();
+
             ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
             p = con.prepareStatement(SQL__FIND_PRODUCT_BY_SEARCH);
             pattern = "%" + pattern + "%";
@@ -102,38 +121,16 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> findAllProducts() {
-        List<Product> products = new ArrayList<>();
-        PreparedStatement p;
-        ResultSet rs;
-        Connection con = null;
-        try {
-            con = DBManager.getInstance().getConnection();
-            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
-            p = con.prepareStatement(SQL__SHOW_ALL_PRODUCTS);
-            rs = p.executeQuery();
-            while (rs.next()) {
-                products.add(mapper.mapRow(rs));
-            }
-            rs.close();
-            p.close();
-        } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
-        } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
-        }
-        return products;
-    }
-
     public int addProduct(Product product) {
         int generatedKey = 0;
         PreparedStatement preparedStatement;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             preparedStatement = con.prepareStatement(SQL__ADD_NEW_PRODUCT, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, product.getNameRu());
             preparedStatement.setString(2, product.getNameEn());

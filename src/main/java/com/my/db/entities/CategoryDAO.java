@@ -9,6 +9,18 @@ import java.util.Map;
 
 public class CategoryDAO {
 
+    private final boolean isTest;
+    private Connection connection;
+
+    public CategoryDAO() {
+        isTest = false;
+    }
+
+    public CategoryDAO(boolean isTest, Connection connection) {
+        this.isTest = isTest;
+        this.connection = connection;
+    }
+
     private static final String SQL__FIND_ALL_CATEGORIES = "SELECT * FROM category;";
     private static final String SQL__FIND_CATEGORY_BY_NAME_EN = "SELECT * FROM category WHERE name_en=?;";
     private static final String SQL__FIND_CATEGORY_BY_NAME_RU = "SELECT * FROM category WHERE name_ru=?;";
@@ -20,7 +32,11 @@ public class CategoryDAO {
         ResultSet resultSet;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             CategoryDAO.CategoryMapper mapper = new CategoryDAO.CategoryMapper();
             if ("ru".equals(localeName)) {
                 preparedStatement = con.prepareStatement(SQL__FIND_CATEGORY_BY_NAME_RU);
@@ -51,7 +67,11 @@ public class CategoryDAO {
         ResultSet resultSet;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             CategoryDAO.CategoryMapper mapper = new CategoryDAO.CategoryMapper();
             preparedStatement = con.prepareStatement(SQL__FIND_CATEGORY_BY_ID);
             preparedStatement.setInt(1, id);
@@ -78,7 +98,11 @@ public class CategoryDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             CategoryDAO.CategoryMapper mapper = new CategoryDAO.CategoryMapper();
             preparedStatement = con.prepareStatement(SQL__FIND_ALL_CATEGORIES);
             rs = preparedStatement.executeQuery();

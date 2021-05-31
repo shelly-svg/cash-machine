@@ -16,15 +16,26 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AddProductsIntoCurrentReceiptCommand extends Command {
+
     private static final long serialVersionUID = -2348237473492349742L;
     private static final Logger logger = Logger.getLogger(EditProductCommand.class);
+    private final ReceiptDAO receiptDAO;
+    private final ProductDAO productDAO;
+
+    public AddProductsIntoCurrentReceiptCommand() {
+        receiptDAO = new ReceiptDAO();
+        productDAO = new ProductDAO();
+    }
+
+    public AddProductsIntoCurrentReceiptCommand(ReceiptDAO receiptDAO, ProductDAO productDAO) {
+        this.receiptDAO = receiptDAO;
+        this.productDAO = productDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Add products into current receipt command is started");
         HttpSession session = request.getSession();
-        ReceiptDAO receiptDAO = new ReceiptDAO();
-        ProductDAO productDAO = new ProductDAO();
 
         String localeName = "en";
         Object localeObj = session.getAttribute("lang");
@@ -72,7 +83,7 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
         logger.debug("RECEIVED PRODUCT ID => " + id);
         logger.debug("Add products into current receipt command is finished, forwarding to search for products page");
 
-        return "controller?command=viewSearchProductPage";
+        return Commands.VIEW_SEARCH_PRODUCT_COMMAND;
     }
 
 }

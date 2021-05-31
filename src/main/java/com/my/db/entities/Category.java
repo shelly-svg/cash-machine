@@ -41,4 +41,15 @@ public class Category implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Category)) {
+            return false;
+        }
+        Category anotherCategory = (Category) obj;
+        if (id != anotherCategory.getId()) {
+            return false;
+        }
+        return nameRu.equals(anotherCategory.getNameRu());
+    }
 }

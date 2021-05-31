@@ -9,6 +9,18 @@ import java.util.List;
 
 public class UserDAO {
 
+    private final boolean isTest;
+    private Connection connection;
+
+    public UserDAO() {
+        isTest = false;
+    }
+
+    public UserDAO(boolean isTest, Connection connection) {
+        this.isTest = isTest;
+        this.connection = connection;
+    }
+
     private static final String SQL__FIND_USER_BY_LOGIN =
             "SELECT * FROM user WHERE login=?";
 
@@ -31,7 +43,11 @@ public class UserDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             p = con.prepareStatement(SQL__FIND_USER_FOR_REPORT_BY_ID);
             p.setInt(1, id);
             rs = p.executeQuery();
@@ -60,7 +76,11 @@ public class UserDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             p = con.prepareStatement(SQL__NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_USERS);
             firstName = "%" + firstName + "%";
             lastName = "%" + lastName + "%";
@@ -91,7 +111,11 @@ public class UserDAO {
         Connection con = null;
         int start = currentPage * recordsPerPage - recordsPerPage;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             p = con.prepareStatement(SQL__SEARCH_USERS_BY_NAME);
             firstName = "%" + firstName + "%";
             lastName = "%" + lastName + "%";
@@ -128,7 +152,11 @@ public class UserDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             preparedStatement = con.prepareStatement(SQL_FIND_USERS_FNAME_LNAME_BY_ID);
             preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
@@ -154,7 +182,11 @@ public class UserDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             UserMapper mapper = new UserMapper();
             preparedStatement = con.prepareStatement(SQL__FIND_USER_BY_ID);
             preparedStatement.setInt(1, id);
@@ -185,7 +217,11 @@ public class UserDAO {
         ResultSet rs;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
             UserMapper mapper = new UserMapper();
             preparedStatement = con.prepareStatement(SQL__FIND_USER_BY_LOGIN);
             preparedStatement.setString(1, login);
