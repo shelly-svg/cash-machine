@@ -405,7 +405,7 @@ public class ReceiptDAO {
                 receipt.setReceiptStatus(ReceiptStatus.getReceiptStatus(rs.getInt(Fields.RECEIPT_RECEIPT_STATUS_ID)));
                 receipt.setUserId(rs.getInt(Fields.RECEIPT_USER_ID));
                 return receipt;
-            } catch (SQLException e) {
+            } catch (SQLException | ApplicationException e) {
                 throw new IllegalStateException(e);
             }
         }

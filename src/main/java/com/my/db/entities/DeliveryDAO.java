@@ -1,5 +1,7 @@
 package com.my.db.entities;
 
+import com.my.web.exception.ApplicationException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +29,7 @@ public class DeliveryDAO {
 
     private static final String SQL__GET_DELIVERY_BY_ID = "SELECT * FROM delivery WHERE id=?";
 
-    public Delivery findDeliveryById(int id) {
+    public Delivery findDeliveryById(int id) throws ApplicationException {
         Delivery delivery = new Delivery();
         PreparedStatement p;
         ResultSet rs;
@@ -50,7 +52,7 @@ public class DeliveryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -58,7 +60,7 @@ public class DeliveryDAO {
         return delivery;
     }
 
-    public Delivery findDeliveryByName(String name) {
+    public Delivery findDeliveryByName(String name) throws ApplicationException {
         Delivery delivery = new Delivery();
         name = "%" + name + "%";
         PreparedStatement p;
@@ -83,7 +85,7 @@ public class DeliveryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -91,7 +93,7 @@ public class DeliveryDAO {
         return delivery;
     }
 
-    public List<Delivery> getAllDeliveries() {
+    public List<Delivery> getAllDeliveries() throws ApplicationException {
         List<Delivery> deliveries = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
@@ -113,7 +115,7 @@ public class DeliveryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);

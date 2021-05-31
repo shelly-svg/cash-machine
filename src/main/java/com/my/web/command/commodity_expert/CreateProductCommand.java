@@ -6,7 +6,9 @@ import com.my.db.entities.CategoryDAO;
 import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
 import com.my.web.Commands;
+import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.validators.ProductValidator;
 import org.apache.log4j.Logger;
 
@@ -16,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -61,8 +62,16 @@ public class CreateProductCommand extends Command {
 
     private String doGet(HttpServletRequest request) {
         logger.debug("create product command started at GET method");
-        Map<Integer, Category> categories = categoryDAO.findAllCategories();
-        request.setAttribute("categories", categories);
+        HttpSession session = request.getSession();
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
+        try {
+            Map<Integer, Category> categories = categoryDAO.findAllCategories();
+            request.setAttribute("categories", categories);
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("category.dao.error");
+            session.setAttribute("errorMessage", errorMessage);
+            return Path.ERROR_PAGE;
+        }
         return Path.ADD_PRODUCT_PAGE;
     }
 
@@ -72,19 +81,7 @@ public class CreateProductCommand extends Command {
 
         HttpSession session = request.getSession();
 
-        String localeName = "en";
-        Object localeObj = session.getAttribute("lang");
-        if (localeObj != null) {
-            localeName = localeObj.toString();
-        }
-
-        Locale locale;
-        if ("ru".equals(localeName)) {
-            locale = new Locale("ru", "RU");
-        } else {
-            locale = new Locale("en", "EN");
-        }
-        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
 
         String nameRu = request.getParameter("name_ru");
         String nameEn = request.getParameter("name_en");
@@ -115,9 +112,15 @@ public class CreateProductCommand extends Command {
         }
         String descriptionRu = request.getParameter("description_ru");
         String descriptionEn = request.getParameter("description_en");
-        int categoryId = categoryDAO.findCategoryByName(request.getParameter("category_id"),
-                session.getAttribute("lang").toString()).getId();
-
+        int categoryId;
+        try {
+            categoryId = categoryDAO.findCategoryByName(request.getParameter("category_id"),
+                    session.getAttribute("lang").toString()).getId();
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("category.dao.error");
+            session.setAttribute("errorMessage", errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
         product.setNameRu(nameRu);
         product.setNameEn(nameEn);
         product.setCode(code);
@@ -126,8 +129,13 @@ public class CreateProductCommand extends Command {
         product.setWeight(weight);
         product.setDescriptionRu(descriptionRu);
         product.setDescriptionEn(descriptionEn);
-        product.setCategory(categoryDAO.findCategoryById(categoryId));
-
+        try {
+            product.setCategory(categoryDAO.findCategoryById(categoryId));
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("category.dao.error");
+            session.setAttribute("errorMessage", errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
         logger.trace("Got product => " + product);
 
         if (!productValidator.validate(product, session, rb)) {

@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
+import com.my.web.LocalizationUtils;
 import com.my.web.email.EmailUtility;
 import org.apache.log4j.Logger;
 
@@ -45,20 +46,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
             return;
         }
 
-        String lang = "en";
-        Object o = session.getAttribute("lang");
-        if (o != null) {
-            lang = o.toString();
-        }
-
-        Locale locale;
-        if ("ru".equals(lang)) {
-            locale = new Locale("ru", "RU");
-        } else {
-            locale = new Locale("en", "EN");
-        }
-
-        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
 
         String action = req.getParameter("action");
         logger.debug("received action => " + action);

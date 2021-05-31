@@ -1,5 +1,7 @@
 package com.my.db.entities;
 
+import com.my.web.exception.ApplicationException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +210,7 @@ public class ProductDAO {
                 product.setDescriptionEn(rs.getString(Fields.PRODUCT__DESCRIPTION_EN));
                 product.setCategory(new CategoryDAO().findCategoryById(rs.getInt(Fields.PRODUCT__CATEGORY_ID)));
                 return product;
-            } catch (SQLException e) {
+            } catch (SQLException | ApplicationException e) {
                 throw new IllegalStateException(e);
             }
         }

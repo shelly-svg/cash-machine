@@ -1,6 +1,7 @@
 package db.entities;
 
 import com.my.db.entities.*;
+import com.my.web.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ public class DeliveryDAOTest {
     }
 
     @Test
-    public void testFindDeliveryById() throws SQLException {
+    public void testFindDeliveryById() throws SQLException, ApplicationException {
         Delivery actualDelivery = instance.findDeliveryById(expectedDelivery.getId());
 
         verify(mockCon, times(1)).prepareStatement(anyString());
@@ -68,7 +69,7 @@ public class DeliveryDAOTest {
     }
 
     @Test
-    public void testFindCategoryByName() throws SQLException {
+    public void testFindCategoryByName() throws SQLException, ApplicationException {
         Delivery actualDelivery = instance.findDeliveryByName(expectedDelivery.getNameRu());
 
         verify(mockCon, times(1)).prepareStatement(anyString());
@@ -80,7 +81,7 @@ public class DeliveryDAOTest {
     }
 
     @Test
-    public void testGetAllDeliveries() throws SQLException {
+    public void testGetAllDeliveries() throws SQLException, ApplicationException {
         List<Delivery> deliveries = instance.getAllDeliveries();
 
         verify(mockCon, times(1)).prepareStatement(anyString());

@@ -1,5 +1,7 @@
 package com.my.web.email;
 
+import org.apache.log4j.Logger;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -12,6 +14,7 @@ import java.util.ResourceBundle;
 
 public class EmailUtility {
 
+    private static final Logger logger = Logger.getLogger(EmailUtility.class);
     private static final String recipientEmail = "cash.machine.epam2021@gmail.com";
     private static final String host = "smtp.gmail.com";
 
@@ -19,7 +22,7 @@ public class EmailUtility {
     }
 
     public static void sendMail(String senderEmail, String filePath, ResourceBundle rb) throws MessagingException {
-
+        logger.debug("sendMail method is started");
         System.out.println(filePath);
 
         Properties properties = System.getProperties();
@@ -34,8 +37,8 @@ public class EmailUtility {
                 return new PasswordAuthentication(recipientEmail, "customPASS22");
             }
         });
-
-        session.setDebug(true);
+        logger.debug("Received email session => " + session);
+        session.setDebug(false);
 
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(recipientEmail));
@@ -48,8 +51,6 @@ public class EmailUtility {
         MimeBodyPart attachment = new MimeBodyPart();
         MimeBodyPart text = new MimeBodyPart();
 
-        String s = new String();
-
         try {
             File f = new File(filePath);
             attachment.attachFile(f);
@@ -57,15 +58,14 @@ public class EmailUtility {
             multipart.addBodyPart(text);
             multipart.addBodyPart(attachment);
         } catch (IOException exception) {
-            exception.printStackTrace();
+            logger.error("An error has occurred while getting the report file : " + exception.getMessage());
         }
 
         message.setContent(multipart, "text/html; charset=UTF-8");
 
-        System.out.println("Sending....");
-
+        logger.debug("Sending email ... ");
         Transport.send(message);
-        System.out.println("Sent successfully");
+        logger.debug("Email sent successfully, sendMail method finished his work");
     }
 
 }

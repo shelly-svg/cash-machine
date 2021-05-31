@@ -1,6 +1,7 @@
 package db.entities;
 
 import com.my.db.entities.*;
+import com.my.web.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ public class CategoryDAOTest {
     }
 
     @Test
-    public void testFindCategoryByName() throws SQLException {
+    public void testFindCategoryByName() throws SQLException, ApplicationException {
         Category actualCategory = instance.findCategoryByName("categoryRu", "ru");
 
         verify(mockCon, times(1)).prepareStatement(anyString());
@@ -66,7 +67,7 @@ public class CategoryDAOTest {
     }
 
     @Test
-    public void testFindCategoryById() throws SQLException {
+    public void testFindCategoryById() throws SQLException, ApplicationException {
         Category actualCategory = instance.findCategoryById(1);
 
         verify(mockCon, times(1)).prepareStatement(anyString());
@@ -77,7 +78,7 @@ public class CategoryDAOTest {
     }
 
     @Test
-    public void testFindAllCategories() throws SQLException {
+    public void testFindAllCategories() throws SQLException, ApplicationException {
         Map<Integer, Category> actualCategories = instance.findAllCategories();
         Map<Integer, Category> expectedCategories = new HashMap<>();
         expectedCategories.put(expectedCategory.getId(), expectedCategory);

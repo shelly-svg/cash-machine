@@ -2,6 +2,9 @@ package com.my.web.command;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.Commands;
+import com.my.web.LocalizationUtils;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -11,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ChangeLangToEnCommand extends Command {
 
@@ -22,6 +26,7 @@ public class ChangeLangToEnCommand extends Command {
         logger.debug("Change lang to english command is started");
         String forward;
         HttpSession session = request.getSession();
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
         System.out.println("SESSION ATR" + session.getAttribute("lastAction"));
         forward = (String) session.getAttribute("lastAction");
         logger.trace("Received session attribute => " + forward);
@@ -35,8 +40,14 @@ public class ChangeLangToEnCommand extends Command {
             return Path.LOGIN_PAGE;
         }
         if (Path.ADD_PRODUCT_PAGE.equals(forward)) {
-            Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
-            request.setAttribute("categories", categories);
+            try {
+                Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
+                request.setAttribute("categories", categories);
+            } catch (ApplicationException ex) {
+                String errorMessage = rb.getString("category.dao.error");
+                session.setAttribute("errorMessage", errorMessage);
+                return Path.ERROR_PAGE;
+            }
         }
         if (Path.VIEW_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=viewProduct&id=" + request.getSession().getAttribute("lastViewedProductId");
@@ -53,8 +64,14 @@ public class ChangeLangToEnCommand extends Command {
             forward = "controller?command=searchProduct&pattern=" + request.getSession().getAttribute("lastSearchPattern") + "&currentPage=" + request.getSession().getAttribute("currentPagPage");
         }
         if (Path.CREATE_RECEIPT_PAGE.equals(forward)) {
-            List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
-            request.setAttribute("deliveries", deliveries);
+            try {
+                List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
+                request.setAttribute("deliveries", deliveries);
+            } catch (ApplicationException exception) {
+                String errorMessage = rb.getString("delivery.dao.error");
+                session.setAttribute("errorMessage", errorMessage);
+                return Path.ERROR_PAGE;
+            }
         }
         if (Path.EDIT_PRODUCT_PAGE.equals(forward)) {
             forward = "controller?command=editProduct&id=" + request.getSession().getAttribute("lastEditedProductId");

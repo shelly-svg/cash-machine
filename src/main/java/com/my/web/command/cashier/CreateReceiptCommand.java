@@ -3,7 +3,9 @@ package com.my.web.command.cashier;
 import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
+import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.validators.ProductValidator;
 import com.my.web.validators.ReceiptValidator;
 import org.apache.log4j.Logger;
@@ -46,21 +48,7 @@ public class CreateReceiptCommand extends Command {
         logger.debug("Create receipt command started at POST method");
         HttpSession session = request.getSession();
         Receipt receipt = new Receipt();
-        String localeName = "en";
-        Object localeObj = session.getAttribute("lang");
-        if (localeObj != null) {
-            localeName = localeObj.toString();
-        }
-
-        Locale locale;
-        if ("ru".equals(localeName)) {
-            locale = new Locale("ru", "RU");
-        } else {
-            locale = new Locale("en", "EN");
-        }
-        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
-
-
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
         receipt.setCreateTime(new Date());
         receipt.setNameRu(request.getParameter("name_ru"));
         receipt.setNameEn(request.getParameter("name_en"));
@@ -72,8 +60,14 @@ public class CreateReceiptCommand extends Command {
         receipt.setReceiptStatus(ReceiptStatus.NEW_RECEIPT);
         User currentUser = (User) session.getAttribute("user");
         receipt.setUserId(currentUser.getId());
-        Delivery delivery = new DeliveryDAO().findDeliveryByName(request.getParameter("delivery_id"));
-        receipt.setDelivery(delivery);
+        try {
+            Delivery delivery = new DeliveryDAO().findDeliveryByName(request.getParameter("delivery_id"));
+            receipt.setDelivery(delivery);
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("delivery.dao.error");
+            session.setAttribute("errorMessage", errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         if (!new ReceiptValidator().validate(receipt, session, rb)) {
             return Commands.ERROR_PAGE_COMMAND;
@@ -89,8 +83,16 @@ public class CreateReceiptCommand extends Command {
 
     private String doGet(HttpServletRequest request) {
         logger.debug("Create receipt command started at GET method");
-        List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
-        request.setAttribute("deliveries", deliveries);
+        HttpSession session = request.getSession();
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
+        try {
+            List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
+            request.setAttribute("deliveries", deliveries);
+        } catch (ApplicationException exception) {
+            String errorMessage = rb.getString("delivery.dao.error");
+            session.setAttribute("errorMessage", errorMessage);
+            return Path.ERROR_PAGE;
+        }
         return Path.CREATE_RECEIPT_PAGE;
     }
 

@@ -1,11 +1,14 @@
 package com.my.db.entities;
 
+import com.my.web.exception.ApplicationException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CategoryDAO {
 
@@ -26,7 +29,7 @@ public class CategoryDAO {
     private static final String SQL__FIND_CATEGORY_BY_NAME_RU = "SELECT * FROM category WHERE name_ru=?;";
     private static final String SQL__FIND_CATEGORY_BY_ID = "SELECT * FROM category WHERE id=?;";
 
-    public Category findCategoryByName(String name, String localeName) {
+    public Category findCategoryByName(String name, String localeName) throws ApplicationException {
         Category category = null;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -53,7 +56,7 @@ public class CategoryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -61,7 +64,7 @@ public class CategoryDAO {
         return category;
     }
 
-    public Category findCategoryById(Integer id) {
+    public Category findCategoryById(Integer id) throws ApplicationException {
         Category category = null;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -84,7 +87,7 @@ public class CategoryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -92,8 +95,8 @@ public class CategoryDAO {
         return category;
     }
 
-    public Map<Integer, Category> findAllCategories() {
-        Map<Integer, Category> categories = new HashMap<>();
+    public Map<Integer, Category> findAllCategories() throws ApplicationException {
+        Map<Integer, Category> categories = new ConcurrentHashMap<>();
         PreparedStatement preparedStatement;
         ResultSet rs;
         Connection con = null;
@@ -115,7 +118,7 @@ public class CategoryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
