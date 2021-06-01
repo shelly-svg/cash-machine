@@ -69,11 +69,10 @@ public class ReceiptDAO {
             preparedStatement.setInt(1, product.getAmount() - 1);
             preparedStatement.setInt(2, product.getId());
             preparedStatement.execute();
+            DBManager.getInstance().commitAndClose(con, preparedStatement);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, preparedStatement);
             throw new DBException(ex.getMessage(), ex);
-        } finally {
-            DBManager.getInstance().commitAndClose(con, preparedStatement);
         }
     }
 
@@ -94,11 +93,10 @@ public class ReceiptDAO {
             p.setInt(1, product.getAmount() + amountAtReceipt);
             p.setInt(2, product.getId());
             p.execute();
+            DBManager.getInstance().commitAndClose(con, p);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, p);
             throw new DBException(ex.getMessage(), ex);
-        } finally {
-            DBManager.getInstance().commitAndClose(con, p);
         }
     }
 
@@ -118,11 +116,10 @@ public class ReceiptDAO {
                 p.setInt(2, product.getId());
                 p.execute();
             }
+            DBManager.getInstance().commitAndClose(con, p);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, p);
             throw new DBException(ex.getMessage(), ex);
-        } finally {
-            DBManager.getInstance().commitAndClose(con, p);
         }
     }
 
@@ -144,11 +141,10 @@ public class ReceiptDAO {
             p.setInt(1, newProductAmount);
             p.setInt(2, productId);
             p.execute();
+            DBManager.getInstance().commitAndClose(con, p);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, p);
             throw new DBException(ex.getMessage(), ex);
-        } finally {
-            DBManager.getInstance().commitAndClose(con, p);
         }
     }
 

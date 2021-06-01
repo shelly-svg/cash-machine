@@ -36,13 +36,13 @@ public class ProductValidator extends Validator<Product> {
             throw new ApplicationException(errorMessage);
         }
         if (product.getDescriptionRu() != null && !product.getDescriptionRu().isEmpty()) {
-            if (validateProductDescriptionRu(product.getDescriptionRu())) {
+            if (!validateProductDescriptionRu(product.getDescriptionRu())) {
                 String errorMessage = "add.product.description.ru.invalid";
                 throw new ApplicationException(errorMessage);
             }
         }
         if (product.getDescriptionEn() != null && !product.getDescriptionEn().isEmpty()) {
-            if (validateProductDescriptionEn(product.getDescriptionEn())) {
+            if (!validateProductDescriptionEn(product.getDescriptionEn())) {
                 String errorMessage = "add.product.description.en.invalid";
                 throw new ApplicationException(errorMessage);
             }
