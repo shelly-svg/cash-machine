@@ -37,9 +37,10 @@ public class GenerateCashierReportServlet extends HttpServlet {
             String errorMessage = "You are not logged or not have access to the chosen page";
             req.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            resp.sendRedirect("controller?command=noCommand");
+            resp.sendRedirect(Commands.ERROR_PAGE_COMMAND);
             return;
         }
+
 
         String sId = req.getParameter("id");
         logger.debug("Received id => " + sId);

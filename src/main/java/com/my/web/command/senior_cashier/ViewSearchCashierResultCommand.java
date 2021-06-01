@@ -3,6 +3,7 @@ package com.my.web.command.senior_cashier;
 import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
@@ -19,14 +20,21 @@ public class ViewSearchCashierResultCommand extends Command {
     private static final Logger logger = Logger.getLogger(ViewSearchCashierResultCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("View search cashier result command is started");
+
         HttpSession session = request.getSession();
         UserDAO userDAO = new UserDAO();
-
-        //set the number of users displayed per page
         int recordsPerPage = 2;
-        int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+
+        int currentPage;
+        try {
+            currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        } catch (NumberFormatException exception) {
+            String errorMessage = "error.occurred";
+            logger.error("errorMessage --> invalid page");
+            throw new ApplicationException(errorMessage);
+        }
         logger.debug("Current page => " + currentPage);
 
         String firstName = request.getParameter("cashier_first_name");
@@ -39,10 +47,9 @@ public class ViewSearchCashierResultCommand extends Command {
         try {
             users = userDAO.searchCashiersByName(firstName, lastName, currentPage, recordsPerPage);
         } catch (DBException exception) {
-            String errorMessage = "An error has occurred while searching cashiers, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + exception.getMessage());
-            return Path.ERROR_PAGE;
+            String errorMessage = "user.dao.search.cashiers";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
         logger.debug("Search cashier result is => " + users);
@@ -52,10 +59,9 @@ public class ViewSearchCashierResultCommand extends Command {
         try {
             numberOfRows = userDAO.countOfRowsAffectedBySearchCashiers(firstName, lastName);
         } catch (DBException exception) {
-            String errorMessage = "An error has occurred, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + exception.getMessage());
-            return Path.ERROR_PAGE;
+            String errorMessage = "error.occurred";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
         logger.debug("Number of rows affected by cashiers search " + numberOfRows);
@@ -74,4 +80,5 @@ public class ViewSearchCashierResultCommand extends Command {
         logger.debug("View search cashier result command is finished");
         return Path.VIEW_SEARCH_CASHIER_RESULT_PAGE;
     }
+
 }

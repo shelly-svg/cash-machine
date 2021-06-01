@@ -9,6 +9,6 @@ import java.util.ResourceBundle;
 
 public abstract class Validator<T> {
 
-    public abstract boolean validate(T entity, HttpSession session) throws IOException, ServletException, ApplicationException;
+    public abstract boolean validate(T entity) throws IOException, ServletException, ApplicationException;
 
 }

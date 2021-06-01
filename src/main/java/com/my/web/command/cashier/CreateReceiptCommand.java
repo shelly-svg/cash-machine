@@ -67,7 +67,7 @@ public class CreateReceiptCommand extends Command {
             throw new ApplicationException(errorMessage);
         }
 
-        new ReceiptValidator().validate(receipt, session);
+        new ReceiptValidator().validate(receipt);
 
         int id;
         try {

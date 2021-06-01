@@ -5,6 +5,7 @@ import com.my.db.entities.Category;
 import com.my.db.entities.CategoryDAO;
 import com.my.db.entities.ProductDAO;
 import com.my.web.command.commodity_expert.CreateProductCommand;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import com.my.web.validators.ProductValidator;
 import org.junit.jupiter.api.Assertions;
@@ -49,7 +50,7 @@ public class CreateProductTest {
     }
 
     @Test
-    public void createProductPOSTTest() throws ServletException, IOException, DBException {
+    public void createProductPOSTTest() throws ServletException, IOException, DBException, ApplicationException {
         int productId = 1;
         String nameRu = "testCreateProductNameRu";
         String nameEn = "testCreateProductNameEn";
@@ -76,7 +77,7 @@ public class CreateProductTest {
         when(mockRequest.getParameter("description_en")).thenReturn(descriptionEn);
         when(mockRequest.getParameter("category_id")).thenReturn("customName");
         when(categoryDAO.findCategoryByName(anyString(), anyString())).thenReturn(category);
-        when(productValidator.validate(any(), any(), any())).thenReturn(Boolean.TRUE);
+        when(productValidator.validate(any())).thenReturn(Boolean.TRUE);
         when(productDAO.addProduct(any())).thenReturn(productId);
 
         String actual = underTest.execute(mockRequest, mockResponse);
@@ -84,12 +85,12 @@ public class CreateProductTest {
         Assertions.assertEquals(expected, actual);
         
         verify(categoryDAO, times(1)).findCategoryByName(anyString(), anyString());
-        verify(productValidator, times(1)).validate(any(), any(), any());
+        verify(productValidator, times(1)).validate(any());
         verify(productDAO, times(1)).addProduct(any());
     }
 
     @Test
-    public void createProductGETTest() throws ServletException, IOException, DBException {
+    public void createProductGETTest() throws ServletException, IOException, DBException, ApplicationException {
         when(mockRequest.getMethod()).thenReturn("GET");
 
         String actual = underTest.execute(mockRequest, mockResponse);

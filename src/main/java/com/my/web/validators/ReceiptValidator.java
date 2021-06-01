@@ -12,7 +12,7 @@ public class ReceiptValidator extends Validator<Receipt> {
     private static final String phonePattern = "^\\d{10}$";
 
     @Override
-    public boolean validate(Receipt receipt, HttpSession session) throws ApplicationException {
+    public boolean validate(Receipt receipt) throws ApplicationException {
         if (receipt.getNameRu() == null || receipt.getNameRu().isEmpty()) {
             String errorMessage = "create.receipt.name.ru.null";
             throw new ApplicationException(errorMessage);

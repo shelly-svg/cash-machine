@@ -1,59 +1,50 @@
 package com.my.web.validators;
 
 import com.my.db.entities.Product;
+import com.my.web.exception.ApplicationException;
 
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ResourceBundle;
 
 public class ProductValidator extends Validator<Product> {
 
     private static final String cyrillicPattern = "[а-яА-ЯёЁІіЇїЪъ]";
 
     @Override
-    public boolean validate(Product product, HttpSession session) {
+    public boolean validate(Product product) throws ApplicationException {
         if (!validateProductNameRu(product.getNameRu())) {
-            String errorMessage = rb.getString("add.product.name.ru.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "add.product.name.ru.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateProductNameEn(product.getNameEn())) {
-            String errorMessage = rb.getString("add.product.name.en.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "add.product.name.en.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateProductCode(product.getCode())) {
-            String errorMessage = rb.getString("add.product.code.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "add.product.code.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateProductPrice(product.getPrice())) {
-            String errorMessage = rb.getString("add.product.price.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "add.product.price.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateProductAmount(product.getAmount())) {
-            String errorMessage = rb.getString("add.product.amount.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "add.product.amount.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateProductWeight(product.getWeight())) {
-            String errorMessage = rb.getString("add.product.weight.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "add.product.weight.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (product.getDescriptionRu() != null && !product.getDescriptionRu().isEmpty()) {
             if (validateProductDescriptionRu(product.getDescriptionRu())) {
-                String errorMessage = rb.getString("add.product.description.ru.invalid");
-                session.setAttribute("errorMessage", errorMessage);
-                return false;
+                String errorMessage = "add.product.description.ru.invalid";
+                throw new ApplicationException(errorMessage);
             }
         }
         if (product.getDescriptionEn() != null && !product.getDescriptionEn().isEmpty()) {
             if (validateProductDescriptionEn(product.getDescriptionEn())) {
-                String errorMessage = rb.getString("add.product.description.en.invalid");
-                session.setAttribute("errorMessage", errorMessage);
-                return false;
+                String errorMessage = "add.product.description.en.invalid";
+                throw new ApplicationException(errorMessage);
             }
         }
         return true;

@@ -5,9 +5,8 @@ import com.my.db.entities.Category;
 import com.my.db.entities.CategoryDAO;
 import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
-import com.my.web.Commands;
-import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import com.my.web.validators.ProductValidator;
 import org.apache.log4j.Logger;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public class CreateProductCommand extends Command {
 
@@ -42,7 +40,7 @@ public class CreateProductCommand extends Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("create product command is started");
         String forward = null;
         logger.debug("REQUEST METHOD IS => " + request.getMethod());
@@ -60,29 +58,25 @@ public class CreateProductCommand extends Command {
         return forward;
     }
 
-    private String doGet(HttpServletRequest request) {
+    private String doGet(HttpServletRequest request) throws ApplicationException {
         logger.debug("create product command started at GET method");
-        HttpSession session = request.getSession();
-        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
+
         try {
             Map<Integer, Category> categories = categoryDAO.findAllCategories();
             request.setAttribute("categories", categories);
         } catch (DBException exception) {
-            String errorMessage = rb.getString("category.dao.error");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
-            return Path.ERROR_PAGE;
+            String errorMessage = "category.dao.error";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
         return Path.ADD_PRODUCT_PAGE;
     }
 
-    private String doPost(HttpServletRequest request) {
+    private String doPost(HttpServletRequest request) throws ApplicationException {
         logger.debug("create product command started at POST method");
+
         Product product = new Product();
-
         HttpSession session = request.getSession();
-
-        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
 
         String nameRu = request.getParameter("name_ru");
         String nameEn = request.getParameter("name_en");
@@ -93,36 +87,40 @@ public class CreateProductCommand extends Command {
         try {
             price = new BigDecimal(request.getParameter("price"));
         } catch (NumberFormatException ex) {
-            String errorMessage = rb.getString("add.product.price.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "add.product.price.invalid";
+            logger.error("errorMessage --> price invalid");
+            throw new ApplicationException(errorMessage);
         }
+
         try {
             amount = Integer.parseInt(request.getParameter("amount"));
         } catch (NumberFormatException ex) {
-            String errorMessage = rb.getString("add.product.amount.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "add.product.amount.invalid";
+            logger.error("errorMessage --> amount invalid");
+            throw new ApplicationException(errorMessage);
         }
+
         try {
             weight = new BigDecimal(request.getParameter("weight"));
         } catch (NumberFormatException ex) {
-            String errorMessage = rb.getString("add.product.weight.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "add.product.weight.invalid";
+            logger.error("errorMessage --> weight invalid");
+            throw new ApplicationException(errorMessage);
         }
+
         String descriptionRu = request.getParameter("description_ru");
         String descriptionEn = request.getParameter("description_en");
+
         int categoryId;
         try {
             categoryId = categoryDAO.findCategoryByName(request.getParameter("category_id"),
                     session.getAttribute("lang").toString()).getId();
         } catch (DBException exception) {
-            String errorMessage = rb.getString("category.dao.error");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "category.dao.error";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
+
         product.setNameRu(nameRu);
         product.setNameEn(nameEn);
         product.setCode(code);
@@ -134,25 +132,21 @@ public class CreateProductCommand extends Command {
         try {
             product.setCategory(categoryDAO.findCategoryById(categoryId));
         } catch (DBException exception) {
-            String errorMessage = rb.getString("category.dao.error");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "category.dao.error";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
         logger.trace("Got product => " + product);
 
-        if (!productValidator.validate(product, session, rb)) {
-            return Commands.ERROR_PAGE_COMMAND;
-        }
+        productValidator.validate(product);
 
         int id;
         try {
             id = productDAO.addProduct(product);
-        } catch (DBException ex) {
-            String errorMessage = "An error has occurred while adding new product, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + ex.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+        } catch (DBException exception) {
+            String errorMessage = "product.dao.add.product";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
         logger.debug("create product command is finished at POST method, forwarding to view product");

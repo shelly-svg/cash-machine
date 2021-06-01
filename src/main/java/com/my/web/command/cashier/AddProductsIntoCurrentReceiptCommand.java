@@ -2,7 +2,6 @@ package com.my.web.command.cashier;
 
 import com.my.db.entities.*;
 import com.my.web.Commands;
-import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
 import com.my.web.command.commodity_expert.EditProductCommand;
 import com.my.web.exception.ApplicationException;
@@ -12,9 +11,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ResourceBundle;
 
 public class AddProductsIntoCurrentReceiptCommand extends Command {
 
@@ -36,9 +33,6 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Add products into current receipt command is started");
-
-        HttpSession session = request.getSession();
-        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
 
         int id;
         try {

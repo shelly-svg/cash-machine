@@ -5,6 +5,7 @@ import com.my.db.entities.ReceiptDAO;
 import com.my.db.entities.ReceiptStatus;
 import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
@@ -20,7 +21,7 @@ public class SetReceiptStatusClosedCommand extends Command {
     private static final Logger logger = Logger.getLogger(SetReceiptStatusClosedCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Set receipt status closed command is started");
 
         HttpSession session = request.getSession();
@@ -31,49 +32,43 @@ public class SetReceiptStatusClosedCommand extends Command {
             try {
                 currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
             } catch (DBException exception) {
-                String errorMessage = "An error has occurred while updating receipt, please try again later";
-                session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage --> " + exception.getMessage());
-                return Commands.ERROR_PAGE_COMMAND;
+                String errorMessage = "receipt.dao.find.receipt";
+                logger.error("errorMessage --> " + exception);
+                throw new ApplicationException(errorMessage);
             }
             try {
                 if (receiptDAO.getAllProductsFromReceipt(currentReceipt.getId()).isEmpty()) {
-                    String errorMessage = "You cannot close empty receipts";
-                    session.setAttribute("errorMessage", errorMessage);
-                    logger.error("errorMessage --> " + errorMessage);
-                    return Commands.ERROR_PAGE_COMMAND;
+                    String errorMessage = "close.receipt.empty.error";
+                    logger.error("errorMessage --> invalid, receipt has no products");
+                    throw new ApplicationException(errorMessage);
                 }
             } catch (DBException exception) {
-                String errorMessage = "An error has occurred, please try again later";
-                session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage --> " + exception.getMessage());
-                return Commands.ERROR_PAGE_COMMAND;
+                String errorMessage = "error.occurred";
+                logger.error("errorMessage --> " + exception);
+                throw new ApplicationException(errorMessage);
             }
             if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
                 try {
                     receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CLOSED);
                 } catch (DBException exception) {
-                    String errorMessage = "Something went wrong while closing this receipt, please try again later";
-                    session.setAttribute("errorMessage", errorMessage);
-                    logger.error("errorMessage --> " + exception.getMessage());
-                    return Commands.ERROR_PAGE_COMMAND;
+                    String errorMessage = "error.occurred";
+                    logger.error("errorMessage --> " + exception);
+                    throw new ApplicationException(errorMessage);
                 }
                 currentReceipt.setReceiptStatus(ReceiptStatus.CLOSED);
             } else {
-                String errorMessage = "This receipt is canceled, you cannot close";
-                session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage --> " + errorMessage);
-                return Commands.ERROR_PAGE_COMMAND;
+                String errorMessage = "close.receipt.canceled.error";
+                logger.error("errorMessage -- Cannot close canceled receipts");
+                throw new ApplicationException(errorMessage);
             }
             session.setAttribute("currentReceipt", currentReceipt);
         } else {
-            String errorMessage = "You didnt chose receipt";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "has.not.chosen.receipt.error";
+            logger.error("errorMessage --> has not chosen receipt");
+            throw new ApplicationException(errorMessage);
         }
 
         logger.debug("Set receipt status closed command is finished");
-        return "controller?command=viewCurrentReceipt";
+        return Commands.VIEW_CURRENT_RECEIPT_COMMAND;
     }
 }
