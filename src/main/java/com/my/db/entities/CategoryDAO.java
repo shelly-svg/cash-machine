@@ -30,8 +30,8 @@ public class CategoryDAO {
 
     public Category findCategoryByName(String name, String localeName) throws DBException {
         Category category = null;
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -50,23 +50,19 @@ public class CategoryDAO {
             if (resultSet.next()) {
                 category = mapper.mapRow(resultSet);
             }
-            resultSet.close();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, resultSet);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement, resultSet);
         }
         return category;
     }
 
     public Category findCategoryById(Integer id) throws DBException {
         Category category = null;
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -81,23 +77,19 @@ public class CategoryDAO {
             if (resultSet.next()) {
                 category = mapper.mapRow(resultSet);
             }
-            resultSet.close();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, resultSet);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement, resultSet);
         }
         return category;
     }
 
     public Map<Integer, Category> findAllCategories() throws DBException {
         Map<Integer, Category> categories = new ConcurrentHashMap<>();
-        PreparedStatement preparedStatement;
-        ResultSet rs;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -112,15 +104,11 @@ public class CategoryDAO {
                 Category category = mapper.mapRow(rs);
                 categories.put(category.getId(), category);
             }
-            rs.close();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
         }
         return categories;
     }

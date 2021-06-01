@@ -5,6 +5,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -52,8 +54,41 @@ public class DBManager {
      */
     public void commitAndClose(Connection con) {
         try {
-            con.commit();
-            con.close();
+            if (con != null) {
+                con.commit();
+                con.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void commitAndClose(Connection con, PreparedStatement preparedStatement, ResultSet resultSet) {
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (con != null) {
+                con.commit();
+                con.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void commitAndClose(Connection con, PreparedStatement preparedStatement) {
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (con != null) {
+                con.commit();
+                con.close();
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -66,8 +101,41 @@ public class DBManager {
      */
     public void rollbackAndClose(Connection con) {
         try {
-            con.rollback();
-            con.close();
+            if (con != null) {
+                con.rollback();
+                con.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void rollbackAndClose(Connection con, PreparedStatement preparedStatement) {
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (con != null) {
+                con.rollback();
+                con.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void rollbackAndClose(Connection con, PreparedStatement preparedStatement, ResultSet resultSet) {
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (con != null) {
+                con.rollback();
+                con.close();
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

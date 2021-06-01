@@ -33,7 +33,7 @@ public class ProductDAO {
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
 
     public void updateProductsAmount(int id, int newAmount) throws DBException {
-        PreparedStatement preparedStatement;
+        PreparedStatement preparedStatement = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -45,21 +45,18 @@ public class ProductDAO {
             preparedStatement.setInt(1, newAmount);
             preparedStatement.setInt(2, id);
             preparedStatement.execute();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement);
         }
     }
 
     public int countOfRowsAffectedBySearch(String pattern) throws DBException {
         int numberOfRows = 0;
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -76,23 +73,19 @@ public class ProductDAO {
             if (rs.next()) {
                 numberOfRows = rs.getInt(1);
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return numberOfRows;
     }
 
     public List<Product> searchProducts(String pattern, int currentPage, int recordsPerPage) throws DBException {
         List<Product> products = new ArrayList<>();
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         int start = currentPage * recordsPerPage - recordsPerPage;
         try {
@@ -110,22 +103,18 @@ public class ProductDAO {
             while (rs.next()) {
                 products.add(mapper.mapRow(rs));
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return products;
     }
 
     public int addProduct(Product product) throws DBException {
         int generatedKey;
-        PreparedStatement preparedStatement;
+        PreparedStatement preparedStatement = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -151,22 +140,19 @@ public class ProductDAO {
                     throw new SQLException("Creating of product is failed, no ID obtained");
                 }
             }
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement);
         }
         return generatedKey;
     }
 
     public Product findProduct(Integer id) throws DBException {
         Product product = null;
-        PreparedStatement preparedStatement;
-        ResultSet rs;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
@@ -177,15 +163,11 @@ public class ProductDAO {
             if (rs.next()) {
                 product = mapper.mapRow(rs);
             }
-            rs.close();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
         }
         return product;
     }
@@ -208,7 +190,7 @@ public class ProductDAO {
                 product.setDescriptionEn(rs.getString(Fields.PRODUCT__DESCRIPTION_EN));
                 product.setCategory(new CategoryDAO().findCategoryById(rs.getInt(Fields.PRODUCT__CATEGORY_ID)));
                 return product;
-            } catch (SQLException | DBException e) {
+            } catch (SQLException e) {
                 throw new IllegalStateException(e);
             }
         }

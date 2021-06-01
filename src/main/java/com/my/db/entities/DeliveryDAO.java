@@ -31,8 +31,8 @@ public class DeliveryDAO {
 
     public Delivery findDeliveryById(int id) throws DBException {
         Delivery delivery = new Delivery();
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -47,15 +47,11 @@ public class DeliveryDAO {
             if (rs.next()) {
                 delivery = mapper.mapRow(rs);
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return delivery;
     }
@@ -63,8 +59,8 @@ public class DeliveryDAO {
     public Delivery findDeliveryByName(String name) throws DBException {
         Delivery delivery = new Delivery();
         name = "%" + name + "%";
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -80,23 +76,19 @@ public class DeliveryDAO {
             if (rs.next()) {
                 delivery = mapper.mapRow(rs);
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return delivery;
     }
 
     public List<Delivery> getAllDeliveries() throws DBException {
         List<Delivery> deliveries = new ArrayList<>();
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -110,15 +102,11 @@ public class DeliveryDAO {
             while (rs.next()) {
                 deliveries.add(mapper.mapRow(rs));
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return deliveries;
     }

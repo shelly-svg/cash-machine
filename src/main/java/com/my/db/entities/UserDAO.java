@@ -41,8 +41,8 @@ public class UserDAO {
 
     public User getUserForReport(int id) throws DBException {
         User user = new User();
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -59,23 +59,19 @@ public class UserDAO {
                 user.setLastName(rs.getString(Fields.USER__LAST_NAME));
                 user.setRoleId(rs.getInt(Fields.USER__ROLE_ID));
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return user;
     }
 
     public int countOfRowsAffectedBySearchCashiers(String firstName, String lastName) throws DBException {
         int numberOfRows = 0;
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -93,23 +89,19 @@ public class UserDAO {
             if (rs.next()) {
                 numberOfRows = rs.getInt(1);
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return numberOfRows;
     }
 
     public List<User> searchCashiersByName(String firstName, String lastName, int currentPage, int recordsPerPage) throws DBException {
         List<User> users = new ArrayList<>();
-        PreparedStatement p;
-        ResultSet rs;
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         int start = currentPage * recordsPerPage - recordsPerPage;
         try {
@@ -135,23 +127,19 @@ public class UserDAO {
                 user.setRoleId(rs.getInt(Fields.USER__ROLE_ID));
                 users.add(user);
             }
-            rs.close();
-            p.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return users;
     }
 
     public String findUsersFNameLName(int id) throws DBException {
         String result = null;
-        PreparedStatement preparedStatement;
-        ResultSet rs;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -165,23 +153,19 @@ public class UserDAO {
             if (rs.next()) {
                 result = rs.getString(Fields.USER__FIRST_NAME) + " " + rs.getString(Fields.USER__LAST_NAME);
             }
-            rs.close();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
         }
         return result;
     }
 
     public User findUser(int id) throws DBException {
         User user = null;
-        PreparedStatement preparedStatement;
-        ResultSet rs;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -196,23 +180,19 @@ public class UserDAO {
             if (rs.next()) {
                 user = mapper.mapRow(rs);
             }
-            rs.close();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
         }
         return user;
     }
 
     public User findUserByLogin(String login) throws DBException {
         User user = null;
-        PreparedStatement preparedStatement;
-        ResultSet rs;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             if (!isTest) {
@@ -226,15 +206,11 @@ public class UserDAO {
             rs = preparedStatement.executeQuery();
             if (rs.next())
                 user = mapper.mapRow(rs);
-            rs.close();
-            preparedStatement.close();
         } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new DBException(ex.getMessage());
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
         } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
         }
         return user;
     }
