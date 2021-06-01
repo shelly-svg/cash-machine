@@ -5,7 +5,7 @@ import com.my.db.entities.Category;
 import com.my.db.entities.CategoryDAO;
 import com.my.db.entities.ProductDAO;
 import com.my.web.command.commodity_expert.CreateProductCommand;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import com.my.web.validators.ProductValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -49,7 +49,7 @@ public class CreateProductTest {
     }
 
     @Test
-    public void createProductPOSTTest() throws ServletException, IOException, ApplicationException {
+    public void createProductPOSTTest() throws ServletException, IOException, DBException {
         int productId = 1;
         String nameRu = "testCreateProductNameRu";
         String nameEn = "testCreateProductNameEn";
@@ -89,7 +89,7 @@ public class CreateProductTest {
     }
 
     @Test
-    public void createProductGETTest() throws ServletException, IOException, ApplicationException {
+    public void createProductGETTest() throws ServletException, IOException, DBException {
         when(mockRequest.getMethod()).thenReturn("GET");
 
         String actual = underTest.execute(mockRequest, mockResponse);

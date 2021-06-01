@@ -3,9 +3,8 @@ package com.my.web.command.common;
 import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
-import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -27,7 +26,7 @@ public class ViewProductCommand extends Command {
         Product product;
         try {
             product = new ProductDAO().findProduct(id);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while searching product, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());

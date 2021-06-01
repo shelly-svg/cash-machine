@@ -1,7 +1,7 @@
 package db.entities;
 
 import com.my.db.entities.*;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testUpdateProductAmount() throws SQLException, ApplicationException {
+    public void testUpdateProductAmount() throws SQLException, DBException {
         instance.deleteProductFromReceipt(1, new Product(), 5);
         verify(mockCon, times(2)).prepareStatement(anyString());
         verify(mockPreparedStatement, times(2)).execute();
@@ -50,7 +50,7 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testSetReceiptStatus() throws SQLException, ApplicationException {
+    public void testSetReceiptStatus() throws SQLException, DBException {
         instance.setReceiptStatus(1, ReceiptStatus.CLOSED);
         verify(mockCon, times(1)).prepareStatement(anyString());
         verify(mockPreparedStatement, times(1)).execute();
@@ -59,7 +59,7 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testSetAmountOfTheProductsAtTheReceipt() throws SQLException, ApplicationException {
+    public void testSetAmountOfTheProductsAtTheReceipt() throws SQLException, DBException {
         instance.setAmountOfProductAtTheReceipt(1, 1, 1, 1);
         verify(mockCon, times(2)).prepareStatement(anyString());
         verify(mockPreparedStatement, times(2)).execute();
@@ -68,7 +68,7 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testCountOfRowsAffectedBySearch() throws SQLException, ApplicationException {
+    public void testCountOfRowsAffectedBySearch() throws SQLException, DBException {
         when(mockRS.getInt(1)).thenReturn(1);
         doNothing().when(mockPreparedStatement).setString(anyInt(), anyString());
 
@@ -84,7 +84,7 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testAddProductIntoReceipt() throws SQLException, ApplicationException {
+    public void testAddProductIntoReceipt() throws SQLException, DBException {
         instance.addProductIntoReceipt(new Product(), 1);
         verify(mockCon, times(2)).prepareStatement(anyString());
         verify(mockPreparedStatement, times(2)).execute();
@@ -93,7 +93,7 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testCreateReceipt() throws SQLException, ApplicationException {
+    public void testCreateReceipt() throws SQLException, DBException {
         int id = 1;
         Timestamp createTime = new Timestamp(System.currentTimeMillis());
         String nameRu = "receiptNameRu";

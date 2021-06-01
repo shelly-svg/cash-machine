@@ -5,7 +5,7 @@ import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -63,7 +62,7 @@ public class EditReceiptProductsCommand extends Command {
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         try {
             currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while updating receipt, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -103,7 +102,7 @@ public class EditReceiptProductsCommand extends Command {
         Map<Product, Integer> receiptProductsMap;
         try {
             receiptProductsMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -112,7 +111,7 @@ public class EditReceiptProductsCommand extends Command {
         Product product;
         try {
             product = productDAO.findProduct(productId);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while searching product, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -130,7 +129,7 @@ public class EditReceiptProductsCommand extends Command {
             try {
                 newProductAmount = product.getAmount() + (oldAmount - newAmount);
                 receiptDAO.setAmountOfProductAtTheReceipt(newAmount, newProductAmount, receiptId, productId);
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = rb.getString("product.dao.error.update.amount");
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage -> " + errorMessage);
@@ -148,7 +147,7 @@ public class EditReceiptProductsCommand extends Command {
         try {
             newProductAmount = product.getAmount() + (oldAmount - newAmount);
             receiptDAO.setAmountOfProductAtTheReceipt(newAmount, newProductAmount, receiptId, productId);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("product.dao.error.update.amount");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + errorMessage);
@@ -165,7 +164,7 @@ public class EditReceiptProductsCommand extends Command {
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         try {
             currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while updating receipt, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -185,7 +184,7 @@ public class EditReceiptProductsCommand extends Command {
         Map<Product, Integer> productMap;
         try {
             productMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
-        } catch (ApplicationException ex) {
+        } catch (DBException ex) {
             String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + ex.getMessage());

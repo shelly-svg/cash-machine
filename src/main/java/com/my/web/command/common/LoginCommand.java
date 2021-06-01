@@ -6,7 +6,7 @@ import com.my.db.entities.UserDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.encryption.PasswordUtility;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import com.my.web.recaptcha.VerifyUtils;
 import org.apache.log4j.Logger;
 
@@ -72,7 +72,7 @@ public class LoginCommand extends Command {
         User user;
         try {
             user = new UserDAO().findUserByLogin(login);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             errorMessage = "An error has occurred while searching user, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);

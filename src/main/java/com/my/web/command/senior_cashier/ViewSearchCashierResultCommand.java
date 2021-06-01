@@ -2,9 +2,8 @@ package com.my.web.command.senior_cashier;
 
 import com.my.Path;
 import com.my.db.entities.*;
-import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -39,7 +38,7 @@ public class ViewSearchCashierResultCommand extends Command {
         List<User> users;
         try {
             users = userDAO.searchCashiersByName(firstName, lastName, currentPage, recordsPerPage);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while searching cashiers, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -52,7 +51,7 @@ public class ViewSearchCashierResultCommand extends Command {
         int numberOfRows;
         try {
             numberOfRows = userDAO.countOfRowsAffectedBySearchCashiers(firstName, lastName);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());

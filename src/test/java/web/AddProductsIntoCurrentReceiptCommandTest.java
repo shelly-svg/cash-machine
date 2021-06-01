@@ -3,7 +3,7 @@ package web;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.cashier.AddProductsIntoCurrentReceiptCommand;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 public class AddProductsIntoCurrentReceiptCommandTest {
 
     @Test
-    public void AddProductsCommandTest() throws ServletException, IOException, ApplicationException {
+    public void AddProductsCommandTest() throws ServletException, IOException, DBException {
         ReceiptDAO receiptDAO = Mockito.mock(ReceiptDAO.class);
         ProductDAO productDAO = Mockito.mock(ProductDAO.class);
         AddProductsIntoCurrentReceiptCommand underTest = new AddProductsIntoCurrentReceiptCommand(receiptDAO, productDAO);

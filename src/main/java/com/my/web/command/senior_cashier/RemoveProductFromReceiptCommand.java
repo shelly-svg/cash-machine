@@ -3,7 +3,7 @@ package com.my.web.command.senior_cashier;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -44,7 +44,7 @@ public class RemoveProductFromReceiptCommand extends Command {
         Receipt updatedReceipt;
         try {
             updatedReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while updating receipt, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -65,7 +65,7 @@ public class RemoveProductFromReceiptCommand extends Command {
         Product currentProduct;
         try {
             currentProduct = productDAO.findProduct(productId);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while retrieving product, try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());
@@ -74,7 +74,7 @@ public class RemoveProductFromReceiptCommand extends Command {
 
         try {
             receiptDAO.deleteProductFromReceipt(receiptId, currentProduct, amount);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while deleting product, try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());

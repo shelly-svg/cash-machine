@@ -1,6 +1,6 @@
 package com.my.db.entities;
 
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class ProductDAO {
 
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
 
-    public void updateProductsAmount(int id, int newAmount) throws ApplicationException {
+    public void updateProductsAmount(int id, int newAmount) throws DBException {
         PreparedStatement preparedStatement;
         Connection con = null;
         try {
@@ -49,14 +49,14 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
     }
 
-    public int countOfRowsAffectedBySearch(String pattern) throws ApplicationException {
+    public int countOfRowsAffectedBySearch(String pattern) throws DBException {
         int numberOfRows = 0;
         PreparedStatement p;
         ResultSet rs;
@@ -81,7 +81,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -89,7 +89,7 @@ public class ProductDAO {
         return numberOfRows;
     }
 
-    public List<Product> searchProducts(String pattern, int currentPage, int recordsPerPage) throws ApplicationException {
+    public List<Product> searchProducts(String pattern, int currentPage, int recordsPerPage) throws DBException {
         List<Product> products = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
@@ -115,7 +115,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -123,7 +123,7 @@ public class ProductDAO {
         return products;
     }
 
-    public int addProduct(Product product) throws ApplicationException {
+    public int addProduct(Product product) throws DBException {
         int generatedKey;
         PreparedStatement preparedStatement;
         Connection con = null;
@@ -155,7 +155,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -163,7 +163,7 @@ public class ProductDAO {
         return generatedKey;
     }
 
-    public Product findProduct(Integer id) throws ApplicationException {
+    public Product findProduct(Integer id) throws DBException {
         Product product = null;
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -182,7 +182,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -208,7 +208,7 @@ public class ProductDAO {
                 product.setDescriptionEn(rs.getString(Fields.PRODUCT__DESCRIPTION_EN));
                 product.setCategory(new CategoryDAO().findCategoryById(rs.getInt(Fields.PRODUCT__CATEGORY_ID)));
                 return product;
-            } catch (SQLException | ApplicationException e) {
+            } catch (SQLException | DBException e) {
                 throw new IllegalStateException(e);
             }
         }

@@ -8,7 +8,7 @@ import com.my.db.entities.ProductDAO;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import com.my.web.validators.ProductValidator;
 import org.apache.log4j.Logger;
 
@@ -67,7 +67,7 @@ public class CreateProductCommand extends Command {
         try {
             Map<Integer, Category> categories = categoryDAO.findAllCategories();
             request.setAttribute("categories", categories);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("category.dao.error");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());
@@ -117,7 +117,7 @@ public class CreateProductCommand extends Command {
         try {
             categoryId = categoryDAO.findCategoryByName(request.getParameter("category_id"),
                     session.getAttribute("lang").toString()).getId();
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("category.dao.error");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());
@@ -133,7 +133,7 @@ public class CreateProductCommand extends Command {
         product.setDescriptionEn(descriptionEn);
         try {
             product.setCategory(categoryDAO.findCategoryById(categoryId));
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("category.dao.error");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());
@@ -148,7 +148,7 @@ public class CreateProductCommand extends Command {
         int id;
         try {
             id = productDAO.addProduct(product);
-        } catch (ApplicationException ex) {
+        } catch (DBException ex) {
             String errorMessage = "An error has occurred while adding new product, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + ex.getMessage());

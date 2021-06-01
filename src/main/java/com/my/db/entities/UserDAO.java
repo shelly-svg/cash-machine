@@ -1,6 +1,6 @@
 package com.my.db.entities;
 
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +39,7 @@ public class UserDAO {
 
     private static final String SQL__FIND_USER_FOR_REPORT_BY_ID = "SELECT id, first_name, last_name, role_id FROM user WHERE id=?;";
 
-    public User getUserForReport(int id) throws ApplicationException {
+    public User getUserForReport(int id) throws DBException {
         User user = new User();
         PreparedStatement p;
         ResultSet rs;
@@ -64,7 +64,7 @@ public class UserDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -72,7 +72,7 @@ public class UserDAO {
         return user;
     }
 
-    public int countOfRowsAffectedBySearchCashiers(String firstName, String lastName) throws ApplicationException {
+    public int countOfRowsAffectedBySearchCashiers(String firstName, String lastName) throws DBException {
         int numberOfRows = 0;
         PreparedStatement p;
         ResultSet rs;
@@ -98,7 +98,7 @@ public class UserDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -106,7 +106,7 @@ public class UserDAO {
         return numberOfRows;
     }
 
-    public List<User> searchCashiersByName(String firstName, String lastName, int currentPage, int recordsPerPage) throws ApplicationException {
+    public List<User> searchCashiersByName(String firstName, String lastName, int currentPage, int recordsPerPage) throws DBException {
         List<User> users = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
@@ -140,7 +140,7 @@ public class UserDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -148,7 +148,7 @@ public class UserDAO {
         return users;
     }
 
-    public String findUsersFNameLName(int id) throws ApplicationException {
+    public String findUsersFNameLName(int id) throws DBException {
         String result = null;
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -170,7 +170,7 @@ public class UserDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -178,7 +178,7 @@ public class UserDAO {
         return result;
     }
 
-    public User findUser(int id) throws ApplicationException {
+    public User findUser(int id) throws DBException {
         User user = null;
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -201,7 +201,7 @@ public class UserDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -209,7 +209,7 @@ public class UserDAO {
         return user;
     }
 
-    public User findUserByLogin(String login) throws ApplicationException {
+    public User findUserByLogin(String login) throws DBException {
         User user = null;
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -231,7 +231,7 @@ public class UserDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);

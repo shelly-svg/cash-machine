@@ -4,7 +4,7 @@ import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -28,7 +28,7 @@ public class ViewCurrentReceiptCommand extends Command {
 
         try {
             currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while updating receipt, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -38,7 +38,7 @@ public class ViewCurrentReceiptCommand extends Command {
         Map<Product, Integer> productMap;
         try {
             productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());
@@ -49,7 +49,7 @@ public class ViewCurrentReceiptCommand extends Command {
         String user;
         try {
             user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while retrieving user information, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());

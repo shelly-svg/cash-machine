@@ -4,7 +4,7 @@ import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -37,7 +37,7 @@ public class SearchReceiptCommand extends Command {
         if (currentReceipt != null) {
             try {
                 currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while updating receipt, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());
@@ -58,7 +58,7 @@ public class SearchReceiptCommand extends Command {
         List<Receipt> result;
         try {
             result = receiptDAO.searchReceipts(pattern, currentPage, recordsPerPage);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while searching products, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -71,7 +71,7 @@ public class SearchReceiptCommand extends Command {
         int numberOfRows;
         try {
             numberOfRows = receiptDAO.countOfRowsAffectedBySearch(pattern);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());

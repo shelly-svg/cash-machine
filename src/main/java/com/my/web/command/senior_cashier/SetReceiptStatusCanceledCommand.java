@@ -3,7 +3,7 @@ package com.my.web.command.senior_cashier;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class SetReceiptStatusCanceledCommand extends Command {
@@ -47,7 +46,7 @@ public class SetReceiptStatusCanceledCommand extends Command {
         if (currentReceipt != null) {
             try {
                 currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 errorMessage = "An error has occurred while updating receipt, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());
@@ -57,7 +56,7 @@ public class SetReceiptStatusCanceledCommand extends Command {
             if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
                 try {
                     receiptDAO.cancelReceipt(currentReceipt);
-                } catch (ApplicationException exception) {
+                } catch (DBException exception) {
                     errorMessage = "An error has occurred while canceling this report, please try again later";
                     session.setAttribute("errorMessage", errorMessage);
                     logger.error("errorMessage --> " + exception.getMessage());

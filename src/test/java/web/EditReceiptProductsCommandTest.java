@@ -4,7 +4,7 @@ import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.cashier.EditReceiptProductsCommand;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class EditReceiptProductsCommandTest {
     private static HttpSession mockSession;
 
     @BeforeAll
-    static void init() throws ApplicationException {
+    static void init() throws DBException {
         receiptDAO = Mockito.mock(ReceiptDAO.class);
         productDAO = Mockito.mock(ProductDAO.class);
         underTest = new EditReceiptProductsCommand(receiptDAO, productDAO);
@@ -50,7 +50,7 @@ public class EditReceiptProductsCommandTest {
     }
 
     @Test
-    public void EditReceiptProductsCommandPOSTTest() throws ServletException, IOException, ApplicationException {
+    public void EditReceiptProductsCommandPOSTTest() throws ServletException, IOException, DBException {
 
         Product testProduct = new Product();
         testProduct.setId(1);
@@ -77,7 +77,7 @@ public class EditReceiptProductsCommandTest {
     }
 
     @Test
-    public void editReceiptProductsCommandGETTest() throws ServletException, IOException, ApplicationException {
+    public void editReceiptProductsCommandGETTest() throws ServletException, IOException, DBException {
 
         when(mockRequest.getMethod()).thenReturn("GET");
         doNothing().when(mockRequest).setAttribute(anyString(), any());

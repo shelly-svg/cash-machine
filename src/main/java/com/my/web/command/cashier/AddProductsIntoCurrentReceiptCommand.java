@@ -5,7 +5,7 @@ import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
 import com.my.web.command.commodity_expert.EditProductCommand;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AddProductsIntoCurrentReceiptCommand extends Command {
@@ -39,11 +38,20 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
 
         HttpSession session = request.getSession();
         ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (NumberFormatException exception) {
+            String errorMessage = "Product with chosen id is not exist";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
         try {
             currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while updating receipt, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -54,7 +62,7 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
         Product product;
         try {
             product = productDAO.findProduct(id);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while searching product, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -77,7 +85,7 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
 
         try {
             receiptDAO.addProductIntoReceipt(product, currentReceipt.getId());
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("add.product.already.added.error");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());

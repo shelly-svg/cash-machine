@@ -5,7 +5,7 @@ import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -28,7 +28,7 @@ public class ViewMenuCommand extends Command {
         if (currentReceipt != null) {
             try {
                 currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while updating receipt, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());

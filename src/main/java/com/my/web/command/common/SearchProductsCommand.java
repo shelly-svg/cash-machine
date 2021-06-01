@@ -4,7 +4,7 @@ import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -37,7 +37,7 @@ public class SearchProductsCommand extends Command {
         List<Product> result;
         try {
             result = productDAO.searchProducts(pattern, currentPage, recordsPerPage);
-        } catch (ApplicationException ex) {
+        } catch (DBException ex) {
             String errorMessage = "An error has occurred while searching products, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + ex.getMessage());
@@ -49,7 +49,7 @@ public class SearchProductsCommand extends Command {
         int numberOfRows;
         try {
             numberOfRows = productDAO.countOfRowsAffectedBySearch(pattern);
-        } catch (ApplicationException ex) {
+        } catch (DBException ex) {
             String errorMessage = "An error has occurred while searching products, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + ex.getMessage());

@@ -3,7 +3,7 @@ package db.entities;
 import com.my.db.entities.Fields;
 import com.my.db.entities.User;
 import com.my.db.entities.UserDAO;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void testGetUserById() throws SQLException, ApplicationException {
+    public void testGetUserById() throws SQLException, DBException {
         User testUser;
         testUser = instance.findUser(userId);
 
@@ -76,7 +76,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void testFindUsersFNameLName() throws SQLException, ApplicationException {
+    public void testFindUsersFNameLName() throws SQLException, DBException {
         String result = "first name last name";
         String usersFNameLName = instance.findUsersFNameLName(userId);
 
@@ -88,7 +88,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void testFindUserByLogin() throws SQLException, ApplicationException {
+    public void testFindUserByLogin() throws SQLException, DBException {
         String login = expectedUser.getLogin();
         User testUser = instance.findUserByLogin(login);
 
@@ -100,7 +100,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void testFindUserForReport() throws ApplicationException {
+    public void testFindUserForReport() throws DBException {
         expectedUser.setLogin(null);
         expectedUser.setPassword(null);
         expectedUser.setLocaleName(null);
@@ -110,7 +110,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void testCountOfRowsAffectedBySearch() throws SQLException, ApplicationException {
+    public void testCountOfRowsAffectedBySearch() throws SQLException, DBException {
         doNothing().when(mockPstm).setString(anyInt(), anyString());
         when(mockRS.getInt(anyInt())).thenReturn(1);
 
@@ -121,7 +121,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void testSearchCashierByName() throws SQLException, ApplicationException {
+    public void testSearchCashierByName() throws SQLException, DBException {
         doNothing().when(mockPstm).setString(anyInt(), anyString());
         doNothing().when(mockPstm).setInt(anyInt(), anyInt());
 

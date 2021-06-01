@@ -1,6 +1,6 @@
 package com.my.db.entities;
 
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +29,7 @@ public class DeliveryDAO {
 
     private static final String SQL__GET_DELIVERY_BY_ID = "SELECT * FROM delivery WHERE id=?";
 
-    public Delivery findDeliveryById(int id) throws ApplicationException {
+    public Delivery findDeliveryById(int id) throws DBException {
         Delivery delivery = new Delivery();
         PreparedStatement p;
         ResultSet rs;
@@ -52,7 +52,7 @@ public class DeliveryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -60,7 +60,7 @@ public class DeliveryDAO {
         return delivery;
     }
 
-    public Delivery findDeliveryByName(String name) throws ApplicationException {
+    public Delivery findDeliveryByName(String name) throws DBException {
         Delivery delivery = new Delivery();
         name = "%" + name + "%";
         PreparedStatement p;
@@ -85,7 +85,7 @@ public class DeliveryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -93,7 +93,7 @@ public class DeliveryDAO {
         return delivery;
     }
 
-    public List<Delivery> getAllDeliveries() throws ApplicationException {
+    public List<Delivery> getAllDeliveries() throws DBException {
         List<Delivery> deliveries = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
@@ -115,7 +115,7 @@ public class DeliveryDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
+            throw new DBException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);

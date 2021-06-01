@@ -5,7 +5,7 @@ import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -87,7 +87,7 @@ public class EditProductCommand extends Command {
 
         try {
             productDAO.updateProductsAmount(id, newAmount);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("product.dao.error.update.amount");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + errorMessage);
@@ -118,7 +118,7 @@ public class EditProductCommand extends Command {
         Product product;
         try {
             product = productDAO.findProduct(id);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while retrieving product, try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());

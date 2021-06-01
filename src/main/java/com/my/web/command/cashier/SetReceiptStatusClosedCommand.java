@@ -1,12 +1,11 @@
 package com.my.web.command.cashier;
 
-import com.my.Path;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
 import com.my.db.entities.ReceiptStatus;
 import com.my.web.Commands;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -31,7 +30,7 @@ public class SetReceiptStatusClosedCommand extends Command {
         if (currentReceipt != null) {
             try {
                 currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while updating receipt, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());
@@ -44,7 +43,7 @@ public class SetReceiptStatusClosedCommand extends Command {
                     logger.error("errorMessage --> " + errorMessage);
                     return Commands.ERROR_PAGE_COMMAND;
                 }
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());
@@ -53,7 +52,7 @@ public class SetReceiptStatusClosedCommand extends Command {
             if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
                 try {
                     receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CLOSED);
-                } catch (ApplicationException exception) {
+                } catch (DBException exception) {
                     String errorMessage = "Something went wrong while closing this receipt, please try again later";
                     session.setAttribute("errorMessage", errorMessage);
                     logger.error("errorMessage --> " + exception.getMessage());

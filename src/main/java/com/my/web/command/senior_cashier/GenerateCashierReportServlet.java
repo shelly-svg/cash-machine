@@ -7,7 +7,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.my.db.entities.*;
 import com.my.web.Commands;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
@@ -64,7 +64,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
 
         try {
             createCashierReport(lang, id);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while creating a report, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
@@ -77,7 +77,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
         logger.debug("generateWeeklyReport servlet is finished at the POST method");
     }
 
-    private void createCashierReport(String localeName, int id) throws IOException, ApplicationException {
+    private void createCashierReport(String localeName, int id) throws IOException, DBException {
         Document document = new Document();
         try {
             File file = new File(FILE + id + ".pdf");
@@ -111,7 +111,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
         }
     }
 
-    private void createTitle(int userId, Document document, Font catFont, Font subFont, ResourceBundle rb) throws DocumentException, ApplicationException {
+    private void createTitle(int userId, Document document, Font catFont, Font subFont, ResourceBundle rb) throws DocumentException, DBException {
         User user = new UserDAO().getUserForReport(userId);
         String title = rb.getString("cashier.report.name.first") + " " + user.getFirstName() + " " + user.getLastName() + " "
                 + rb.getString("cashier.report.name.second");
@@ -129,7 +129,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
         document.add(preface);
     }
 
-    private void createTable(int userId, Document document, Font smallBold, Font tableHeaderFont, ResourceBundle rb) throws DocumentException, ApplicationException {
+    private void createTable(int userId, Document document, Font smallBold, Font tableHeaderFont, ResourceBundle rb) throws DocumentException, DBException {
         User user = new UserDAO().getUserForReport(userId);
         ReceiptDAO receiptDAO = new ReceiptDAO();
 

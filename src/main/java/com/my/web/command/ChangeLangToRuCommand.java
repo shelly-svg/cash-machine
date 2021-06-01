@@ -4,7 +4,7 @@ import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -43,7 +43,7 @@ public class ChangeLangToRuCommand extends Command {
             try {
                 Map<Integer, Category> categories = new CategoryDAO().findAllCategories();
                 request.setAttribute("categories", categories);
-            } catch (ApplicationException ex) {
+            } catch (DBException ex) {
                 String errorMessage = rb.getString("category.dao.error");
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage -> " + ex.getMessage());
@@ -68,7 +68,7 @@ public class ChangeLangToRuCommand extends Command {
             try {
                 List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
                 request.setAttribute("deliveries", deliveries);
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = rb.getString("delivery.dao.error");
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage -> " + exception.getMessage());
@@ -82,7 +82,7 @@ public class ChangeLangToRuCommand extends Command {
             Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
             try {
                 currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while updating receipt, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());
@@ -92,7 +92,7 @@ public class ChangeLangToRuCommand extends Command {
             Map<Product, Integer> productMap;
             try {
                 productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage -> " + exception.getMessage());
@@ -102,7 +102,7 @@ public class ChangeLangToRuCommand extends Command {
             String user;
             try {
                 user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while retrieving user information, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage -> " + exception.getMessage());
@@ -115,7 +115,7 @@ public class ChangeLangToRuCommand extends Command {
             Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
             try {
                 currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while updating receipt, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());
@@ -125,7 +125,7 @@ public class ChangeLangToRuCommand extends Command {
             Map<Product, Integer> productMap;
             try {
                 productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
-            } catch (ApplicationException ex) {
+            } catch (DBException ex) {
                 String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage -> " + ex.getMessage());

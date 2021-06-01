@@ -5,8 +5,7 @@ import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
-import com.my.web.exception.ApplicationException;
-import com.my.web.validators.ProductValidator;
+import com.my.web.exception.DBException;
 import com.my.web.validators.ReceiptValidator;
 import org.apache.log4j.Logger;
 
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class CreateReceiptCommand extends Command {
@@ -63,7 +61,7 @@ public class CreateReceiptCommand extends Command {
         try {
             Delivery delivery = new DeliveryDAO().findDeliveryByName(request.getParameter("delivery_id"));
             receipt.setDelivery(delivery);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("delivery.dao.error");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());
@@ -77,11 +75,11 @@ public class CreateReceiptCommand extends Command {
         int id;
         try {
             id = new ReceiptDAO().createReceipt(receipt);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while creating receipt, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
-            return Path.ERROR_PAGE;
+            return Commands.ERROR_PAGE_COMMAND;
         }
         receipt.setId(id);
         session.setAttribute("currentReceipt", receipt);
@@ -97,7 +95,7 @@ public class CreateReceiptCommand extends Command {
         try {
             List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
             request.setAttribute("deliveries", deliveries);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = rb.getString("delivery.dao.error");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage -> " + exception.getMessage());

@@ -10,7 +10,7 @@ import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.email.EmailUtility;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.mail.MessagingException;
@@ -55,7 +55,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
 
         try {
             createWeeklyReport(rb);
-        } catch (ApplicationException exception) {
+        } catch (DBException exception) {
             String errorMessage = "An error has occurred while creating weekly report, please try again later";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
@@ -73,7 +73,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
             User updatedUser = null;
             try {
                 updatedUser = new UserDAO().findUserByLogin(user.getLogin());
-            } catch (ApplicationException exception) {
+            } catch (DBException exception) {
                 String errorMessage = "An error has occurred while retrieving user, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + exception.getMessage());
@@ -97,7 +97,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         logger.debug("generateWeeklyReport servlet is finished at the POST method");
     }
 
-    private void createWeeklyReport(ResourceBundle rb) throws IOException, ApplicationException {
+    private void createWeeklyReport(ResourceBundle rb) throws IOException, DBException {
         Document document = new Document();
         try {
             File file = new File(FILE);
@@ -123,7 +123,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         }
     }
 
-    private void createTable(Document document, Font smallBold, Font tableHeaderFont, ResourceBundle rb) throws DocumentException, ApplicationException {
+    private void createTable(Document document, Font smallBold, Font tableHeaderFont, ResourceBundle rb) throws DocumentException, DBException {
         Paragraph tableParagraph = new Paragraph();
         tableParagraph.add(new Paragraph(rb.getString("weekly.report.table.title"), tableHeaderFont));
         addEmptyLine(tableParagraph, 1);

@@ -3,20 +3,17 @@ package com.my.web.mytags;
 import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.ReceiptDAO;
-import com.my.web.exception.ApplicationException;
+import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspApplicationContext;
-import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Price extends SimpleTagSupport {
 
@@ -41,7 +38,7 @@ public class Price extends SimpleTagSupport {
             Map<Product, Integer> products = new TreeMap<>();
             try {
                 products = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(receiptDAO.findReceipt(id));
-            } catch (ApplicationException ex) {
+            } catch (DBException ex) {
                 String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage -> " + ex.getMessage());
