@@ -4,6 +4,7 @@ import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.command.cashier.EditReceiptProductsCommand;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,7 +51,7 @@ public class EditReceiptProductsCommandTest {
     }
 
     @Test
-    public void EditReceiptProductsCommandPOSTTest() throws ServletException, IOException, DBException {
+    public void EditReceiptProductsCommandPOSTTest() throws ServletException, IOException, DBException, ApplicationException {
 
         Product testProduct = new Product();
         testProduct.setId(1);
@@ -77,7 +78,7 @@ public class EditReceiptProductsCommandTest {
     }
 
     @Test
-    public void editReceiptProductsCommandGETTest() throws ServletException, IOException, DBException {
+    public void editReceiptProductsCommandGETTest() throws ServletException, IOException, DBException, ApplicationException {
 
         when(mockRequest.getMethod()).thenReturn("GET");
         doNothing().when(mockRequest).setAttribute(anyString(), any());

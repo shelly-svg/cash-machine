@@ -27,7 +27,7 @@ public class PasswordUtility {
     /**
      * Generates salt of the declared length
      *
-     * @param length
+     * @param length length of generated salt
      * @return generated salt
      */
     public static String getSalt(int length) {
@@ -43,8 +43,8 @@ public class PasswordUtility {
     /**
      * Hash password
      *
-     * @param password
-     * @param salt
+     * @param password password to be hashed
+     * @param salt salt of the password
      * @return encoded password with PBKDF2 Algorithm
      */
     public static byte[] hash(char[] password, byte[] salt) {
@@ -63,8 +63,8 @@ public class PasswordUtility {
     /**
      * Encodes password with Base64
      *
-     * @param password
-     * @param salt
+     * @param password password to be encoded
+     * @param salt salt to the password
      * @return encoded password with Base64
      */
     public static String generateSecurePassword(String password, String salt) {
@@ -80,14 +80,14 @@ public class PasswordUtility {
     /**
      * Verifying password with encoded one
      *
-     * @param providedPassword
-     * @param securedPassword
-     * @param salt
+     * @param providedPassword password which need to be verified
+     * @param securedPassword encoded password
+     * @param salt salt of the encoded password
      * @return true if providedPassword is match encoded
      */
     public static boolean verifyUserPassword(String providedPassword,
                                              String securedPassword, String salt) {
-        boolean returnValue = false;
+        boolean returnValue;
 
         // Generate New secure password with the same salt
         String newSecurePassword = generateSecurePassword(providedPassword, salt);
