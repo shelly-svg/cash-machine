@@ -2,8 +2,8 @@ package com.my.web.command.common;
 
 import com.my.Path;
 import com.my.db.entities.*;
-import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
@@ -29,26 +29,32 @@ public class SearchReceiptCommand extends Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Search receipt command is started");
 
         HttpSession session = request.getSession();
+        int recordsPerPage = 5;
+
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
         if (currentReceipt != null) {
             try {
                 currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
             } catch (DBException exception) {
-                String errorMessage = "An error has occurred while updating receipt, please try again later";
-                session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage --> " + exception.getMessage());
-                return Commands.ERROR_PAGE_COMMAND;
+                String errorMessage = "receipt.dao.find.receipt";
+                logger.error("errorMessage --> " + exception);
+                throw new ApplicationException(errorMessage);
             }
             session.setAttribute("currentReceipt", currentReceipt);
         }
 
-        //set the number of receipts displayed per page
-        int recordsPerPage = 5;
-        int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        int currentPage;
+        try {
+            currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        } catch (NumberFormatException exception) {
+            String errorMessage = "error.occurred";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
+        }
         logger.debug("Current page => " + currentPage);
 
         String pattern = request.getParameter("receipt_pattern");
@@ -59,10 +65,9 @@ public class SearchReceiptCommand extends Command {
         try {
             result = receiptDAO.searchReceipts(pattern, currentPage, recordsPerPage);
         } catch (DBException exception) {
-            String errorMessage = "An error has occurred while searching products, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "receipt.dao.search.receipt";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
         logger.debug("Search result is => " + result);
@@ -72,12 +77,12 @@ public class SearchReceiptCommand extends Command {
         try {
             numberOfRows = receiptDAO.countOfRowsAffectedBySearch(pattern);
         } catch (DBException exception) {
-            String errorMessage = "An error has occurred, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "error.occurred";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
         logger.debug("Number of rows affected by search " + numberOfRows);
+
         int nOfPages = numberOfRows / recordsPerPage;
         logger.debug("nOfPages ===>>> " + nOfPages);
 

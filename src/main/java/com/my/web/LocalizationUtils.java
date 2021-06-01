@@ -25,4 +25,10 @@ public class LocalizationUtils {
         }
         return ResourceBundle.getBundle("resources", locale);
     }
+
+    public static ResourceBundle getEnglishRb() {
+        Locale locale = new Locale("en", "EN");
+        return ResourceBundle.getBundle("resources", locale);
+    }
+
 }

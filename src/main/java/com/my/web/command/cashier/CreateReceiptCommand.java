@@ -3,8 +3,8 @@ package com.my.web.command.cashier;
 import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
-import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import com.my.web.validators.ReceiptValidator;
 import org.apache.log4j.Logger;
@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class CreateReceiptCommand extends Command {
 
@@ -24,7 +23,7 @@ public class CreateReceiptCommand extends Command {
     private static final Logger logger = Logger.getLogger(CreateReceiptCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Create receipt command is started");
         String forward = null;
         logger.debug("REQUEST METHOD IS => " + request.getMethod());
@@ -42,11 +41,12 @@ public class CreateReceiptCommand extends Command {
         return forward;
     }
 
-    private String doPost(HttpServletRequest request) {
+    private String doPost(HttpServletRequest request) throws ApplicationException {
         logger.debug("Create receipt command started at POST method");
+
         HttpSession session = request.getSession();
         Receipt receipt = new Receipt();
-        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
+
         receipt.setCreateTime(new Date());
         receipt.setNameRu(request.getParameter("name_ru"));
         receipt.setNameEn(request.getParameter("name_en"));
@@ -62,44 +62,39 @@ public class CreateReceiptCommand extends Command {
             Delivery delivery = new DeliveryDAO().findDeliveryByName(request.getParameter("delivery_id"));
             receipt.setDelivery(delivery);
         } catch (DBException exception) {
-            String errorMessage = rb.getString("delivery.dao.error");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "delivery.dao.error";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
-        if (!new ReceiptValidator().validate(receipt, session, rb)) {
-            return Commands.ERROR_PAGE_COMMAND;
-        }
+        new ReceiptValidator().validate(receipt, session);
 
         int id;
         try {
             id = new ReceiptDAO().createReceipt(receipt);
         } catch (DBException exception) {
-            String errorMessage = "An error has occurred while creating receipt, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "receipt.dao.create.receipt";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
+        logger.debug("Received created receipt id => " + id);
+
         receipt.setId(id);
         session.setAttribute("currentReceipt", receipt);
         logger.trace("Set session attribute currentReceipt => " + receipt);
 
-        return "controller?command=viewCurrentReceipt";
+        return Commands.VIEW_CURRENT_RECEIPT_COMMAND;
     }
 
-    private String doGet(HttpServletRequest request) {
+    private String doGet(HttpServletRequest request) throws ApplicationException {
         logger.debug("Create receipt command started at GET method");
-        HttpSession session = request.getSession();
-        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
         try {
             List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
             request.setAttribute("deliveries", deliveries);
         } catch (DBException exception) {
-            String errorMessage = rb.getString("delivery.dao.error");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
-            return Path.ERROR_PAGE;
+            String errorMessage = "delivery.dao.error";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
         return Path.CREATE_RECEIPT_PAGE;
     }

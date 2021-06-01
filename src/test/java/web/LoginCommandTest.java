@@ -2,6 +2,7 @@ package web;
 
 import com.my.web.Commands;
 import com.my.web.command.common.LoginCommand;
+import com.my.web.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.times;
 public class LoginCommandTest {
 
     @Test
-    public void LoginCommandExecuteTestCaptcha() throws ServletException, IOException {
+    public void LoginCommandExecuteTestCaptcha() throws ServletException, IOException, ApplicationException {
         HttpServletRequest mockRequest = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse mockResponse = Mockito.mock(HttpServletResponse.class);
         HttpSession mockSession = Mockito.mock(HttpSession.class);

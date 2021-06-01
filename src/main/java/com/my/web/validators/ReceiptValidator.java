@@ -1,6 +1,7 @@
 package com.my.web.validators;
 
 import com.my.db.entities.Receipt;
+import com.my.web.exception.ApplicationException;
 
 import javax.servlet.http.HttpSession;
 import java.util.ResourceBundle;
@@ -11,62 +12,51 @@ public class ReceiptValidator extends Validator<Receipt> {
     private static final String phonePattern = "^\\d{10}$";
 
     @Override
-    public boolean validate(Receipt receipt, HttpSession session, ResourceBundle rb) {
+    public boolean validate(Receipt receipt, HttpSession session) throws ApplicationException {
         if (receipt.getNameRu() == null || receipt.getNameRu().isEmpty()) {
-            String errorMessage = rb.getString("create.receipt.name.ru.null");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.name.ru.null";
+            throw new ApplicationException(errorMessage);
         }
         if (receipt.getNameEn() == null || receipt.getNameEn().isEmpty()) {
-            String errorMessage = rb.getString("create.receipt.name.en.null");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.name.en.null";
+            throw new ApplicationException(errorMessage);
         }
         if (receipt.getAddressRu() == null || receipt.getAddressRu().isEmpty()) {
-            String errorMessage = rb.getString("create.receipt.address.ru.null");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.address.ru.null";
+            throw new ApplicationException(errorMessage);
         }
         if (receipt.getPhoneNumber() == null || receipt.getPhoneNumber().isEmpty()) {
-            String errorMessage = rb.getString("create.receipt.phone.number.null");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.phone.number.null";
+            throw new ApplicationException(errorMessage);
         }
 
         if (!validateReceiptNameRu(receipt.getNameRu())) {
-            String errorMessage = rb.getString("create.receipt.name.ru.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.name.ru.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateReceiptNameEn(receipt.getNameEn())) {
-            String errorMessage = rb.getString("create.receipt.name.en.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.name.en.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateReceiptAddressRu(receipt.getAddressRu())) {
-            String errorMessage = rb.getString("create.receipt.address.ru.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.address.ru.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateReceiptAddressEn(receipt.getAddressEn())) {
-            String errorMessage = rb.getString("create.receipt.address.en.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.address.en.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateReceiptPhoneNumber(receipt.getPhoneNumber())) {
-            String errorMessage = rb.getString("create.receipt.phone.number.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.phone.number.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateReceiptDescriptionRu(receipt.getDescriptionRu())) {
-            String errorMessage = rb.getString("create.receipt.description.ru.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.description.ru.invalid";
+            throw new ApplicationException(errorMessage);
         }
         if (!validateReceiptDescriptionEn(receipt.getDescriptionEn())) {
-            String errorMessage = rb.getString("create.receipt.description.en.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            return false;
+            String errorMessage = "create.receipt.description.en.invalid";
+            throw new ApplicationException(errorMessage);
         }
         return true;
     }

@@ -11,7 +11,7 @@ public class ProductValidator extends Validator<Product> {
     private static final String cyrillicPattern = "[а-яА-ЯёЁІіЇїЪъ]";
 
     @Override
-    public boolean validate(Product product, HttpSession session, ResourceBundle rb) {
+    public boolean validate(Product product, HttpSession session) {
         if (!validateProductNameRu(product.getNameRu())) {
             String errorMessage = rb.getString("add.product.name.ru.invalid");
             session.setAttribute("errorMessage", errorMessage);

@@ -18,6 +18,7 @@ public class LogoutCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Logout command is started");
+
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();

@@ -8,6 +8,8 @@ import java.sql.SQLException;
  */
 public class DBException extends SQLException {
 
+    private static final long serialVersionUID = -3289120349923004221L;
+
     public DBException() {
     }
 

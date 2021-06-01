@@ -2,8 +2,8 @@ package com.my.web.command.common;
 
 import com.my.Path;
 import com.my.db.entities.*;
-import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 
@@ -20,7 +20,7 @@ public class ViewCurrentReceiptCommand extends Command {
     private static final Logger logger = Logger.getLogger(ViewCurrentReceiptCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("View current receipt command is started");
 
         HttpSession session = request.getSession();
@@ -29,33 +29,31 @@ public class ViewCurrentReceiptCommand extends Command {
         try {
             currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
         } catch (DBException exception) {
-            String errorMessage = "An error has occurred while updating receipt, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
+            String errorMessage = "receipt.dao.find.receipt";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
         Map<Product, Integer> productMap;
         try {
             productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
         } catch (DBException exception) {
-            String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
-            return Path.ERROR_PAGE;
+            String errorMessage = "error.occurred";
+            logger.error("errorMessage -> " + exception);
+            throw new ApplicationException(errorMessage);
+        }
+        request.setAttribute("currentReceiptProductMap", productMap);
+
+        String creator;
+        try {
+            creator = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
+        } catch (DBException exception) {
+            String errorMessage = "user.dao.creator";
+            logger.error("errorMessage -> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
-        request.setAttribute("currentReceiptProductMap", productMap);
-        String user;
-        try {
-            user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
-        } catch (DBException exception) {
-            String errorMessage = "An error has occurred while retrieving user information, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
-            return Path.ERROR_PAGE;
-        }
-        request.setAttribute("creator", user);
+        request.setAttribute("creator", creator);
         session.setAttribute("currentReceipt", currentReceipt);
 
         logger.debug("View current receipt command is finished");

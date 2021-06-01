@@ -2,6 +2,7 @@ package com.my.web;
 
 import com.my.web.command.Command;
 import com.my.web.command.CommandContainer;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class Controller extends HttpServlet {
 
@@ -28,7 +30,11 @@ public class Controller extends HttpServlet {
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.debug("Controller starts");
+        logger.debug("Controller is started");
+
+        HttpSession session = request.getSession();
+        ResourceBundle userRb = LocalizationUtils.getCurrentRb(session);
+        ResourceBundle enRb = LocalizationUtils.getEnglishRb();
 
         String commandName = request.getParameter("command");
         logger.trace("Request parameter: command -> " + commandName);
@@ -36,12 +42,18 @@ public class Controller extends HttpServlet {
         Command command = CommandContainer.get(commandName);
         logger.trace("Obtained command: " + commandName);
 
-        String forward = command.execute(request, response);
+        String forward = Commands.ERROR_PAGE_COMMAND;
+        try {
+            forward = command.execute(request, response);
+        } catch (ApplicationException exception) {
+            logger.error(enRb.getString(exception.getMessage()));
+            session.setAttribute("errorMessage", userRb.getString(exception.getMessage()));
+        }
         logger.trace("Forward address -> " + forward);
 
         logger.debug("Controller is finished, forward to address -> " + forward);
-        HttpSession session = request.getSession();
-        session.setAttribute("lastAction", forward);
+
+        request.getSession().setAttribute("lastAction", forward);
 
         if (request.getMethod().equals("GET")) {
             if (forward != null) {

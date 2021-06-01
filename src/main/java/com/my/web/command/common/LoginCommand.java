@@ -6,6 +6,7 @@ import com.my.db.entities.UserDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.encryption.PasswordUtility;
+import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import com.my.web.recaptcha.VerifyUtils;
 import org.apache.log4j.Logger;
@@ -15,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class LoginCommand extends Command {
 
@@ -24,37 +23,25 @@ public class LoginCommand extends Command {
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Login command is started");
 
         HttpSession session = request.getSession();
 
-        String localeName = "en";
-        Object localeObj = session.getAttribute("lang");
-        if (localeObj != null) {
-            localeName = localeObj.toString();
-        }
-        Locale locale;
-        if ("ru".equals(localeName)) {
-            locale = new Locale("ru", "RU");
-        } else {
-            locale = new Locale("en", "EN");
-        }
-        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
         String login = request.getParameter("login");
-        logger.trace("Request parameter : logging -> " + login);
+        logger.trace("Request parameter : login -> " + login);
 
         String password = request.getParameter("password");
+        logger.trace("Request parameter : password -> " + password);
 
         String errorMessage;
         String forward;
         boolean valid;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
-            errorMessage = rb.getString("login.command.values.empty");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            errorMessage = "login.command.values.empty";
+            logger.error("errorMessage --> " + "Login/password cannot be empty");
+            throw new ApplicationException(errorMessage);
         }
 
         String gCaptchaResponse = request.getParameter("g-recaptcha-response");
@@ -62,42 +49,37 @@ public class LoginCommand extends Command {
         valid = VerifyUtils.verify(gCaptchaResponse);
 
         if (!valid) {
-            errorMessage = rb.getString("login.command.captcha.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            errorMessage = "login.command.captcha.invalid";
+            logger.error("errorMessage --> " + "Captcha isn`t valid");
+            throw new ApplicationException(errorMessage);
         }
+
         logger.debug("captcha is valid");
 
         User user;
         try {
             user = new UserDAO().findUserByLogin(login);
         } catch (DBException exception) {
-            errorMessage = "An error has occurred while searching user, please try again later";
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            errorMessage = "user.dao.find.user.error";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
         }
 
         logger.trace("Found user at DB: user-> " + user);
 
         if (user == null || !PasswordUtility.verifyUserPassword(password, user.getPassword(), user.getSalt())) {
-            errorMessage = rb.getString("login.command.credentials.invalid");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Commands.ERROR_PAGE_COMMAND;
+            errorMessage = "login.command.credentials.invalid";
+            logger.error("errorMessage --> " + "Login/password isn`t valid");
+            throw new ApplicationException(errorMessage);
         } else {
             Role userRole = Role.getRole(user);
             logger.debug("User role --> " + userRole);
-
             session.setAttribute("user", user);
             logger.trace("Set the session attribute: user --> " + user);
             session.setAttribute("userRole", userRole);
             logger.info("User " + user + " logged as " + userRole.toString().toLowerCase());
-
             forward = Commands.VIEW_MENU_COMMAND;
 
-            //work with i18n
             String userLocaleName = user.getLocaleName();
             logger.debug("userLocalName --> " + userLocaleName);
             if (userLocaleName != null && !userLocaleName.isEmpty()) {
