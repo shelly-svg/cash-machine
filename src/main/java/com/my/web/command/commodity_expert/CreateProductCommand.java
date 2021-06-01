@@ -145,7 +145,15 @@ public class CreateProductCommand extends Command {
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        int id = productDAO.addProduct(product);
+        int id;
+        try {
+            id = productDAO.addProduct(product);
+        } catch (ApplicationException ex) {
+            String errorMessage = "An error has occurred while adding new product, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + ex.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         logger.debug("create product command is finished at POST method, forwarding to view product");
         session.setAttribute("lastAction", "controller?command=viewProduct&id=" + id);

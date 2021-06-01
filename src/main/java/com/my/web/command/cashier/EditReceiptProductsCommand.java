@@ -61,7 +61,14 @@ public class EditReceiptProductsCommand extends Command {
 
         HttpSession session = request.getSession();
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-        currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        try {
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while updating receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         if (currentReceipt == null || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CLOSED.name())
                 || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CANCELED.name())) {
@@ -93,10 +100,26 @@ public class EditReceiptProductsCommand extends Command {
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        Map<Product, Integer> receiptProductsMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
-        Product product = productDAO.findProduct(productId);
+        Map<Product, Integer> receiptProductsMap;
+        try {
+            receiptProductsMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+        Product product;
+        try {
+            product = productDAO.findProduct(productId);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while searching product, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
-        if (!receiptProductsMap.containsKey(product)){
+        if (!receiptProductsMap.containsKey(product)) {
             String errorMessage = "Product that you are currently updating is already deleted from the receipt";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
@@ -140,7 +163,14 @@ public class EditReceiptProductsCommand extends Command {
         HttpSession session = request.getSession();
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-        currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        try {
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while updating receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         if (currentReceipt == null || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CLOSED.name())
                 || currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.CANCELED.name())) {
@@ -152,7 +182,15 @@ public class EditReceiptProductsCommand extends Command {
 
         session.setAttribute("currentReceipt", currentReceipt);
 
-        Map<Product, Integer> productMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        Map<Product, Integer> productMap;
+        try {
+            productMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        } catch (ApplicationException ex) {
+            String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + ex.getMessage());
+            return Path.ERROR_PAGE;
+        }
         request.setAttribute("receiptProductMap", productMap);
 
         return Path.VIEW_RECEIPT_PRODUCTS_PAGE;

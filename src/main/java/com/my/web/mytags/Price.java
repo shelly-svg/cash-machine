@@ -1,13 +1,22 @@
 package com.my.web.mytags;
 
+import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.ReceiptDAO;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspApplicationContext;
+import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Price extends SimpleTagSupport {
 
@@ -22,10 +31,23 @@ public class Price extends SimpleTagSupport {
     public void doTag() throws IOException {
         logger.debug("doTag at the price tag is started");
         JspWriter out = getJspContext().getOut();
+        PageContext context = (PageContext) getJspContext();
+        HttpSession session = context.getSession();
+        HttpServletResponse response = (HttpServletResponse) context.getResponse();
         ReceiptDAO receiptDAO = new ReceiptDAO();
         if (receiptId != null) {
             int id = Integer.parseInt(receiptId);
-            Map<Product, Integer> products = receiptDAO.getMapOfAmountsAndProductsFromReceipt(receiptDAO.findReceipt(id));
+
+            Map<Product, Integer> products = new TreeMap<>();
+            try {
+                products = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(receiptDAO.findReceipt(id));
+            } catch (ApplicationException ex) {
+                String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage -> " + ex.getMessage());
+                response.sendRedirect(Path.ERROR_PAGE);
+            }
+
             double price = 0d;
             if (!products.isEmpty()) {
                 for (Product product : products.keySet()) {

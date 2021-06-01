@@ -41,7 +41,7 @@ public class AddProductsIntoCurrentReceiptCommandTest {
         when(mockRequest.getSession().getAttribute("currentReceipt")).thenReturn(testReceipt);
         when(receiptDAO.findReceipt(anyInt())).thenReturn(testReceipt);
         when(productDAO.findProduct(anyInt())).thenReturn(testProduct);
-        doNothing().when(receiptDAO).addProductIntoReceipt(anyInt(), anyInt());
+        doNothing().when(receiptDAO).addProductIntoReceipt(any(), anyInt());
         doNothing().when(productDAO).updateProductsAmount(anyInt(), anyInt());
 
 

@@ -74,7 +74,15 @@ public class CreateReceiptCommand extends Command {
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        int id = new ReceiptDAO().createReceipt(receipt);
+        int id;
+        try {
+            id = new ReceiptDAO().createReceipt(receipt);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while creating receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Path.ERROR_PAGE;
+        }
         receipt.setId(id);
         session.setAttribute("currentReceipt", receipt);
         logger.trace("Set session attribute currentReceipt => " + receipt);

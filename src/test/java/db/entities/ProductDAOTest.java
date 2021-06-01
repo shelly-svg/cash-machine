@@ -87,7 +87,7 @@ public class ProductDAOTest {
     }
 
     @Test
-    public void testAddProduct() throws SQLException {
+    public void testAddProduct() throws SQLException, ApplicationException {
 
         Product product = new Product();
         product.setId(expectedProduct.getId());

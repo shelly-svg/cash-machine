@@ -103,8 +103,35 @@ public class EditProductCommand extends Command {
 
     private String doGet(HttpServletRequest request) {
         logger.debug("Edit product command started at GET method");
-        int id = Integer.parseInt(request.getParameter("id"));
-        Product product = productDAO.findProduct(id);
+
+        HttpSession session = request.getSession();
+        int id;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (NumberFormatException exception) {
+            String errorMessage = "Product with requested index does not exist";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
+        Product product;
+        try {
+            product = productDAO.findProduct(id);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while retrieving product, try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
+        if (product == null) {
+            String errorMessage = "Product with requested index does not exist, try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
         request.setAttribute("product", product);
         request.getSession().setAttribute("lastEditedProductId", id);
         return Path.EDIT_PRODUCT_PAGE;

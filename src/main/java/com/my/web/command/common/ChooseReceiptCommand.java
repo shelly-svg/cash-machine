@@ -4,12 +4,15 @@ import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,10 +27,27 @@ public class ChooseReceiptCommand extends Command {
         int id = Integer.parseInt(request.getParameter("id"));
         logger.trace("Received id from search product result => " + id);
         ReceiptDAO receiptDAO = new ReceiptDAO();
-        Receipt receipt = receiptDAO.findReceipt(id);
+        HttpSession session = request.getSession();
+        Receipt receipt;
+        try {
+            receipt = receiptDAO.findReceipt(id);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while receiving receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Path.ERROR_PAGE;
+        }
         request.getSession().setAttribute("currentReceipt", receipt);
 
-        List<Product> products = receiptDAO.getAllProductsFromReceipt(receipt.getId());
+        List<Product> products;
+        try {
+            products = receiptDAO.getAllProductsFromReceipt(receipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Path.ERROR_PAGE;
+        }
         request.getSession().setAttribute("currentReceiptProducts", products);
 
         logger.trace("Received receipt from database and set session attribute=> " + receipt);

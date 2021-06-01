@@ -2,6 +2,7 @@ package com.my.web.command;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
@@ -79,18 +80,58 @@ public class ChangeLangToRuCommand extends Command {
         }
         if (Path.VIEW_CURRENT_RECEIPT_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            try {
+                currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred while updating receipt, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + exception.getMessage());
+                return Commands.ERROR_PAGE_COMMAND;
+            }
 
-            Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            Map<Product, Integer> productMap;
+            try {
+                productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage -> " + exception.getMessage());
+                return Path.ERROR_PAGE;
+            }
             request.setAttribute("currentReceiptProductMap", productMap);
+            String user;
+            try {
+                user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred while retrieving user information, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage -> " + exception.getMessage());
+                return Path.ERROR_PAGE;
+            }
 
-            String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
             request.setAttribute("creator", user);
         }
         if (Path.VIEW_RECEIPT_PRODUCTS_PAGE.equals(forward)) {
             Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
-            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-            Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            try {
+                currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred while updating receipt, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + exception.getMessage());
+                return Commands.ERROR_PAGE_COMMAND;
+            }
+
+            Map<Product, Integer> productMap;
+            try {
+                productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            } catch (ApplicationException ex) {
+                String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage -> " + ex.getMessage());
+                return Path.ERROR_PAGE;
+            }
+
             request.setAttribute("receiptProductMap", productMap);
         }
 

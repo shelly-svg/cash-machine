@@ -41,10 +41,26 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
         ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
         int id = Integer.parseInt(request.getParameter("id"));
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
-        currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        try {
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while updating receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
         logger.debug("Updated current receipt => " + currentReceipt);
 
-        Product product = productDAO.findProduct(id);
+        Product product;
+        try {
+            product = productDAO.findProduct(id);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while searching product, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
         if (product.getAmount() == 0) {
             String errorMessage = rb.getString("add.product.out.of.stock");
             session.setAttribute("errorMessage", errorMessage);
@@ -60,20 +76,11 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
         }
 
         try {
-            receiptDAO.addProductIntoReceipt(id, currentReceipt.getId());
+            receiptDAO.addProductIntoReceipt(product, currentReceipt.getId());
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("add.product.already.added.error");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + exception.getMessage());
-            return Commands.ERROR_PAGE_COMMAND;
-        }
-
-        try {
-            productDAO.updateProductsAmount(id, product.getAmount() - 1);
-        } catch (ApplicationException exception) {
-            String errorMessage = rb.getString("product.dao.error.update.amount");
-            session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + exception.getMessage());
             return Commands.ERROR_PAGE_COMMAND;
         }
 

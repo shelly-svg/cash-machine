@@ -41,7 +41,15 @@ public class RemoveProductFromReceiptCommand extends Command {
         ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-        Receipt updatedReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        Receipt updatedReceipt;
+        try {
+            updatedReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while updating receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         if (!updatedReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
             String errorMessage = rb.getString("remove.product.from.receipt.command.invalid.status");
@@ -54,18 +62,24 @@ public class RemoveProductFromReceiptCommand extends Command {
         int receiptId = Integer.parseInt(request.getParameter("receipt_id"));
         int amount = Integer.parseInt(request.getParameter("amount"));
 
-        Product currentProduct = productDAO.findProduct(productId);
-
+        Product currentProduct;
         try {
-            productDAO.updateProductsAmount(productId, currentProduct.getAmount() + amount);
+            currentProduct = productDAO.findProduct(productId);
         } catch (ApplicationException exception) {
-            String errorMessage = rb.getString("product.dao.error.update.amount");
+            String errorMessage = "An error has occurred while retrieving product, try again later";
             session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        receiptDAO.deleteProductFromReceipt(receiptId, productId);
+        try {
+            receiptDAO.deleteProductFromReceipt(receiptId, currentProduct, amount);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while deleting product, try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         logger.debug("Remove product from receipt command is finished");
         return "controller?command=viewReceiptProducts";

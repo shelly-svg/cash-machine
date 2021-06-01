@@ -56,7 +56,7 @@ public class ProductDAO {
         }
     }
 
-    public int countOfRowsAffectedBySearch(String pattern) {
+    public int countOfRowsAffectedBySearch(String pattern) throws ApplicationException {
         int numberOfRows = 0;
         PreparedStatement p;
         ResultSet rs;
@@ -81,7 +81,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -89,7 +89,7 @@ public class ProductDAO {
         return numberOfRows;
     }
 
-    public List<Product> searchProducts(String pattern, int currentPage, int recordsPerPage) {
+    public List<Product> searchProducts(String pattern, int currentPage, int recordsPerPage) throws ApplicationException {
         List<Product> products = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
@@ -115,7 +115,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -123,8 +123,8 @@ public class ProductDAO {
         return products;
     }
 
-    public int addProduct(Product product) {
-        int generatedKey = 0;
+    public int addProduct(Product product) throws ApplicationException {
+        int generatedKey;
         PreparedStatement preparedStatement;
         Connection con = null;
         try {
@@ -144,7 +144,6 @@ public class ProductDAO {
             preparedStatement.setString(8, product.getDescriptionEn());
             preparedStatement.setInt(9, product.getCategory().getId());
             preparedStatement.execute();
-
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     generatedKey = generatedKeys.getInt(1);
@@ -152,12 +151,11 @@ public class ProductDAO {
                     throw new SQLException("Creating of product is failed, no ID obtained");
                 }
             }
-
             preparedStatement.close();
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -165,7 +163,7 @@ public class ProductDAO {
         return generatedKey;
     }
 
-    public Product findProduct(Integer id) {
+    public Product findProduct(Integer id) throws ApplicationException {
         Product product = null;
         PreparedStatement preparedStatement;
         ResultSet rs;
@@ -184,7 +182,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);

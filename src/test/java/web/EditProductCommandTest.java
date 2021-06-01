@@ -56,7 +56,7 @@ public class EditProductCommandTest {
     }
 
     @Test
-    public void editProductCommandGETTest() throws ServletException, IOException {
+    public void editProductCommandGETTest() throws ServletException, IOException, ApplicationException {
         when(mockRequest.getMethod()).thenReturn("GET");
         when(productDAO.findProduct(any())).thenReturn(new Product());
 

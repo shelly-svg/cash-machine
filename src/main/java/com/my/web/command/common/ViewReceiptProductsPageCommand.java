@@ -4,7 +4,9 @@ import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -25,10 +27,25 @@ public class ViewReceiptProductsPageCommand extends Command {
 
         HttpSession session = request.getSession();
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
-        currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+        try {
+            currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while updating receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
         session.setAttribute("currentReceipt", currentReceipt);
 
-        Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        Map<Product, Integer> productMap;
+        try {
+            productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        } catch (ApplicationException ex) {
+            String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + ex.getMessage());
+            return Path.ERROR_PAGE;
+        }
         request.setAttribute("receiptProductMap", productMap);
 
         logger.debug("View receipt product page command is finished");

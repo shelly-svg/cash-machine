@@ -31,7 +31,7 @@ public class EditReceiptProductsCommandTest {
     private static HttpSession mockSession;
 
     @BeforeAll
-    static void init(){
+    static void init() throws ApplicationException {
         receiptDAO = Mockito.mock(ReceiptDAO.class);
         productDAO = Mockito.mock(ProductDAO.class);
         underTest = new EditReceiptProductsCommand(receiptDAO, productDAO);
@@ -77,7 +77,7 @@ public class EditReceiptProductsCommandTest {
     }
 
     @Test
-    public void editReceiptProductsCommandGETTest() throws ServletException, IOException {
+    public void editReceiptProductsCommandGETTest() throws ServletException, IOException, ApplicationException {
 
         when(mockRequest.getMethod()).thenReturn("GET");
         doNothing().when(mockRequest).setAttribute(anyString(), any());

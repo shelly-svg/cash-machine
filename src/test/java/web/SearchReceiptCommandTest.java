@@ -3,6 +3,7 @@ package web;
 import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.command.common.SearchReceiptCommand;
+import com.my.web.exception.ApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,7 @@ public class SearchReceiptCommandTest {
     }
 
     @Test
-    public void searchReceiptCommandTest() throws ServletException, IOException {
+    public void searchReceiptCommandTest() throws ServletException, IOException, ApplicationException {
         when(mockRequest.getParameter("currentPage")).thenReturn("1");
         when(mockRequest.getParameter("receipt_pattern")).thenReturn("name");
         doNothing().when(mockSession).setAttribute(anyString(), any());

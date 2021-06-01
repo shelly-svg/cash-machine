@@ -2,7 +2,9 @@ package com.my.web.command.common;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -33,7 +35,14 @@ public class SearchReceiptCommand extends Command {
         HttpSession session = request.getSession();
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
         if (currentReceipt != null) {
-            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            try {
+                currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred while updating receipt, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + exception.getMessage());
+                return Commands.ERROR_PAGE_COMMAND;
+            }
             session.setAttribute("currentReceipt", currentReceipt);
         }
 
@@ -46,12 +55,28 @@ public class SearchReceiptCommand extends Command {
         logger.debug("search pattern is ==> " + pattern);
         session.setAttribute("lastSearchReceiptPattern", pattern);
 
-        List<Receipt> result = receiptDAO.searchReceipts(pattern, currentPage, recordsPerPage);
+        List<Receipt> result;
+        try {
+            result = receiptDAO.searchReceipts(pattern, currentPage, recordsPerPage);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while searching products, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
         logger.debug("Search result is => " + result);
         request.setAttribute("searchReceiptResult", result);
 
-        int numberOfRows = receiptDAO.countOfRowsAffectedBySearch(pattern);
+        int numberOfRows;
+        try {
+            numberOfRows = receiptDAO.countOfRowsAffectedBySearch(pattern);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
         logger.debug("Number of rows affected by search " + numberOfRows);
         int nOfPages = numberOfRows / recordsPerPage;
         logger.debug("nOfPages ===>>> " + nOfPages);

@@ -2,7 +2,9 @@ package com.my.web.command.common;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -24,12 +26,35 @@ public class ViewCurrentReceiptCommand extends Command {
         HttpSession session = request.getSession();
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
 
-        currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+        try {
+            currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while updating receipt, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Commands.ERROR_PAGE_COMMAND;
+        }
 
-        Map<Product, Integer> productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        Map<Product, Integer> productMap;
+        try {
+            productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while retrieving receipt products, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
+            return Path.ERROR_PAGE;
+        }
+
         request.setAttribute("currentReceiptProductMap", productMap);
-
-        String user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
+        String user;
+        try {
+            user = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while retrieving user information, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
+            return Path.ERROR_PAGE;
+        }
         request.setAttribute("creator", user);
         session.setAttribute("currentReceipt", currentReceipt);
 

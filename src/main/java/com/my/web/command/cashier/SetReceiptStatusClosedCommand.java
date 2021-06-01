@@ -1,9 +1,12 @@
 package com.my.web.command.cashier;
 
+import com.my.Path;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.ReceiptDAO;
 import com.my.db.entities.ReceiptStatus;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -23,32 +26,52 @@ public class SetReceiptStatusClosedCommand extends Command {
 
         HttpSession session = request.getSession();
         ReceiptDAO receiptDAO = new ReceiptDAO();
-        String errorMessage;
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         if (currentReceipt != null) {
-            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
-            if (receiptDAO.getAllProductsFromReceipt(currentReceipt.getId()).isEmpty()){
-                errorMessage = "You cannot close empty receipts";
+            try {
+                currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred while updating receipt, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage --> " + errorMessage);
-                return "controller?command=noCommand";
+                logger.error("errorMessage --> " + exception.getMessage());
+                return Commands.ERROR_PAGE_COMMAND;
+            }
+            try {
+                if (receiptDAO.getAllProductsFromReceipt(currentReceipt.getId()).isEmpty()) {
+                    String errorMessage = "You cannot close empty receipts";
+                    session.setAttribute("errorMessage", errorMessage);
+                    logger.error("errorMessage --> " + errorMessage);
+                    return Commands.ERROR_PAGE_COMMAND;
+                }
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + exception.getMessage());
+                return Commands.ERROR_PAGE_COMMAND;
             }
             if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
-                receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CLOSED);
+                try {
+                    receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CLOSED);
+                } catch (ApplicationException exception) {
+                    String errorMessage = "Something went wrong while closing this receipt, please try again later";
+                    session.setAttribute("errorMessage", errorMessage);
+                    logger.error("errorMessage --> " + exception.getMessage());
+                    return Commands.ERROR_PAGE_COMMAND;
+                }
                 currentReceipt.setReceiptStatus(ReceiptStatus.CLOSED);
-            }else{
-                errorMessage = "This receipt is canceled, you cannot close";
+            } else {
+                String errorMessage = "This receipt is canceled, you cannot close";
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);
-                return "controller?command=noCommand";
+                return Commands.ERROR_PAGE_COMMAND;
             }
             session.setAttribute("currentReceipt", currentReceipt);
         } else {
-            errorMessage = "You didnt chose receipt";
+            String errorMessage = "You didnt chose receipt";
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return "controller?command=noCommand";
+            return Commands.ERROR_PAGE_COMMAND;
         }
 
         logger.debug("Set receipt status closed command is finished");

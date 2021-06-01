@@ -4,11 +4,13 @@ import com.my.Path;
 import com.my.db.entities.Product;
 import com.my.db.entities.ProductDAO;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class SearchProductsCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Search command is started");
 
+        HttpSession session = request.getSession();
         //set the number of products displayed per page
         int recordsPerPage = 3;
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -28,14 +31,31 @@ public class SearchProductsCommand extends Command {
 
         String pattern = request.getParameter("pattern");
         logger.debug("Pattern is => " + pattern);
-        request.getSession().setAttribute("lastSearchPattern", pattern);
+        session.setAttribute("lastSearchPattern", pattern);
         ProductDAO productDAO = new ProductDAO();
 
-        List<Product> result = productDAO.searchProducts(pattern, currentPage, recordsPerPage);
+        List<Product> result;
+        try {
+            result = productDAO.searchProducts(pattern, currentPage, recordsPerPage);
+        } catch (ApplicationException ex) {
+            String errorMessage = "An error has occurred while searching products, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + ex.getMessage());
+            return Path.ERROR_PAGE;
+        }
         logger.debug("Search result is => " + result);
         request.setAttribute("searchResult", result);
 
-        int numberOfRows = productDAO.countOfRowsAffectedBySearch(pattern);
+        int numberOfRows;
+        try {
+            numberOfRows = productDAO.countOfRowsAffectedBySearch(pattern);
+        } catch (ApplicationException ex) {
+            String errorMessage = "An error has occurred while searching products, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + ex.getMessage());
+            return Path.ERROR_PAGE;
+        }
+
         logger.debug("Number of rows affected by search " + numberOfRows);
         int nOfPages = numberOfRows / recordsPerPage;
         logger.debug("nOfPages ===>>> " + nOfPages);
@@ -46,7 +66,7 @@ public class SearchProductsCommand extends Command {
 
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
-        request.getSession().setAttribute("currentPagPage", currentPage);
+        session.setAttribute("currentPagPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
 
         logger.debug("Search command is finished");

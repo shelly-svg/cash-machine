@@ -45,33 +45,37 @@ public class SetReceiptStatusCanceledCommand extends Command {
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         if (currentReceipt != null) {
-            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            try {
+                currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+            } catch (ApplicationException exception) {
+                errorMessage = "An error has occurred while updating receipt, please try again later";
+                session.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + exception.getMessage());
+                return Commands.ERROR_PAGE_COMMAND;
+            }
+
             if (currentReceipt.getReceiptStatus().name().equals(ReceiptStatus.NEW_RECEIPT.name())) {
-                Map<Product, Integer> productAmountsMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
-                for (Product product : productAmountsMap.keySet()) {
-                    try {
-                        productDAO.updateProductsAmount(product.getId(), product.getAmount() + productAmountsMap.get(product));
-                    } catch (ApplicationException exception) {
-                        errorMessage = rb.getString("product.dao.error.update.amount");
-                        session.setAttribute("errorMessage", errorMessage);
-                        logger.error("errorMessage -> " + errorMessage);
-                        return Commands.ERROR_PAGE_COMMAND;
-                    }
+                try {
+                    receiptDAO.cancelReceipt(currentReceipt);
+                } catch (ApplicationException exception) {
+                    errorMessage = "An error has occurred while canceling this report, please try again later";
+                    session.setAttribute("errorMessage", errorMessage);
+                    logger.error("errorMessage --> " + exception.getMessage());
+                    return Commands.ERROR_PAGE_COMMAND;
                 }
-                receiptDAO.setReceiptStatus(currentReceipt.getId(), ReceiptStatus.CANCELED);
                 currentReceipt.setReceiptStatus(ReceiptStatus.CANCELED);
+                session.setAttribute("currentReceipt", currentReceipt);
             } else {
                 errorMessage = rb.getString("set.receipt.status.closed.command.invalid.status");
                 session.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);
-                return "controller?command=noCommand";
+                return Commands.ERROR_PAGE_COMMAND;
             }
-            session.setAttribute("currentReceipt", currentReceipt);
         } else {
             errorMessage = rb.getString("set.receipt.status.closed.command.receipt.null");
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return "controller?command=noCommand";
+            return Commands.ERROR_PAGE_COMMAND;
         }
 
         logger.debug("Set receipt status canceled command is finished");

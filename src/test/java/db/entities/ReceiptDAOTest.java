@@ -41,16 +41,16 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testUpdateProductAmount() throws SQLException {
-        instance.deleteProductFromReceipt(1, 1);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(1)).execute();
+    public void testUpdateProductAmount() throws SQLException, ApplicationException {
+        instance.deleteProductFromReceipt(1, new Product(), 5);
+        verify(mockCon, times(2)).prepareStatement(anyString());
+        verify(mockPreparedStatement, times(2)).execute();
         verify(mockCon, times(1)).commit();
         verify(mockCon, times(1)).close();
     }
 
     @Test
-    public void testSetReceiptStatus() throws SQLException {
+    public void testSetReceiptStatus() throws SQLException, ApplicationException {
         instance.setReceiptStatus(1, ReceiptStatus.CLOSED);
         verify(mockCon, times(1)).prepareStatement(anyString());
         verify(mockPreparedStatement, times(1)).execute();
@@ -68,7 +68,7 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testCountOfRowsAffectedBySearch() throws SQLException {
+    public void testCountOfRowsAffectedBySearch() throws SQLException, ApplicationException {
         when(mockRS.getInt(1)).thenReturn(1);
         doNothing().when(mockPreparedStatement).setString(anyInt(), anyString());
 
@@ -85,15 +85,15 @@ public class ReceiptDAOTest {
 
     @Test
     public void testAddProductIntoReceipt() throws SQLException, ApplicationException {
-        instance.addProductIntoReceipt(1, 1);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(1)).execute();
+        instance.addProductIntoReceipt(new Product(), 1);
+        verify(mockCon, times(2)).prepareStatement(anyString());
+        verify(mockPreparedStatement, times(2)).execute();
         verify(mockCon, times(1)).commit();
         verify(mockCon, times(1)).close();
     }
 
     @Test
-    public void testCreateReceipt() throws SQLException {
+    public void testCreateReceipt() throws SQLException, ApplicationException {
         int id = 1;
         Timestamp createTime = new Timestamp(System.currentTimeMillis());
         String nameRu = "receiptNameRu";

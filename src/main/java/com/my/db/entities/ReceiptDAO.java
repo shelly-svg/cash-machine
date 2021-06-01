@@ -51,58 +51,34 @@ public class ReceiptDAO {
 
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
 
-    public List<Receipt> getCurrentDayClosedReceiptsForUser(User user) {
-        List<Receipt> receipts = new ArrayList<>();
-        PreparedStatement p;
-        ResultSet rs;
+    public void addProductIntoReceipt(Product product, int receiptId) throws ApplicationException {
+        PreparedStatement preparedStatement;
         Connection con = null;
         try {
-            con = DBManager.getInstance().getConnection();
-            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
-            p = con.prepareStatement(SQL__GET_CURRENT_DAY_CLOSED_RECEIPTS_FOR_USER);
-            p.setInt(1, user.getId());
-            rs = p.executeQuery();
-            while (rs.next()) {
-                receipts.add(mapper.mapRow(rs));
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
             }
-            p.execute();
+            preparedStatement = con.prepareStatement(SQL__ADD_PRODUCT_INTO_RECEIPT);
+            preparedStatement.setInt(1, receiptId);
+            preparedStatement.setInt(2, product.getId());
+            preparedStatement.setInt(3, product.getId());
+            preparedStatement.execute();
+            preparedStatement = con.prepareStatement(SQL__UPDATE_PRODUCT_AMOUNT_BY_ID);
+            preparedStatement.setInt(1, product.getAmount() - 1);
+            preparedStatement.setInt(2, product.getId());
+            preparedStatement.execute();
+            preparedStatement.close();
+            DBManager.getInstance().commitAndClose(con);
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
-        } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
+            throw new ApplicationException(ex.getMessage());
         }
-        return receipts;
     }
 
-    public List<Receipt> getLastWeekClosedReceipts() {
-        List<Receipt> receiptList = new ArrayList<>();
-        PreparedStatement p;
-        ResultSet rs;
-        Connection con = null;
-        try {
-            con = DBManager.getInstance().getConnection();
-            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
-            p = con.prepareStatement(SQL__GET_LAST_WEEK_CLOSED_RECEIPTS);
-            rs = p.executeQuery();
-            while (rs.next()) {
-                receiptList.add(mapper.mapRow(rs));
-            }
-            p.execute();
-        } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
-        } finally {
-            assert con != null;
-            DBManager.getInstance().commitAndClose(con);
-        }
-        return receiptList;
-    }
-
-    public void deleteProductFromReceipt(int receiptId, int productId) {
+    public void deleteProductFromReceipt(int receiptId, Product product, int amountAtReceipt) throws ApplicationException {
         PreparedStatement p;
         Connection con = null;
         try {
@@ -113,35 +89,44 @@ public class ReceiptDAO {
             }
             p = con.prepareStatement(SQL__DELETE_PRODUCT_FROM_RECEIPT);
             p.setInt(1, receiptId);
-            p.setInt(2, productId);
+            p.setInt(2, product.getId());
             p.execute();
+            p = con.prepareStatement(SQL__UPDATE_PRODUCT_AMOUNT_BY_ID);
+            p.setInt(1, product.getAmount() + amountAtReceipt);
+            p.setInt(2, product.getId());
+            p.execute();
+            p.close();
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
     }
 
-    public void setReceiptStatus(int receiptId, ReceiptStatus receiptStatus) {
+    public void cancelReceipt(Receipt receipt) throws ApplicationException {
         PreparedStatement p;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__SET_RECEIPT_STATUS);
-            p.setInt(1, receiptStatus.getId());
-            p.setInt(2, receiptId);
+            p.setInt(1, ReceiptStatus.CANCELED.getId());
+            p.setInt(2, receipt.getId());
             p.execute();
-        } catch (SQLException ex) {
+            Map<Product, Integer> productAmountsMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(receipt);
+            for (Product product : productAmountsMap.keySet()) {
+                p = con.prepareStatement(SQL__UPDATE_PRODUCT_AMOUNT_BY_ID);
+                p.setInt(1, product.getAmount() + productAmountsMap.get(product));
+                p.setInt(2, product.getId());
+                p.execute();
+            }
+            p.close();
+        } catch (SQLException | ApplicationException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -177,11 +162,88 @@ public class ReceiptDAO {
         }
     }
 
-    public Map<Product, Integer> getMapOfAmountsAndProductsFromReceipt(Receipt receipt) {
-        Map<Product, Integer> productMap = new TreeMap<>();
-        List<Product> products = new ReceiptDAO().getAllProductsFromReceipt(receipt.getId());
+    public List<Receipt> getCurrentDayClosedReceiptsForUser(User user) throws ApplicationException {
+        List<Receipt> receipts = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
+            p = con.prepareStatement(SQL__GET_CURRENT_DAY_CLOSED_RECEIPTS_FOR_USER);
+            p.setInt(1, user.getId());
+            rs = p.executeQuery();
+            while (rs.next()) {
+                receipts.add(mapper.mapRow(rs));
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            throw new ApplicationException(ex.getMessage());
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return receipts;
+    }
+
+    public List<Receipt> getLastWeekClosedReceipts() throws ApplicationException {
+        List<Receipt> receiptList = new ArrayList<>();
+        PreparedStatement p;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ReceiptDAO.ReceiptMapper mapper = new ReceiptDAO.ReceiptMapper();
+            p = con.prepareStatement(SQL__GET_LAST_WEEK_CLOSED_RECEIPTS);
+            rs = p.executeQuery();
+            while (rs.next()) {
+                receiptList.add(mapper.mapRow(rs));
+            }
+            rs.close();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            throw new ApplicationException(ex.getMessage());
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return receiptList;
+    }
+
+    public void setReceiptStatus(int receiptId, ReceiptStatus receiptStatus) throws ApplicationException {
+        PreparedStatement p;
+        Connection con = null;
+        try {
+            if (!isTest) {
+                con = DBManager.getInstance().getConnection();
+            } else {
+                con = this.connection;
+            }
+            p = con.prepareStatement(SQL__SET_RECEIPT_STATUS);
+            p.setInt(1, receiptStatus.getId());
+            p.setInt(2, receiptId);
+            p.execute();
+            p.close();
+        } catch (SQLException ex) {
+            assert con != null;
+            DBManager.getInstance().rollbackAndClose(con);
+            throw new ApplicationException(ex.getMessage());
+        } finally {
+            assert con != null;
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+
+    public Map<Product, Integer> getMapOfAmountsAndProductsFromReceipt(Receipt receipt) throws ApplicationException {
+        Map<Product, Integer> productMap = new TreeMap<>();
+        List<Product> products = new ReceiptDAO().getAllProductsFromReceipt(receipt.getId());
+        PreparedStatement p = null;
+        ResultSet rs = null;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
@@ -194,10 +256,16 @@ public class ReceiptDAO {
                     productMap.put(product, rs.getInt(Fields.RECEIPT_HAS_PRODUCT_AMOUNT));
                 }
             }
+            if (rs != null) {
+                rs.close();
+            }
+            if (p != null) {
+                p.close();
+            }
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -205,7 +273,7 @@ public class ReceiptDAO {
         return productMap;
     }
 
-    public Receipt findReceipt(int id) {
+    public Receipt findReceipt(int id) throws ApplicationException {
         Receipt receipt = new Receipt();
         PreparedStatement p;
         ResultSet rs;
@@ -219,10 +287,12 @@ public class ReceiptDAO {
             if (rs.next()) {
                 receipt = mapper.mapRow(rs);
             }
+            rs.close();
+            p.close();
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -230,7 +300,7 @@ public class ReceiptDAO {
         return receipt;
     }
 
-    public int countOfRowsAffectedBySearch(String pattern) {
+    public int countOfRowsAffectedBySearch(String pattern) throws ApplicationException {
         int numberOfRows = 0;
         PreparedStatement p;
         ResultSet rs;
@@ -254,7 +324,7 @@ public class ReceiptDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -262,7 +332,7 @@ public class ReceiptDAO {
         return numberOfRows;
     }
 
-    public List<Receipt> searchReceipts(String pattern, int currentPage, int recordsPerPage) {
+    public List<Receipt> searchReceipts(String pattern, int currentPage, int recordsPerPage) throws ApplicationException {
         List<Receipt> receipts = new ArrayList<>();
         PreparedStatement p;
         ResultSet rs;
@@ -286,7 +356,7 @@ public class ReceiptDAO {
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
@@ -294,7 +364,7 @@ public class ReceiptDAO {
         return receipts;
     }
 
-    public List<Product> getAllProductsFromReceipt(int receiptId) {
+    public List<Product> getAllProductsFromReceipt(int receiptId) throws ApplicationException {
         List<Product> products = new ArrayList<>();
         List<Integer> productsIds = new ArrayList<>();
         ProductDAO productDAO = new ProductDAO();
@@ -312,23 +382,23 @@ public class ReceiptDAO {
             }
             rs.close();
             p.close();
-        } catch (SQLException ex) {
+            for (Integer id : productsIds) {
+                products.add(productDAO.findProduct(id));
+            }
+        } catch (SQLException | ApplicationException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);
         }
-
-        for (Integer id : productsIds) {
-            products.add(productDAO.findProduct(id));
-        }
         return products;
     }
 
-    public void addProductIntoReceipt(int productId, int receiptId) throws ApplicationException {
-        PreparedStatement preparedStatement;
+    public int createReceipt(Receipt receipt) throws ApplicationException {
+        int generatedKey;
+        PreparedStatement p;
         Connection con = null;
         try {
             if (!isTest) {
@@ -336,44 +406,20 @@ public class ReceiptDAO {
             } else {
                 con = this.connection;
             }
-            preparedStatement = con.prepareStatement(SQL__ADD_PRODUCT_INTO_RECEIPT);
-            preparedStatement.setInt(1, receiptId);
-            preparedStatement.setInt(2, productId);
-            preparedStatement.setInt(3, productId);
-            preparedStatement.execute();
-            preparedStatement.close();
-            DBManager.getInstance().commitAndClose(con);
-        } catch (SQLException ex) {
-            assert con != null;
-            DBManager.getInstance().rollbackAndClose(con);
-            throw new ApplicationException(ex.getMessage());
-        }
-    }
-
-    public int createReceipt(Receipt receipt) {
-        int generatedKey = 0;
-        PreparedStatement preparedStatement;
-        Connection con = null;
-        try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
-            preparedStatement = con.prepareStatement(SQL__CREATE_NEW_RECEIPT, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, receipt.getNameRu());
-            preparedStatement.setString(2, receipt.getNameEn());
-            preparedStatement.setString(3, receipt.getAddressRu());
-            preparedStatement.setString(4, receipt.getAddressEn());
-            preparedStatement.setString(5, receipt.getDescriptionRu());
-            preparedStatement.setString(6, receipt.getDescriptionEn());
-            preparedStatement.setString(7, receipt.getPhoneNumber());
-            preparedStatement.setInt(8, receipt.getDelivery().getId());
-            preparedStatement.setInt(9, receipt.getReceiptStatus().getId());
-            preparedStatement.setInt(10, receipt.getUserId());
-            preparedStatement.execute();
-
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            p = con.prepareStatement(SQL__CREATE_NEW_RECEIPT, PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setString(1, receipt.getNameRu());
+            p.setString(2, receipt.getNameEn());
+            p.setString(3, receipt.getAddressRu());
+            p.setString(4, receipt.getAddressEn());
+            p.setString(5, receipt.getDescriptionRu());
+            p.setString(6, receipt.getDescriptionEn());
+            p.setString(7, receipt.getPhoneNumber());
+            p.setInt(8, receipt.getDelivery().getId());
+            p.setInt(9, receipt.getReceiptStatus().getId());
+            p.setInt(10, receipt.getUserId());
+            p.execute();
+            p.close();
+            try (ResultSet generatedKeys = p.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     generatedKey = generatedKeys.getInt(1);
                 } else {
@@ -381,11 +427,11 @@ public class ReceiptDAO {
                 }
             }
 
-            preparedStatement.close();
+            p.close();
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);

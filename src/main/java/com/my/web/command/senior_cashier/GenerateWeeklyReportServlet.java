@@ -10,6 +10,7 @@ import com.my.db.entities.*;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.email.EmailUtility;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.mail.MessagingException;
@@ -51,7 +52,15 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         String action = req.getParameter("action");
         logger.debug("received action => " + action);
         logger.debug("creating weekly report is started");
-        createWeeklyReport(rb);
+
+        try {
+            createWeeklyReport(rb);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while creating weekly report, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            resp.sendRedirect(Path.ERROR_PAGE);
+        }
 
         if (DOWNLOAD.equals(action)) {
             logger.debug("getting weekly report and setting attachment");
@@ -61,16 +70,26 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         if (SEND_MAIL.equals(action)) {
             logger.debug("sending report via user`s email");
             User user = (User) session.getAttribute("user");
-            User updatedUser = new UserDAO().findUserByLogin(user.getLogin());
-            logger.debug("received user => " + updatedUser);
+            User updatedUser = null;
             try {
-                EmailUtility.sendMail(updatedUser.getEmail(), FILE, rb);
-                session.setAttribute("sendMessage", "Sending is completed");
-            } catch (MessagingException exception) {
-                String errorMessage = rb.getString("send.report.error");
+                updatedUser = new UserDAO().findUserByLogin(user.getLogin());
+            } catch (ApplicationException exception) {
+                String errorMessage = "An error has occurred while retrieving user, please try again later";
                 session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage --> " + errorMessage);
+                logger.error("errorMessage --> " + exception.getMessage());
                 forward = Commands.ERROR_PAGE_COMMAND;
+            }
+            logger.debug("received user => " + updatedUser);
+            if (updatedUser != null) {
+                try {
+                    EmailUtility.sendMail(updatedUser.getEmail(), FILE, rb);
+                    session.setAttribute("sendMessage", "Sending is completed");
+                } catch (MessagingException exception) {
+                    String errorMessage = rb.getString("send.report.error");
+                    session.setAttribute("errorMessage", errorMessage);
+                    logger.error("errorMessage --> " + errorMessage);
+                    forward = Commands.ERROR_PAGE_COMMAND;
+                }
             }
             resp.sendRedirect(forward);
         }
@@ -78,7 +97,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         logger.debug("generateWeeklyReport servlet is finished at the POST method");
     }
 
-    private void createWeeklyReport(ResourceBundle rb) throws IOException {
+    private void createWeeklyReport(ResourceBundle rb) throws IOException, ApplicationException {
         Document document = new Document();
         try {
             File file = new File(FILE);
@@ -104,7 +123,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         }
     }
 
-    private void createTable(Document document, Font smallBold, Font tableHeaderFont, ResourceBundle rb) throws DocumentException {
+    private void createTable(Document document, Font smallBold, Font tableHeaderFont, ResourceBundle rb) throws DocumentException, ApplicationException {
         Paragraph tableParagraph = new Paragraph();
         tableParagraph.add(new Paragraph(rb.getString("weekly.report.table.title"), tableHeaderFont));
         addEmptyLine(tableParagraph, 1);

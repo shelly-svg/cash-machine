@@ -2,7 +2,9 @@ package com.my.web.command.senior_cashier;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.web.Commands;
 import com.my.web.command.Command;
+import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -21,6 +23,8 @@ public class ViewSearchCashierResultCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("View search cashier result command is started");
         HttpSession session = request.getSession();
+        UserDAO userDAO = new UserDAO();
+
         //set the number of users displayed per page
         int recordsPerPage = 2;
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -32,13 +36,29 @@ public class ViewSearchCashierResultCommand extends Command {
         session.setAttribute("lastSearchCashierFName", firstName);
         session.setAttribute("lastSearchCashierLName", lastName);
 
-        UserDAO userDAO = new UserDAO();
-        List<User> users = userDAO.searchCashiersByName(firstName, lastName, currentPage, recordsPerPage);
+        List<User> users;
+        try {
+            users = userDAO.searchCashiersByName(firstName, lastName, currentPage, recordsPerPage);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred while searching cashiers, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Path.ERROR_PAGE;
+        }
 
         logger.debug("Search cashier result is => " + users);
         request.setAttribute("searchCashiersResult", users);
 
-        int numberOfRows = userDAO.countOfRowsAffectedBySearchCashiers(firstName, lastName);
+        int numberOfRows;
+        try {
+            numberOfRows = userDAO.countOfRowsAffectedBySearchCashiers(firstName, lastName);
+        } catch (ApplicationException exception) {
+            String errorMessage = "An error has occurred, please try again later";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
+            return Path.ERROR_PAGE;
+        }
+
         logger.debug("Number of rows affected by cashiers search " + numberOfRows);
         int nOfPages = numberOfRows / recordsPerPage;
         logger.debug("nOfPages ===>>> " + nOfPages);
