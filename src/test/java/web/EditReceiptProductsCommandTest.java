@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.mockito.Mockito.*;
 
@@ -54,14 +56,18 @@ public class EditReceiptProductsCommandTest {
         testProduct.setId(1);
         testProduct.setAmount(99);
 
+        Map<Product, Integer> products = new ConcurrentHashMap<>();
+        products.put(testProduct, 200);
+
         when(mockRequest.getMethod()).thenReturn("POST");
         doNothing().when(mockRequest).setAttribute(anyString(), any());
         when(mockRequest.getParameter("product_id")).thenReturn("1");
         when(mockRequest.getParameter("receipt_id")).thenReturn("1");
         when(mockRequest.getParameter("oldAmount")).thenReturn("1");
         when(mockRequest.getParameter("newAmount")).thenReturn("15");
+        when(receiptDAO.getMapOfAmountsAndProductsFromReceipt(any())).thenReturn(products);
         when(productDAO.findProduct(anyInt())).thenReturn(testProduct);
-        doNothing().when(receiptDAO).setAmountOfProductAtTheReceipt(anyInt(), anyInt(), anyInt());
+        doNothing().when(receiptDAO).setAmountOfProductAtTheReceipt(anyInt(), anyInt(), anyInt(), anyInt());
         doNothing().when(productDAO).updateProductsAmount(anyInt(), anyInt());
 
         String actualCommand = underTest.execute(mockRequest, mockResponse);
@@ -83,7 +89,7 @@ public class EditReceiptProductsCommandTest {
         Assertions.assertEquals(expectedCommand, actualCommand);
 
         verify(receiptDAO, times(2)).findReceipt(anyInt());
-        verify(receiptDAO, times(1)).getMapOfAmountsAndProductsFromReceipt(any());
+        verify(receiptDAO, times(2)).getMapOfAmountsAndProductsFromReceipt(any());
     }
 
 }

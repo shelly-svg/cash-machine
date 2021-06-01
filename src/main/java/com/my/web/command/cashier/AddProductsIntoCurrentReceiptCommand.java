@@ -36,11 +36,13 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Add products into current receipt command is started");
+
         HttpSession session = request.getSession();
         ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
         int id = Integer.parseInt(request.getParameter("id"));
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
         currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+        logger.debug("Updated current receipt => " + currentReceipt);
 
         Product product = productDAO.findProduct(id);
         if (product.getAmount() == 0) {
@@ -62,17 +64,19 @@ public class AddProductsIntoCurrentReceiptCommand extends Command {
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("add.product.already.added.error");
             session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
+            logger.error("errorMessage --> " + exception.getMessage());
             return Commands.ERROR_PAGE_COMMAND;
         }
+
         try {
             productDAO.updateProductsAmount(id, product.getAmount() - 1);
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("product.dao.error.update.amount");
             session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
             return Commands.ERROR_PAGE_COMMAND;
         }
+
         logger.debug("Received products ID => " + id);
         logger.debug("Add products into current receipt command is finished, forwarding to search for products page");
 

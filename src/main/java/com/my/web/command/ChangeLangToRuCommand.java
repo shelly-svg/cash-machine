@@ -45,7 +45,7 @@ public class ChangeLangToRuCommand extends Command {
             } catch (ApplicationException ex) {
                 String errorMessage = rb.getString("category.dao.error");
                 session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage -> " + errorMessage);
+                logger.error("errorMessage -> " + ex.getMessage());
                 return Path.ERROR_PAGE;
             }
         }
@@ -70,7 +70,7 @@ public class ChangeLangToRuCommand extends Command {
             } catch (ApplicationException exception) {
                 String errorMessage = rb.getString("delivery.dao.error");
                 session.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage -> " + errorMessage);
+                logger.error("errorMessage -> " + exception.getMessage());
                 return Path.ERROR_PAGE;
             }
         }

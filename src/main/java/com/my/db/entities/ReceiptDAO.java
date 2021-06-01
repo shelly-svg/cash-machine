@@ -49,6 +49,8 @@ public class ReceiptDAO {
 
     private static final String SQL__GET_CURRENT_DAY_CLOSED_RECEIPTS_FOR_USER = "SELECT * FROM receipt WHERE creation_time >= curdate() AND user_id = ? AND receipt_status_id=2;";
 
+    private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
+
     public List<Receipt> getCurrentDayClosedReceiptsForUser(User user) {
         List<Receipt> receipts = new ArrayList<>();
         PreparedStatement p;
@@ -146,7 +148,7 @@ public class ReceiptDAO {
         }
     }
 
-    public void setAmountOfProductAtTheReceipt(int amount, int receiptId, int productId) {
+    public void setAmountOfProductAtTheReceipt(int amount, int newProductAmount, int receiptId, int productId) throws ApplicationException {
         PreparedStatement p;
         Connection con = null;
         try {
@@ -160,10 +162,15 @@ public class ReceiptDAO {
             p.setInt(2, receiptId);
             p.setInt(3, productId);
             p.execute();
+            p = con.prepareStatement(SQL__UPDATE_PRODUCT_AMOUNT_BY_ID);
+            p.setInt(1, newProductAmount);
+            p.setInt(2, productId);
+            p.execute();
+            p.close();
         } catch (SQLException ex) {
             assert con != null;
             DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
+            throw new ApplicationException(ex.getMessage());
         } finally {
             assert con != null;
             DBManager.getInstance().commitAndClose(con);

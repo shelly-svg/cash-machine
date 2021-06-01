@@ -70,7 +70,7 @@ public class CreateProductCommand extends Command {
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("category.dao.error");
             session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
             return Path.ERROR_PAGE;
         }
         return Path.ADD_PRODUCT_PAGE;
@@ -120,7 +120,7 @@ public class CreateProductCommand extends Command {
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("category.dao.error");
             session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
             return Commands.ERROR_PAGE_COMMAND;
         }
         product.setNameRu(nameRu);
@@ -136,7 +136,7 @@ public class CreateProductCommand extends Command {
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("category.dao.error");
             session.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage -> " + errorMessage);
+            logger.error("errorMessage -> " + exception.getMessage());
             return Commands.ERROR_PAGE_COMMAND;
         }
         logger.trace("Got product => " + product);

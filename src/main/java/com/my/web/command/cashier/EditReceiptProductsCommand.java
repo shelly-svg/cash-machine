@@ -3,6 +3,7 @@ package com.my.web.command.cashier;
 import com.my.Path;
 import com.my.db.entities.*;
 import com.my.web.Commands;
+import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;
 import org.apache.log4j.Logger;
@@ -38,19 +39,9 @@ public class EditReceiptProductsCommand extends Command {
         logger.debug("Edit receipt products command is started");
         String forward = null;
         logger.debug("REQUEST METHOD =>  " + request.getMethod());
-        String localeName = "en";
         HttpSession session = request.getSession();
-        Object localeObj = session.getAttribute("lang");
-        if (localeObj != null) {
-            localeName = localeObj.toString();
-        }
-        Locale locale;
-        if ("ru".equals(localeName)) {
-            locale = new Locale("ru", "RU");
-        } else {
-            locale = new Locale("en", "EN");
-        }
-        ResourceBundle rb = ResourceBundle.getBundle("resources", locale);
+
+        ResourceBundle rb = LocalizationUtils.getCurrentRb(session);
         if (request.getMethod().equals("GET")) {
             forward = doGet(request, rb);
         } else {
@@ -84,7 +75,8 @@ public class EditReceiptProductsCommand extends Command {
         int productId = Integer.parseInt(request.getParameter("product_id"));
         int receiptId = Integer.parseInt(request.getParameter("receipt_id"));
         int oldAmount = Integer.parseInt(request.getParameter("oldAmount"));
-        int newAmount = -1;
+        int newAmount;
+        int newProductAmount;
         try {
             newAmount = Integer.parseInt(request.getParameter("newAmount"));
         } catch (NumberFormatException exception) {
@@ -93,17 +85,28 @@ public class EditReceiptProductsCommand extends Command {
             logger.error("errorMessage --> " + errorMessage);
             return Commands.ERROR_PAGE_COMMAND;
         }
+
         if (newAmount <= 0 || newAmount > 999999999) {
             String errorMessage = rb.getString("edit.receipt.products.command.amount.error.null");
             session.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Commands.ERROR_PAGE_COMMAND;
         }
+
+        Map<Product, Integer> receiptProductsMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
         Product product = productDAO.findProduct(productId);
+
+        if (!receiptProductsMap.containsKey(product)){
+            String errorMessage = "Product that you are currently updating is already deleted from the receipt";
+            session.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Commands.ERROR_PAGE_COMMAND;
+        }
+
         if (oldAmount > newAmount && oldAmount + newAmount <= product.getAmount()) {
-            receiptDAO.setAmountOfProductAtTheReceipt(newAmount, receiptId, productId);
             try {
-                productDAO.updateProductsAmount(productId, product.getAmount() + (oldAmount - newAmount));
+                newProductAmount = product.getAmount() + (oldAmount - newAmount);
+                receiptDAO.setAmountOfProductAtTheReceipt(newAmount, newProductAmount, receiptId, productId);
             } catch (ApplicationException exception) {
                 String errorMessage = rb.getString("product.dao.error.update.amount");
                 session.setAttribute("errorMessage", errorMessage);
@@ -119,11 +122,9 @@ public class EditReceiptProductsCommand extends Command {
             return Commands.ERROR_PAGE_COMMAND;
         }
 
-        logger.debug("===>>>>>" + productId + " " + receiptId + " , new Amount = " + newAmount);
-
-        receiptDAO.setAmountOfProductAtTheReceipt(newAmount, receiptId, productId);
         try {
-            productDAO.updateProductsAmount(productId, product.getAmount() - (newAmount - oldAmount));
+            newProductAmount = product.getAmount() + (oldAmount - newAmount);
+            receiptDAO.setAmountOfProductAtTheReceipt(newAmount, newProductAmount, receiptId, productId);
         } catch (ApplicationException exception) {
             String errorMessage = rb.getString("product.dao.error.update.amount");
             session.setAttribute("errorMessage", errorMessage);

@@ -59,10 +59,10 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testSetAmountOfTheProductsAtTheReceipt() throws SQLException {
-        instance.setAmountOfProductAtTheReceipt(1, 1, 1);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(1)).execute();
+    public void testSetAmountOfTheProductsAtTheReceipt() throws SQLException, ApplicationException {
+        instance.setAmountOfProductAtTheReceipt(1, 1, 1, 1);
+        verify(mockCon, times(2)).prepareStatement(anyString());
+        verify(mockPreparedStatement, times(2)).execute();
         verify(mockCon, times(1)).commit();
         verify(mockCon, times(1)).close();
     }
