@@ -6,7 +6,7 @@
 <c:if test="${not empty sessionScope.lang}">
     <script src='https://www.google.com/recaptcha/api.js?hl=${sessionScope.lang}'></script>
 </c:if>
-
+<%@ include file="/WEB-INF/jspf/alertify.jspf" %>
 
 <%@ page pageEncoding="UTF-8" %>
 

@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
 <%@ page import="com.my.db.entities.Role" %>
-
+<%@ include file="/WEB-INF/jspf/alertify.jspf" %>
 <%@ page pageEncoding="UTF-8" %>
 
 <html>

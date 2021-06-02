@@ -1,23 +1,27 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ page isErrorPage="true" %>
 <html>
 <head>
-    <title>ERROR</title>
+    <%@ include file="/WEB-INF/jspf/head.jspf" %>
+    <title><fmt:message key="error.page.title"/></title>
 </head>
 <body>
 
-<c:if test="${not empty errorMessage and empty exception and empty code}">
-    <h3>Error message: ${errorMessage}</h3>
-    <c:remove var="errorMessage"/>
+<c:if test="${not empty sessionScope.errorMessage and empty exception and empty code}">
+    <h3>${sessionScope.errorMessage}</h3>
 </c:if>
-
+<c:if test="${empty sessionScope.errorMessage}">
+    <h3><fmt:message key="error.page.empty.error.message"/></h3>
+</c:if>
+<c:remove scope="session" var="errorMessage"/>
 <hr>
 <c:if test="${not empty sessionScope.user}">
-    <p>Get back to the main menu? </p><a href="?command=viewMenu">Menu</a>
+    <p><fmt:message key="error.page.not.empty.user"/></p><a href="?command=viewMenu">Menu</a>
 </c:if>
 <c:if test="${empty sessionScope.user}">
-    <p>Get back to the login? <a href="${pageContext.request.contextPath}/login.jsp">Login page</a>.</p>
+    <p><fmt:message key="error.page.empty.user"/><a href="${pageContext.request.contextPath}/login.jsp">Login page</a>.
+    </p>
 </c:if>
 </body>
 </html>
