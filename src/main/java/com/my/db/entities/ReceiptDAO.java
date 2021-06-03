@@ -10,18 +10,6 @@ import java.util.*;
 
 public class ReceiptDAO {
 
-    private final boolean isTest;
-    private Connection connection;
-
-    public ReceiptDAO() {
-        isTest = false;
-    }
-
-    public ReceiptDAO(boolean isTest, Connection connection) {
-        this.isTest = isTest;
-        this.connection = connection;
-    }
-
     private static final String SQL__CREATE_NEW_RECEIPT = "INSERT INTO receipt(creation_time, name_ru, name_en, address_ru, address_en, " +
             "description_ru, description_en, phone_number, delivery_id, receipt_status_id, user_id) value \n" +
             "(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -55,11 +43,8 @@ public class ReceiptDAO {
         PreparedStatement preparedStatement = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
+            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             preparedStatement = con.prepareStatement(SQL__ADD_PRODUCT_INTO_RECEIPT);
             preparedStatement.setInt(1, receiptId);
             preparedStatement.setInt(2, product.getId());
@@ -69,10 +54,12 @@ public class ReceiptDAO {
             preparedStatement.setInt(1, product.getAmount() - 1);
             preparedStatement.setInt(2, product.getId());
             preparedStatement.execute();
-            DBManager.getInstance().commitAndClose(con, preparedStatement);
+            con.commit();
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, preparedStatement);
             throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().closeResources(con, preparedStatement);
         }
     }
 
@@ -80,11 +67,8 @@ public class ReceiptDAO {
         PreparedStatement p = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
+            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             p = con.prepareStatement(SQL__DELETE_PRODUCT_FROM_RECEIPT);
             p.setInt(1, receiptId);
             p.setInt(2, product.getId());
@@ -93,10 +77,12 @@ public class ReceiptDAO {
             p.setInt(1, product.getAmount() + amountAtReceipt);
             p.setInt(2, product.getId());
             p.execute();
-            DBManager.getInstance().commitAndClose(con, p);
+            con.commit();
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, p);
             throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().closeResources(con, p);
         }
     }
 
@@ -105,6 +91,7 @@ public class ReceiptDAO {
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
+            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             p = con.prepareStatement(SQL__SET_RECEIPT_STATUS);
             p.setInt(1, ReceiptStatus.CANCELED.getId());
             p.setInt(2, receipt.getId());
@@ -116,10 +103,12 @@ public class ReceiptDAO {
                 p.setInt(2, product.getId());
                 p.execute();
             }
-            DBManager.getInstance().commitAndClose(con, p);
+            con.commit();
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, p);
             throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().closeResources(con, p);
         }
     }
 
@@ -127,11 +116,8 @@ public class ReceiptDAO {
         PreparedStatement p = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
+            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             p = con.prepareStatement(SQL__SET_AMOUNT_OF_PRODUCT_AT_THE_RECEIPT);
             p.setInt(1, amount);
             p.setInt(2, receiptId);
@@ -141,10 +127,12 @@ public class ReceiptDAO {
             p.setInt(1, newProductAmount);
             p.setInt(2, productId);
             p.execute();
-            DBManager.getInstance().commitAndClose(con, p);
+            con.commit();
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con, p);
             throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().closeResources(con, p);
         }
     }
 
@@ -197,11 +185,7 @@ public class ReceiptDAO {
         PreparedStatement p = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__SET_RECEIPT_STATUS);
             p.setInt(1, receiptStatus.getId());
             p.setInt(2, receiptId);
@@ -269,11 +253,7 @@ public class ReceiptDAO {
         ResultSet rs = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_RECEIPT);
             pattern = "%" + pattern + "%";
             p.setString(1, pattern);
@@ -326,7 +306,6 @@ public class ReceiptDAO {
         PreparedStatement p = null;
         ResultSet rs = null;
         Connection con = null;
-
         try {
             con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__FIND_PRODUCTS_FROM_RECEIPT);
@@ -352,11 +331,7 @@ public class ReceiptDAO {
         PreparedStatement p = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__CREATE_NEW_RECEIPT, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setString(1, receipt.getNameRu());
             p.setString(2, receipt.getNameEn());

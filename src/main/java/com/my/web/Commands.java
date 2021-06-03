@@ -9,4 +9,6 @@ public class Commands {
     public static final String VIEW_REPORTS_MENU_COMMAND = "controller?command=viewReportsMenu";
     public static final String VIEW_CURRENT_RECEIPT_COMMAND = "controller?command=viewCurrentReceipt";
 
+    public static final String VIEW_SETTINGS_COMMAND = "controller?command=viewSettings";
+
 }

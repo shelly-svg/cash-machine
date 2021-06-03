@@ -8,18 +8,6 @@ import java.util.List;
 
 public class ProductDAO {
 
-    private final boolean isTest;
-    private Connection connection;
-
-    public ProductDAO() {
-        isTest = false;
-    }
-
-    public ProductDAO(boolean isTest, Connection connection) {
-        this.isTest = isTest;
-        this.connection = connection;
-    }
-
     private static final String SQL__ADD_NEW_PRODUCT = "INSERT INTO product(name_ru, name_en, code, price, amount, " +
             "weight, description_ru, description_en, category_id) value (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -36,11 +24,7 @@ public class ProductDAO {
         PreparedStatement preparedStatement = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             preparedStatement = con.prepareStatement(SQL__UPDATE_PRODUCT_AMOUNT_BY_ID);
             preparedStatement.setInt(1, newAmount);
             preparedStatement.setInt(2, id);
@@ -59,11 +43,7 @@ public class ProductDAO {
         ResultSet rs = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH);
             pattern = "%" + pattern + "%";
             p.setString(1, pattern);
@@ -90,7 +70,6 @@ public class ProductDAO {
         int start = currentPage * recordsPerPage - recordsPerPage;
         try {
             con = DBManager.getInstance().getConnection();
-
             ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
             p = con.prepareStatement(SQL__FIND_PRODUCT_BY_SEARCH);
             pattern = "%" + pattern + "%";
@@ -117,11 +96,7 @@ public class ProductDAO {
         PreparedStatement preparedStatement = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             preparedStatement = con.prepareStatement(SQL__ADD_NEW_PRODUCT, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, product.getNameRu());
             preparedStatement.setString(2, product.getNameEn());

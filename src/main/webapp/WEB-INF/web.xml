@@ -58,7 +58,8 @@
         </init-param>
         <init-param>
             <param-name>common</param-name>
-            <param-value>searchProduct viewMenu logout viewSettings viewSearchProductPage viewProduct
+            <param-value>searchProduct viewMenu logout viewSettings viewSearchProductPage viewProduct changeUserLocale
+                changePassword sendConfirmationLink
             </param-value>
         </init-param>
         <init-param>
@@ -89,7 +90,7 @@
         <url-pattern>/WEB-INF/jsp/*</url-pattern>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
-    
+
     <listener>
         <listener-class>com.my.web.listener.ContextListener</listener-class>
     </listener>

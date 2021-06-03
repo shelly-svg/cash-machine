@@ -99,17 +99,6 @@ public class DBManager {
      *
      * @param con Connection to be roll-backed and closed.
      */
-    public void rollbackAndClose(Connection con) {
-        try {
-            if (con != null) {
-                con.rollback();
-                con.close();
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public void rollbackAndClose(Connection con, PreparedStatement preparedStatement) {
         try {
             if (preparedStatement != null) {
@@ -134,6 +123,35 @@ public class DBManager {
             }
             if (con != null) {
                 con.rollback();
+                con.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void closeResources(Connection con, PreparedStatement preparedStatement, ResultSet resultSet) {
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void closeResources(Connection con, PreparedStatement preparedStatement) {
+        try {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (con != null) {
                 con.close();
             }
         } catch (SQLException ex) {

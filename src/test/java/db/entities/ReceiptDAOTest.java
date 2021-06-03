@@ -1,11 +1,11 @@
 package db.entities;
 
 import com.my.db.entities.*;
-import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.sql.*;
@@ -31,7 +31,7 @@ public class ReceiptDAOTest {
         mockCon = Mockito.mock(Connection.class);
         mockPreparedStatement = Mockito.mock(PreparedStatement.class);
         mockRS = Mockito.mock(ResultSet.class);
-        instance = new ReceiptDAO(true, mockCon);
+        instance = new ReceiptDAO();
 
         doNothing().when(mockCon).commit();
         when(mockCon.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
@@ -41,105 +41,135 @@ public class ReceiptDAOTest {
     }
 
     @Test
-    public void testUpdateProductAmount() throws SQLException, DBException {
-        instance.deleteProductFromReceipt(1, new Product(), 5);
-        verify(mockCon, times(2)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(2)).execute();
-        verify(mockCon, times(1)).commit();
-        verify(mockCon, times(1)).close();
+    public void testUpdateProductAmount() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
+
+            instance.deleteProductFromReceipt(1, new Product(), 5);
+            verify(mockCon, times(2)).prepareStatement(anyString());
+            verify(mockPreparedStatement, times(2)).execute();
+            verify(dbManager, times(1)).commitAndClose(any(), any());
+        }
     }
 
     @Test
-    public void testSetReceiptStatus() throws SQLException, DBException {
-        instance.setReceiptStatus(1, ReceiptStatus.CLOSED);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(1)).execute();
-        verify(mockCon, times(1)).commit();
-        verify(mockCon, times(1)).close();
+    public void testSetReceiptStatus() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
+
+            instance.setReceiptStatus(1, ReceiptStatus.CLOSED);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(mockPreparedStatement, times(1)).execute();
+            verify(dbManager, times(1)).commitAndClose(any(), any());
+        }
     }
 
     @Test
-    public void testSetAmountOfTheProductsAtTheReceipt() throws SQLException, DBException {
-        instance.setAmountOfProductAtTheReceipt(1, 1, 1, 1);
-        verify(mockCon, times(2)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(2)).execute();
-        verify(mockCon, times(1)).commit();
-        verify(mockCon, times(1)).close();
+    public void testSetAmountOfTheProductsAtTheReceipt() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
+
+            instance.setAmountOfProductAtTheReceipt(1, 1, 1, 1);
+            verify(mockCon, times(2)).prepareStatement(anyString());
+            verify(mockPreparedStatement, times(2)).execute();
+            verify(dbManager, times(1)).commitAndClose(any(), any());
+        }
     }
 
     @Test
-    public void testCountOfRowsAffectedBySearch() throws SQLException, DBException {
-        when(mockRS.getInt(1)).thenReturn(1);
-        doNothing().when(mockPreparedStatement).setString(anyInt(), anyString());
+    public void testCountOfRowsAffectedBySearch() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        int expected = 1;
-        int actual = instance.countOfRowsAffectedBySearch("name");
+            when(mockRS.getInt(1)).thenReturn(1);
+            doNothing().when(mockPreparedStatement).setString(anyInt(), anyString());
 
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockCon, times(1)).close();
+            int expected = 1;
+            int actual = instance.countOfRowsAffectedBySearch("name");
 
-        Assertions.assertEquals(expected, actual);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(mockPreparedStatement, times(1)).executeQuery();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+
+            Assertions.assertEquals(expected, actual);
+        }
     }
 
     @Test
-    public void testAddProductIntoReceipt() throws SQLException, DBException {
-        instance.addProductIntoReceipt(new Product(), 1);
-        verify(mockCon, times(2)).prepareStatement(anyString());
-        verify(mockPreparedStatement, times(2)).execute();
-        verify(mockCon, times(1)).commit();
-        verify(mockCon, times(1)).close();
+    public void testAddProductIntoReceipt() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
+
+            instance.addProductIntoReceipt(new Product(), 1);
+            verify(mockCon, times(2)).prepareStatement(anyString());
+            verify(mockPreparedStatement, times(2)).execute();
+            verify(dbManager, times(1)).commitAndClose(any(), any());
+        }
     }
 
     @Test
-    public void testCreateReceipt() throws SQLException, DBException {
-        int id = 1;
-        Timestamp createTime = new Timestamp(System.currentTimeMillis());
-        String nameRu = "receiptNameRu";
-        String nameEn = "receiptNameEn";
-        String addressRu = "receiptAddressRu";
-        String addressEn = "receiptAddressEn";
-        String descriptionRu = "receiptDescriptionRu";
-        String descriptionEn = "receiptDescriptionEn";
-        String phoneNumber = "receiptPhoneNumber";
-        Delivery delivery = new Delivery();
-        delivery.setId(1);
-        delivery.setNameRu("deliveryRu");
-        delivery.setNameEn("deliveryEn");
-        ReceiptStatus receiptStatus = ReceiptStatus.NEW_RECEIPT;
-        int userId = 2;
+    public void testCreateReceipt() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        when(mockCon.prepareStatement(anyString(), anyInt())).thenReturn(mockPreparedStatement);
-        doNothing().when(mockPreparedStatement).setInt(anyInt(), anyInt());
-        doNothing().when(mockPreparedStatement).setString(anyInt(), anyString());
+            int id = 1;
+            Timestamp createTime = new Timestamp(System.currentTimeMillis());
+            String nameRu = "receiptNameRu";
+            String nameEn = "receiptNameEn";
+            String addressRu = "receiptAddressRu";
+            String addressEn = "receiptAddressEn";
+            String descriptionRu = "receiptDescriptionRu";
+            String descriptionEn = "receiptDescriptionEn";
+            String phoneNumber = "receiptPhoneNumber";
+            Delivery delivery = new Delivery();
+            delivery.setId(1);
+            delivery.setNameRu("deliveryRu");
+            delivery.setNameEn("deliveryEn");
+            ReceiptStatus receiptStatus = ReceiptStatus.NEW_RECEIPT;
+            int userId = 2;
 
-        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockRS);
-        when(mockRS.getInt(1)).thenReturn(1);
+            when(mockCon.prepareStatement(anyString(), anyInt())).thenReturn(mockPreparedStatement);
+            doNothing().when(mockPreparedStatement).setInt(anyInt(), anyInt());
+            doNothing().when(mockPreparedStatement).setString(anyInt(), anyString());
 
-        Receipt receipt = new Receipt();
-        receipt.setId(id);
-        receipt.setCreateTime(createTime);
-        receipt.setNameRu(nameRu);
-        receipt.setNameEn(nameEn);
-        receipt.setAddressRu(addressRu);
-        receipt.setAddressEn(addressEn);
-        receipt.setDescriptionRu(descriptionRu);
-        receipt.setDescriptionEn(descriptionEn);
-        receipt.setPhoneNumber(phoneNumber);
-        receipt.setDelivery(delivery);
-        receipt.setReceiptStatus(receiptStatus);
-        receipt.setUserId(userId);
+            when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockRS);
+            when(mockRS.getInt(1)).thenReturn(1);
 
-        int expected = 1;
-        int actual = instance.createReceipt(receipt);
+            Receipt receipt = new Receipt();
+            receipt.setId(id);
+            receipt.setCreateTime(createTime);
+            receipt.setNameRu(nameRu);
+            receipt.setNameEn(nameEn);
+            receipt.setAddressRu(addressRu);
+            receipt.setAddressEn(addressEn);
+            receipt.setDescriptionRu(descriptionRu);
+            receipt.setDescriptionEn(descriptionEn);
+            receipt.setPhoneNumber(phoneNumber);
+            receipt.setDelivery(delivery);
+            receipt.setReceiptStatus(receiptStatus);
+            receipt.setUserId(userId);
 
-        Assertions.assertEquals(expected, actual);
+            int expected = 1;
+            int actual = instance.createReceipt(receipt);
 
-        verify(mockCon, times(1)).prepareStatement(anyString(), anyInt());
-        verify(mockPreparedStatement, times(1)).execute();
-        verify(mockCon, times(1)).commit();
-        verify(mockCon, times(1)).close();
+            Assertions.assertEquals(expected, actual);
+
+            verify(mockCon, times(1)).prepareStatement(anyString(), anyInt());
+            verify(mockPreparedStatement, times(1)).execute();
+            verify(dbManager, times(1)).commitAndClose(any(), any());
+        }
 
     }
 

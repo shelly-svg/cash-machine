@@ -2,6 +2,7 @@ package com.my.db.entities;
 
 import com.my.web.exception.DBException;
 
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,18 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
-
-    private final boolean isTest;
-    private Connection connection;
-
-    public UserDAO() {
-        isTest = false;
-    }
-
-    public UserDAO(boolean isTest, Connection connection) {
-        this.isTest = isTest;
-        this.connection = connection;
-    }
 
     private static final String SQL__FIND_USER_BY_LOGIN =
             "SELECT * FROM user WHERE login=?";
@@ -39,17 +28,62 @@ public class UserDAO {
 
     private static final String SQL__FIND_USER_FOR_REPORT_BY_ID = "SELECT id, first_name, last_name, role_id FROM user WHERE id=?;";
 
+    private static final String SQL__UPDATE_USER_LANGUAGE = "UPDATE user SET locale_name=? WHERE id=?";
+
+    private static final String SQL__ADD_CONFIRMATION_CODE = "INSERT INTO user_details(user_id, salt, code) VALUE (?, ?, ?);";
+
+    private static final String SQL__FIRST_PART_OF_EVENT = "CREATE EVENT IF NOT EXISTS delete_code";
+    private static final String SQL__SECOND_PART_OF_EVENT = " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 SECOND DO DELETE FROM user_details WHERE code=?;";
+
+    public void addConfirmationCode(int userId, String salt, String code) throws DBException {
+        PreparedStatement p = null;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__ADD_CONFIRMATION_CODE);
+            p.setInt(1, userId);
+            p.setString(2, salt);
+            p.setString(3, code);
+            p.execute();
+            String event = SQL__FIRST_PART_OF_EVENT +
+                    salt.substring(new SecureRandom().nextInt(salt.length() / 2)) +
+                    SQL__SECOND_PART_OF_EVENT;
+            p = con.prepareStatement(event);
+            p.setString(1, code);
+            p.execute();
+            con.commit();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().closeResources(con, p);
+        }
+    }
+
+    public void updateUserLanguage(int userId, String newLang) throws DBException {
+        PreparedStatement p = null;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__UPDATE_USER_LANGUAGE);
+            p.setString(1, newLang);
+            p.setInt(2, userId);
+            p.execute();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, p);
+        }
+    }
+
     public User getUserForReport(int id) throws DBException {
         User user = new User();
         PreparedStatement p = null;
         ResultSet rs = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__FIND_USER_FOR_REPORT_BY_ID);
             p.setInt(1, id);
             rs = p.executeQuery();
@@ -74,11 +108,7 @@ public class UserDAO {
         ResultSet rs = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_USERS);
             firstName = "%" + firstName + "%";
             lastName = "%" + lastName + "%";
@@ -105,11 +135,7 @@ public class UserDAO {
         Connection con = null;
         int start = currentPage * recordsPerPage - recordsPerPage;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             p = con.prepareStatement(SQL__SEARCH_USERS_BY_NAME);
             firstName = "%" + firstName + "%";
             lastName = "%" + lastName + "%";
@@ -142,11 +168,7 @@ public class UserDAO {
         ResultSet rs = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             preparedStatement = con.prepareStatement(SQL_FIND_USERS_FNAME_LNAME_BY_ID);
             preparedStatement.setInt(1, id);
             rs = preparedStatement.executeQuery();
@@ -168,11 +190,7 @@ public class UserDAO {
         ResultSet rs = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             UserMapper mapper = new UserMapper();
             preparedStatement = con.prepareStatement(SQL__FIND_USER_BY_ID);
             preparedStatement.setInt(1, id);
@@ -195,11 +213,7 @@ public class UserDAO {
         ResultSet rs = null;
         Connection con = null;
         try {
-            if (!isTest) {
-                con = DBManager.getInstance().getConnection();
-            } else {
-                con = this.connection;
-            }
+            con = DBManager.getInstance().getConnection();
             UserMapper mapper = new UserMapper();
             preparedStatement = con.prepareStatement(SQL__FIND_USER_BY_LOGIN);
             preparedStatement.setString(1, login);

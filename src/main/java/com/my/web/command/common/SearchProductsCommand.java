@@ -42,6 +42,7 @@ public class SearchProductsCommand extends Command {
             logger.error("errorMessage --> " + ex);
             throw new ApplicationException(errorMessage);
         }
+
         logger.debug("Search result is => " + result);
         request.setAttribute("searchResult", result);
 

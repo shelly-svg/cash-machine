@@ -1,13 +1,14 @@
 package db.entities;
 
+import com.my.db.entities.DBManager;
 import com.my.db.entities.Fields;
 import com.my.db.entities.User;
 import com.my.db.entities.UserDAO;
-import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
@@ -28,25 +29,25 @@ public class UserDAOTest {
     @Mock
     Connection mockCon;
     @Mock
-    PreparedStatement mockPstm;
+    PreparedStatement preparedStatement;
     @Mock
     ResultSet mockRS;
 
     @BeforeEach
     public void setUp() throws SQLException {
         mockCon = Mockito.mock(Connection.class);
-        mockPstm = Mockito.mock(PreparedStatement.class);
+        preparedStatement = Mockito.mock(PreparedStatement.class);
         mockRS = Mockito.mock(ResultSet.class);
-        instance = new UserDAO(true, mockCon);
+        instance = new UserDAO();
 
         doNothing().when(mockCon).commit();
-        when(mockCon.prepareStatement(anyString())).thenReturn(mockPstm);
-        doNothing().when(mockPstm).setInt(anyInt(), anyInt());
-        when(mockPstm.executeQuery()).thenReturn(mockRS);
+        when(mockCon.prepareStatement(anyString())).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(anyInt(), anyInt());
+        when(preparedStatement.executeQuery()).thenReturn(mockRS);
         when(mockRS.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
         when(mockRS.getInt(Fields.ENTITY__ID)).thenReturn(1);
-        when(mockRS.getString(Fields.USER__LOGIN)).thenReturn("mylogin");
-        when(mockRS.getString(Fields.USER__PASSWORD)).thenReturn("mypassword");
+        when(mockRS.getString(Fields.USER__LOGIN)).thenReturn("myLogin");
+        when(mockRS.getString(Fields.USER__PASSWORD)).thenReturn("myPassword");
         when(mockRS.getString(Fields.USER__FIRST_NAME)).thenReturn("first name");
         when(mockRS.getString(Fields.USER__LAST_NAME)).thenReturn("last name");
         when(mockRS.getString(Fields.USER__LOCALE_NAME)).thenReturn("en");
@@ -54,8 +55,8 @@ public class UserDAOTest {
 
         expectedUser = new User();
         expectedUser.setId(1);
-        expectedUser.setLogin("mylogin");
-        expectedUser.setPassword("mypassword");
+        expectedUser.setLogin("myLogin");
+        expectedUser.setPassword("myPassword");
         expectedUser.setFirstName("first name");
         expectedUser.setLastName("last name");
         expectedUser.setLocaleName("en");
@@ -63,78 +64,114 @@ public class UserDAOTest {
     }
 
     @Test
-    public void testGetUserById() throws SQLException, DBException {
-        User testUser;
-        testUser = instance.findUser(userId);
+    public void testGetUserById() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        Assertions.assertEquals(expectedUser, testUser);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(0)).setString(anyInt(), anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
+            User testUser;
+            testUser = instance.findUser(userId);
+
+            Assertions.assertEquals(expectedUser, testUser);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(0)).setString(anyInt(), anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(1)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+        }
     }
 
     @Test
-    public void testFindUsersFNameLName() throws SQLException, DBException {
-        String result = "first name last name";
-        String usersFNameLName = instance.findUsersFNameLName(userId);
+    public void testFindUsersFNameLName() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        Assertions.assertEquals(result, usersFNameLName);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
+            String result = "first name last name";
+            String usersFNameLName = instance.findUsersFNameLName(userId);
+
+            Assertions.assertEquals(result, usersFNameLName);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(1)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+        }
     }
 
     @Test
-    public void testFindUserByLogin() throws SQLException, DBException {
-        String login = expectedUser.getLogin();
-        User testUser = instance.findUserByLogin(login);
+    public void testFindUserByLogin() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        Assertions.assertEquals(testUser, expectedUser);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
+            String login = expectedUser.getLogin();
+            User testUser = instance.findUserByLogin(login);
+
+            Assertions.assertEquals(testUser, expectedUser);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(1)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+        }
     }
 
     @Test
-    public void testFindUserForReport() throws DBException {
-        expectedUser.setLogin(null);
-        expectedUser.setPassword(null);
-        expectedUser.setLocaleName(null);
-        User testUser = instance.getUserForReport(expectedUser.getId());
+    public void testFindUserForReport() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        Assertions.assertEquals(expectedUser, testUser);
+            expectedUser.setLogin(null);
+            expectedUser.setPassword(null);
+            expectedUser.setLocaleName(null);
+            User testUser = instance.getUserForReport(expectedUser.getId());
+
+            Assertions.assertEquals(expectedUser, testUser);
+        }
     }
 
     @Test
-    public void testCountOfRowsAffectedBySearch() throws SQLException, DBException {
-        doNothing().when(mockPstm).setString(anyInt(), anyString());
-        when(mockRS.getInt(anyInt())).thenReturn(1);
+    public void testCountOfRowsAffectedBySearch() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        int expected = 1;
-        int actual = instance.countOfRowsAffectedBySearchCashiers("first_name", "last_name");
+            doNothing().when(preparedStatement).setString(anyInt(), anyString());
+            when(mockRS.getInt(anyInt())).thenReturn(1);
 
-        Assertions.assertEquals(expected, actual);
+            int expected = 1;
+            int actual = instance.countOfRowsAffectedBySearchCashiers("first_name", "last_name");
+
+            Assertions.assertEquals(expected, actual);
+        }
     }
 
     @Test
-    public void testSearchCashierByName() throws SQLException, DBException {
-        doNothing().when(mockPstm).setString(anyInt(), anyString());
-        doNothing().when(mockPstm).setInt(anyInt(), anyInt());
+    public void testSearchCashierByName() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        expectedUser.setLogin(null);
-        expectedUser.setPassword(null);
-        expectedUser.setLocaleName(null);
-        List<User> users = instance.searchCashiersByName("first_name", "last_name", 1, 5);
+            doNothing().when(preparedStatement).setString(anyInt(), anyString());
+            doNothing().when(preparedStatement).setInt(anyInt(), anyInt());
 
-        Assertions.assertEquals(users.size(), 1);
+            expectedUser.setLogin(null);
+            expectedUser.setPassword(null);
+            expectedUser.setLocaleName(null);
+            List<User> users = instance.searchCashiersByName("first_name", "last_name", 1, 5);
 
-        User actualUser = users.get(0);
+            Assertions.assertEquals(users.size(), 1);
 
-        Assertions.assertEquals(expectedUser, actualUser);
+            User actualUser = users.get(0);
+
+            Assertions.assertEquals(expectedUser, actualUser);
+        }
     }
 
 }

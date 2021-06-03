@@ -1,11 +1,11 @@
 package db.entities;
 
 import com.my.db.entities.*;
-import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ public class ProductDAOTest {
         mockCon = Mockito.mock(Connection.class);
         preparedStatement = Mockito.mock(PreparedStatement.class);
         mockRS = Mockito.mock(ResultSet.class);
-        instance = new ProductDAO(true, mockCon);
+        instance = new ProductDAO();
 
         doNothing().when(mockCon).commit();
         when(mockCon.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -79,47 +79,58 @@ public class ProductDAOTest {
     }
 
     @Test
-    public void testUpdateProductAmount() throws SQLException, DBException {
-        instance.updateProductsAmount(expectedProduct.getId(), 10);
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(preparedStatement, times(1)).execute();
-        verify(mockCon, times(1)).commit();
+    public void testUpdateProductAmount() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
+
+            instance.updateProductsAmount(expectedProduct.getId(), 10);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).execute();
+            verify(dbManager, times(1)).commitAndClose(any(), any());
+        }
     }
 
     @Test
-    public void testAddProduct() throws SQLException, DBException {
+    public void testAddProduct() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        Product product = new Product();
-        product.setId(expectedProduct.getId());
-        product.setNameRu(expectedProduct.getNameRu());
-        product.setNameEn(expectedProduct.getNameEn());
-        product.setCode(expectedProduct.getCode());
-        product.setPrice(expectedProduct.getPrice());
-        product.setAmount(expectedProduct.getAmount());
-        product.setWeight(expectedProduct.getWeight());
-        product.setDescriptionRu(expectedProduct.getDescriptionRu());
-        product.setDescriptionEn(expectedProduct.getDescriptionEn());
-        product.setCategory(expectedProduct.getCategory());
+            Product product = new Product();
+            product.setId(expectedProduct.getId());
+            product.setNameRu(expectedProduct.getNameRu());
+            product.setNameEn(expectedProduct.getNameEn());
+            product.setCode(expectedProduct.getCode());
+            product.setPrice(expectedProduct.getPrice());
+            product.setAmount(expectedProduct.getAmount());
+            product.setWeight(expectedProduct.getWeight());
+            product.setDescriptionRu(expectedProduct.getDescriptionRu());
+            product.setDescriptionEn(expectedProduct.getDescriptionEn());
+            product.setCategory(expectedProduct.getCategory());
 
-        when(mockCon.prepareStatement(anyString(), anyInt())).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setString(anyInt(), anyString());
-        doNothing().when(preparedStatement).setInt(anyInt(), anyInt());
-        doNothing().when(preparedStatement).setBigDecimal(anyInt(), any());
+            when(mockCon.prepareStatement(anyString(), anyInt())).thenReturn(preparedStatement);
+            doNothing().when(preparedStatement).setString(anyInt(), anyString());
+            doNothing().when(preparedStatement).setInt(anyInt(), anyInt());
+            doNothing().when(preparedStatement).setBigDecimal(anyInt(), any());
 
-        when(preparedStatement.getGeneratedKeys()).thenReturn(mockRS);
-        when(mockRS.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
-        when(mockRS.getInt(1)).thenReturn(1);
+            when(preparedStatement.getGeneratedKeys()).thenReturn(mockRS);
+            when(mockRS.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
+            when(mockRS.getInt(1)).thenReturn(1);
 
-        int expected = 1;
-        int actual = instance.addProduct(product);
+            int expected = 1;
+            int actual = instance.addProduct(product);
 
 
-        verify(mockCon, times(1)).prepareStatement(anyString(), anyInt());
-        verify(preparedStatement, times(1)).execute();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
+            verify(mockCon, times(1)).prepareStatement(anyString(), anyInt());
+            verify(preparedStatement, times(1)).execute();
+            verify(mockRS, times(1)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any());
 
-        Assertions.assertEquals(expected, actual);
+            Assertions.assertEquals(expected, actual);
+        }
     }
 
 }

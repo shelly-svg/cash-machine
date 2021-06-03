@@ -1,11 +1,11 @@
 package db.entities;
 
 import com.my.db.entities.*;
-import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
@@ -26,21 +26,21 @@ public class CategoryDAOTest {
     @Mock
     Connection mockCon;
     @Mock
-    PreparedStatement mockPstm;
+    PreparedStatement preparedStatement;
     @Mock
     ResultSet mockRS;
 
     @BeforeEach
     public void setUp() throws SQLException {
         mockCon = Mockito.mock(Connection.class);
-        mockPstm = Mockito.mock(PreparedStatement.class);
+        preparedStatement = Mockito.mock(PreparedStatement.class);
         mockRS = Mockito.mock(ResultSet.class);
-        instance = new CategoryDAO(true, mockCon);
+        instance = new CategoryDAO();
 
         doNothing().when(mockCon).commit();
-        when(mockCon.prepareStatement(anyString())).thenReturn(mockPstm);
-        doNothing().when(mockPstm).setInt(anyInt(), anyInt());
-        when(mockPstm.executeQuery()).thenReturn(mockRS);
+        when(mockCon.prepareStatement(anyString())).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(anyInt(), anyInt());
+        when(preparedStatement.executeQuery()).thenReturn(mockRS);
         when(mockRS.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
         int categoryId = 1;
         String catNameRu = "categoryRu";
@@ -56,40 +56,57 @@ public class CategoryDAOTest {
     }
 
     @Test
-    public void testFindCategoryByName() throws SQLException, DBException {
-        Category actualCategory = instance.findCategoryByName("categoryRu", "ru");
+    public void testFindCategoryByName() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
-        Assertions.assertEquals(expectedCategory, actualCategory);
+            Category actualCategory = instance.findCategoryByName("categoryRu", "ru");
+
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(1)).next();
+            Assertions.assertEquals(expectedCategory, actualCategory);
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+        }
     }
 
     @Test
-    public void testFindCategoryById() throws SQLException, DBException {
-        Category actualCategory = instance.findCategoryById(1);
+    public void testFindCategoryById() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
-        Assertions.assertEquals(expectedCategory, actualCategory);
+            Category actualCategory = instance.findCategoryById(1);
+
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            Assertions.assertEquals(expectedCategory, actualCategory);
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+        }
     }
 
     @Test
-    public void testFindAllCategories() throws SQLException, DBException {
-        Map<Integer, Category> actualCategories = instance.findAllCategories();
-        Map<Integer, Category> expectedCategories = new HashMap<>();
-        expectedCategories.put(expectedCategory.getId(), expectedCategory);
+    public void testFindAllCategories() throws SQLException{
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(2)).next();
+            Map<Integer, Category> actualCategories = instance.findAllCategories();
+            Map<Integer, Category> expectedCategories = new HashMap<>();
+            expectedCategories.put(expectedCategory.getId(), expectedCategory);
 
-        Assertions.assertEquals(1, actualCategories.size());
-        Assertions.assertEquals(expectedCategories, actualCategories);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(2)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+
+            Assertions.assertEquals(1, actualCategories.size());
+            Assertions.assertEquals(expectedCategories, actualCategories);
+        }
     }
 
 }

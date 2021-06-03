@@ -7,6 +7,9 @@ import com.my.web.command.cashier.SetReceiptStatusClosedCommand;
 import com.my.web.command.commodity_expert.CreateProductCommand;
 import com.my.web.command.commodity_expert.EditProductCommand;
 import com.my.web.command.common.*;
+import com.my.web.command.common.settings.ChangePasswordCommand;
+import com.my.web.command.common.settings.ChangeUserLocaleCommand;
+import com.my.web.command.common.settings.SendConfirmationLinkCommand;
 import com.my.web.command.senior_cashier.*;
 import org.apache.log4j.Logger;
 
@@ -48,6 +51,10 @@ public class CommandContainer {
         commands.put("viewReportsMenu", new ViewReportsMenuCommand());
         commands.put("searchCashier", new SearchCashierCommand());
         commands.put("viewSearchCashierResult", new ViewSearchCashierResultCommand());
+
+        commands.put("changeUserLocale", new ChangeUserLocaleCommand());
+        commands.put("sendConfirmationLink", new SendConfirmationLinkCommand());
+        commands.put("changePassword", new ChangePasswordCommand());
     }
 
     public static Command get(String commandName) {

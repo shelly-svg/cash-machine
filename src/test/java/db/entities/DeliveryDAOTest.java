@@ -1,11 +1,11 @@
 package db.entities;
 
 import com.my.db.entities.*;
-import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.sql.Connection;
@@ -27,21 +27,21 @@ public class DeliveryDAOTest {
     @Mock
     Connection mockCon;
     @Mock
-    PreparedStatement mockPstm;
+    PreparedStatement preparedStatement;
     @Mock
     ResultSet mockRS;
 
     @BeforeEach
     public void setUp() throws SQLException {
         mockCon = Mockito.mock(Connection.class);
-        mockPstm = Mockito.mock(PreparedStatement.class);
+        preparedStatement = Mockito.mock(PreparedStatement.class);
         mockRS = Mockito.mock(ResultSet.class);
-        instance = new DeliveryDAO(true, mockCon);
+        instance = new DeliveryDAO();
 
         doNothing().when(mockCon).commit();
-        when(mockCon.prepareStatement(anyString())).thenReturn(mockPstm);
-        doNothing().when(mockPstm).setInt(anyInt(), anyInt());
-        when(mockPstm.executeQuery()).thenReturn(mockRS);
+        when(mockCon.prepareStatement(anyString())).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(anyInt(), anyInt());
+        when(preparedStatement.executeQuery()).thenReturn(mockRS);
         when(mockRS.next()).thenReturn(Boolean.TRUE, Boolean.FALSE);
         int deliveryId = 1;
         String deliveryNameRu = "deliveryNameRu";
@@ -57,40 +57,58 @@ public class DeliveryDAOTest {
     }
 
     @Test
-    public void testFindDeliveryById() throws SQLException, DBException {
-        Delivery actualDelivery = instance.findDeliveryById(expectedDelivery.getId());
+    public void testFindDeliveryById() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
+            Delivery actualDelivery = instance.findDeliveryById(expectedDelivery.getId());
 
-        Assertions.assertEquals(expectedDelivery, actualDelivery);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(1)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+
+            Assertions.assertEquals(expectedDelivery, actualDelivery);
+        }
     }
 
     @Test
-    public void testFindCategoryByName() throws SQLException, DBException {
-        Delivery actualDelivery = instance.findDeliveryByName(expectedDelivery.getNameRu());
+    public void testFindCategoryByName() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(1)).next();
+            Delivery actualDelivery = instance.findDeliveryByName(expectedDelivery.getNameRu());
 
-        Assertions.assertEquals(expectedDelivery, actualDelivery);
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(1)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+
+            Assertions.assertEquals(expectedDelivery, actualDelivery);
+        }
     }
 
     @Test
-    public void testGetAllDeliveries() throws SQLException, DBException {
-        List<Delivery> deliveries = instance.getAllDeliveries();
+    public void testGetAllDeliveries() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
 
-        verify(mockCon, times(1)).prepareStatement(anyString());
-        verify(mockPstm, times(1)).executeQuery();
-        verify(mockCon, times(1)).commit();
-        verify(mockRS, times(2)).next();
+            List<Delivery> deliveries = instance.getAllDeliveries();
 
-        Assertions.assertEquals(1, deliveries.size());
-        Assertions.assertEquals(expectedDelivery, deliveries.get(0));
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(2)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+
+            Assertions.assertEquals(1, deliveries.size());
+            Assertions.assertEquals(expectedDelivery, deliveries.get(0));
+        }
     }
 
 }
