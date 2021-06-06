@@ -24,5 +24,6 @@ public final class Path {
     public static final String VIEW_SEARCH_CASHIER_RESULT_PAGE = "/WEB-INF/jsp/senior_cashier/search_cashier_result.jsp";
 
     public static final String ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
+    public static final String CHANGE_PASSWORD_PAGE = "/WEB-INF/jsp/common/change_password_page.jsp";
 
 }

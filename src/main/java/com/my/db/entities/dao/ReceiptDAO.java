@@ -1,5 +1,6 @@
-package com.my.db.entities;
+package com.my.db.entities.dao;
 
+import com.my.db.entities.*;
 import com.my.web.exception.DBException;
 
 import java.sql.Connection;

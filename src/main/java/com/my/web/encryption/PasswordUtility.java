@@ -10,7 +10,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 /**
- * Password utility class
+ * Password utility class. Provides methods for encryption and decryption passwords
  *
  * @author Denys Tsebro
  */
@@ -54,7 +54,7 @@ public class PasswordUtility {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             return skf.generateSecret(spec).getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AssertionError("Error while hashing a password: " + e.getMessage(), e);
+            throw new AssertionError("Error while hashing a password => " + e.getMessage(), e);
         } finally {
             spec.clearPassword();
         }

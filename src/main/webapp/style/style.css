@@ -449,3 +449,13 @@ hr {
     height: 15%;
     width: 90%;
 }
+
+#change_password_container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -18%;
+    margin-left: -20%;
+    width: 36%;
+    height: 40%;
+}

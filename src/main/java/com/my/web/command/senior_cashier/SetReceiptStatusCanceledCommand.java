@@ -1,6 +1,7 @@
 package com.my.web.command.senior_cashier;
 
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;

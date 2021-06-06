@@ -2,6 +2,8 @@ package web;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ProductDAO;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.web.Commands;
 import com.my.web.command.cashier.EditReceiptProductsCommand;
 import com.my.web.exception.ApplicationException;

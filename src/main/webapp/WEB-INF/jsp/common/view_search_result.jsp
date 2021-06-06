@@ -19,7 +19,7 @@
             <input type="hidden" name="currentPage" value="1"/>
             <label>
                 <input type="text" placeholder="<fmt:message key="search_jsp.search.placeholder"/>" name="pattern"
-                       required>
+                       required/>
             </label>
             <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
@@ -60,8 +60,8 @@
                             <c:if test="${not empty sessionScope.currentReceipt}">
                                 <td>
                                     <form action="controller" method="post">
-                                        <input type="hidden" name="command" value="addProductsIntoCurrentReceipt">
-                                        <input type="hidden" name="id" value="${product.id}">
+                                        <input type="hidden" name="command" value="addProductsIntoCurrentReceipt"/>
+                                        <input type="hidden" name="id" value="${product.id}"/>
                                         <button type="submit" class="add_product_receipt_btn"><fmt:message
                                                 key="view_search_result_jsp.add.to.receipt"/></button>
                                     </form>

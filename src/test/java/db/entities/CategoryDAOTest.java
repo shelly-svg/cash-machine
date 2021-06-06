@@ -1,6 +1,7 @@
 package db.entities;
 
 import com.my.db.entities.*;
+import com.my.db.entities.dao.CategoryDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

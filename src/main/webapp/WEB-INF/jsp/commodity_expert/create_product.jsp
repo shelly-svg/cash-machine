@@ -18,29 +18,35 @@
         <h2><fmt:message key="product.creating.new.product"/></h2>
         <form action="controller" method="post" name="addProductForm" onsubmit="return(validate())">
             <input type="hidden" name="command" value="createProduct"/>
-            <input type="text" placeholder="<fmt:message key="product.name.ru.column"/>" name="name_ru" required>
-            <input type="text" placeholder="<fmt:message key="product.name.en.column"/>" name="name_en" required>
-            <input type="text" placeholder="<fmt:message key="product.code.column"/>" name="code" required>
-            <input type="text" placeholder="<fmt:message key="product.price.column"/>" name="price" required>
-            <input type="text" placeholder="<fmt:message key="product.amount.column"/>" name="amount" required>
-            <input type="text" placeholder="<fmt:message key="product.weight.column"/>" name="weight" required>
-            <textarea rows="10" cols="100" name="description_ru"
-                      placeholder="<fmt:message key="product.description.ru.column"/>"></textarea>
+            <label>
+                <input type="text" placeholder="<fmt:message key="product.name.ru.column"/>" name="name_ru" required/>
+                <input type="text" placeholder="<fmt:message key="product.name.en.column"/>" name="name_en" required/>
+                <input type="text" placeholder="<fmt:message key="product.code.column"/>" name="code" required/>
+                <input type="text" placeholder="<fmt:message key="product.price.column"/>" name="price" required/>
+                <input type="text" placeholder="<fmt:message key="product.amount.column"/>" name="amount" required/>
+                <input type="text" placeholder="<fmt:message key="product.weight.column"/>" name="weight" required/>
+                <textarea rows="10" cols="100" name="description_ru"
+                          placeholder="<fmt:message key="product.description.ru.column"/>"></textarea>
+            </label>
             <hr>
-            <textarea rows="10" cols="100" name="description_en"
-                      placeholder="<fmt:message key="product.description.en.column"/>"></textarea>
+            <label>
+                <textarea rows="10" cols="100" name="description_en"
+                          placeholder="<fmt:message key="product.description.en.column"/>"></textarea>
+            </label>
             <hr>
             <c:if test="${not empty requestScope.categories}">
-                <select name="category_id">
-                    <c:forEach items="${requestScope.categories}" var="category">
-                        <c:if test="${sessionScope.lang == 'ru'}">
-                            <option><c:out value="${category.value.nameRu}"/></option>
-                        </c:if>
-                        <c:if test="${sessionScope.lang == 'en'}">
-                            <option><c:out value="${category.value.nameEn}"/></option>
-                        </c:if>
-                    </c:forEach>
-                </select>
+                <label>
+                    <select name="category_id">
+                        <c:forEach items="${requestScope.categories}" var="category">
+                            <c:if test="${sessionScope.lang == 'ru'}">
+                                <option><c:out value="${category.value.nameRu}"/></option>
+                            </c:if>
+                            <c:if test="${sessionScope.lang == 'en'}">
+                                <option><c:out value="${category.value.nameEn}"/></option>
+                            </c:if>
+                        </c:forEach>
+                    </select>
+                </label>
             </c:if>
             <hr>
             <button type="submit" class="add_product_btn" name="submit"><fmt:message
@@ -89,7 +95,7 @@
             alertify.alert("<fmt:message key="product.price.column"/>", "<fmt:message key="add.product.invalid.length"/>");
             return false;
         }
-        if (document.addProductForm.price.value < 0){
+        if (document.addProductForm.price.value < 0) {
             alertify.alert("<fmt:message key="product.price.column"/>", "<fmt:message key="add.product.invalid.numeric.negative"/>");
             return false;
         }
@@ -101,7 +107,7 @@
             alertify.alert("<fmt:message key="product.amount.column"/>", "<fmt:message key="add.product.invalid.length"/>");
             return false;
         }
-        if (document.addProductForm.amount.value < 0){
+        if (document.addProductForm.amount.value < 0) {
             alertify.alert("<fmt:message key="product.amount.column"/>", "<fmt:message key="add.product.invalid.numeric.negative"/>");
             return false;
         }
@@ -113,7 +119,7 @@
             alertify.alert("<fmt:message key="product.weight.column"/>", "<fmt:message key="add.product.invalid.length"/>");
             return false;
         }
-        if (document.addProductForm.weight.value < 0){
+        if (document.addProductForm.weight.value < 0) {
             alertify.alert("<fmt:message key="product.weight.column"/>", "<fmt:message key="add.product.invalid.numeric.negative"/>");
             return false;
         }

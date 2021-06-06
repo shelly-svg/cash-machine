@@ -10,5 +10,6 @@ public class Commands {
     public static final String VIEW_CURRENT_RECEIPT_COMMAND = "controller?command=viewCurrentReceipt";
 
     public static final String VIEW_SETTINGS_COMMAND = "controller?command=viewSettings";
+    public static final String LOGOUT_COMMAND = "controller?command=logout";
 
 }

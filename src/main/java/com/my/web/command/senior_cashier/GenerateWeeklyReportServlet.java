@@ -7,6 +7,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ReceiptDAO;
+import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.email.EmailUtility;
@@ -97,6 +99,14 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         logger.debug("generateWeeklyReport servlet is finished at the POST method");
     }
 
+    /**
+     * GNU Affero General Public License v3.0. Itextpdf copyright.
+     * Creates a weekly report based on language, chosen at rb
+     *
+     * @param rb rb, used to localize report
+     * @throws IOException if can`t find font file or report file
+     * @throws DBException if something wrong with DB connection
+     */
     private void createWeeklyReport(ResourceBundle rb) throws IOException, DBException {
         Document document = new Document();
         try {
@@ -218,6 +228,10 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
         Paragraph summary = new Paragraph();
         addEmptyLine(summary, 2);
         summary.add(new Phrase(rb.getString("weekly.report.summary") + ": " + lastWeekIncome, tableHeaderFont));
+        addEmptyLine(summary, 2);
+        Paragraph copy = new Paragraph("©iTextPDF Copyright", smallBold);
+        copy.setAlignment(Element.ALIGN_CENTER);
+        summary.add(copy);
         tableParagraph.add(table);
         tableParagraph.add(summary);
 

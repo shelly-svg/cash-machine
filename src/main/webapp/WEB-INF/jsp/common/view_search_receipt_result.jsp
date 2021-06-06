@@ -18,7 +18,9 @@
         <form action="controller" name="searchReceipt" onsubmit="return(validate())">
             <input type="hidden" name="command" value="searchReceipt"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="<fmt:message key="search_receipt_jsp.placeholder"/>" name="receipt_pattern" required>
+            <label>
+                <input type="text" placeholder="<fmt:message key="search_receipt_jsp.placeholder"/>" name="receipt_pattern" required/>
+            </label>
             <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
@@ -40,7 +42,7 @@
                 <c:forEach items="${requestScope.searchReceiptResult}" var="receipt">
                     <tr>
                         <td><c:out value="${receipt.id}"/></td>
-                        <td><c:out value="${receipt.createTime}"/></td>
+                        <td> <fmt:formatDate value="${receipt.createTime}" type="date" pattern="EEE, d MMM yyyy HH:mm:ss"/></td>
                         <td><c:out value="${receipt.nameRu}"/></td>
                         <td><c:out value="${receipt.nameEn}"/></td>
                         <td><c:out value="${receipt.addressRu}"/></td>

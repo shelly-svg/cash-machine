@@ -19,10 +19,14 @@
         <form action="controller" name="searchCashiers" onsubmit="return(validate())">
             <input type="hidden" name="command" value="viewSearchCashierResult"/>
             <input type="hidden" name="currentPage" value="1"/>
-            <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.fname"/>"
-                   name="cashier_first_name" required>
-            <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.lname"/>"
-                   name="cashier_last_name" required>
+            <label>
+                <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.fname"/>"
+                       name="cashier_first_name" required/>
+            </label>
+            <label>
+                <input type="text" placeholder="<fmt:message key="search.cashier.placeholder.lname"/>"
+                       name="cashier_last_name" required/>
+            </label>
             <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>
         <hr>
@@ -47,7 +51,7 @@
                         <c:if test="${sessionScope.userRole.name().toLowerCase() == 'senior_cashier'}">
                             <td>
                                 <form action="generateCashierReport" method="post">
-                                    <input type="hidden" name="id" value="${user.id}">
+                                    <input type="hidden" name="id" value="${user.id}"/>
                                     <button type="submit" class="cashier_report_btn"><fmt:message
                                             key="cashier.report.generate.button"/></button>
                                 </form>

@@ -2,9 +2,9 @@ package com.my.web.command.commodity_expert;
 
 import com.my.Path;
 import com.my.db.entities.Category;
-import com.my.db.entities.CategoryDAO;
+import com.my.db.entities.dao.CategoryDAO;
 import com.my.db.entities.Product;
-import com.my.db.entities.ProductDAO;
+import com.my.db.entities.dao.ProductDAO;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;

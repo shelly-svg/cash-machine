@@ -1,6 +1,8 @@
 package com.my.web.command.cashier;
 
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ProductDAO;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.command.commodity_expert.EditProductCommand;

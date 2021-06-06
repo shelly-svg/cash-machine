@@ -1,5 +1,9 @@
-package com.my.db.entities;
+package com.my.db.entities.dao;
 
+import com.my.db.entities.DBManager;
+import com.my.db.entities.EntityMapper;
+import com.my.db.entities.Fields;
+import com.my.db.entities.User;
 import com.my.web.exception.DBException;
 
 import java.security.SecureRandom;
@@ -28,18 +32,87 @@ public class UserDAO {
 
     private static final String SQL__FIND_USER_FOR_REPORT_BY_ID = "SELECT id, first_name, last_name, role_id FROM user WHERE id=?;";
 
-    private static final String SQL__UPDATE_USER_LANGUAGE = "UPDATE user SET locale_name=? WHERE id=?";
+    private static final String SQL__UPDATE_USER_LANGUAGE = "UPDATE user SET locale_name=? WHERE id=?;";
 
     private static final String SQL__ADD_CONFIRMATION_CODE = "INSERT INTO user_details(user_id, salt, code) VALUE (?, ?, ?);";
 
     private static final String SQL__FIRST_PART_OF_EVENT = "CREATE EVENT IF NOT EXISTS delete_code";
     private static final String SQL__SECOND_PART_OF_EVENT = " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 SECOND DO DELETE FROM user_details WHERE code=?;";
 
+    private static final String SQL__GET_SALT_FROM_USER_DETAILS = "SELECT salt FROM user_details WHERE user_id=?;";
+
+    private static final String SQL__GET_CODE_FROM_USER_DETAILS = "SELECT code FROM user_details WHERE user_id=?;";
+
+    private static final String SQL__UPDATE_USER_PASSWORD = "UPDATE user SET password=?, salt=? WHERE id=?;";
+
+    public void updateUserPassword(String newSecurePassword, String newSalt, int userId) throws DBException {
+        PreparedStatement p = null;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__UPDATE_USER_PASSWORD);
+            p.setString(1, newSecurePassword);
+            p.setString(2, newSalt);
+            p.setInt(3, userId);
+            p.execute();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, p);
+        }
+    }
+
+    public String getCode(int userId) throws DBException {
+        PreparedStatement p = null;
+        Connection con = null;
+        ResultSet rs = null;
+        String code = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__GET_CODE_FROM_USER_DETAILS);
+            p.setInt(1, userId);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                code = rs.getString(Fields.USER_DETAILS_CODE);
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, p, rs);
+        }
+        return code;
+    }
+
+    public String getSalt(int userId) throws DBException {
+        PreparedStatement p = null;
+        Connection con = null;
+        ResultSet rs = null;
+        String salt = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__GET_SALT_FROM_USER_DETAILS);
+            p.setInt(1, userId);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                salt = rs.getString(Fields.USER__SALT);
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, p, rs);
+        }
+        return salt;
+    }
+
     public void addConfirmationCode(int userId, String salt, String code) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
+            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
             p = con.prepareStatement(SQL__ADD_CONFIRMATION_CODE);
             p.setInt(1, userId);
             p.setString(2, salt);

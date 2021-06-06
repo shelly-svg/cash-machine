@@ -1,11 +1,10 @@
 package com.my.web.command.senior_cashier;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ReceiptDAO;
+import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
 import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
@@ -78,6 +77,15 @@ public class GenerateCashierReportServlet extends HttpServlet {
         logger.debug("generateWeeklyReport servlet is finished at the POST method");
     }
 
+    /**
+     * GNU Affero General Public License v3.0. Itextpdf copyright.
+     * Generates cashier report and save`s into file
+     *
+     * @param localeName language, on which report will be generated
+     * @param id cashier`s id to report on
+     * @throws IOException when file not found
+     * @throws DBException when something happened with connection to DB
+     */
     private void createCashierReport(String localeName, int id) throws IOException, DBException {
         Document document = new Document();
         try {
@@ -181,6 +189,10 @@ public class GenerateCashierReportServlet extends HttpServlet {
             Paragraph summary = new Paragraph();
             addEmptyLine(summary, 2);
             summary.add(new Phrase(rb.getString("weekly.report.summary") + ": " + todayEarn, tableHeaderFont));
+            addEmptyLine(summary, 2);
+            Paragraph copy = new Paragraph("©iTextPDF Copyright", smallBold);
+            copy.setAlignment(Element.ALIGN_CENTER);
+            summary.add(copy);
             tableParagraph.add(table);
             tableParagraph.add(summary);
             document.add(tableParagraph);

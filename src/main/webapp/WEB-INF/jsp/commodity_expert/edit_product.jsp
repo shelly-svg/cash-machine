@@ -33,11 +33,11 @@
             <c:out value="${requestScope.product.amount}"/>
             <br/>
             <form action="controller" method="post" name="editProductAmount" onsubmit="return(validate())">
-                <input type="hidden" name="command" value="editProduct">
-                <input type="hidden" name="id" value="${requestScope.product.id}">
+                <input type="hidden" name="command" value="editProduct"/>
+                <input type="hidden" name="id" value="${requestScope.product.id}"/>
                 <label>
                     <input type="text" placeholder="<fmt:message key="edit.product.new.amount.placeholder"/>"
-                           name="amount" required>
+                           name="amount" required/>
                 </label>
                 <button type="submit" class="add_product_btn" name="submit"><fmt:message
                         key="edit.product.new.amount.submit"/></button>

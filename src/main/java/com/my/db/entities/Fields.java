@@ -47,9 +47,12 @@ public final class Fields {
     public static final String RECEIPT_HAS_PRODUCT_PRODUCT_ID = "product_id";
     public static final String RECEIPT_HAS_PRODUCT_AMOUNT = "amount";
 
-
     //delivery
     public static final String DELIVERY_NAME_RU = "name_ru";
     public static final String DELIVERY_NAME_EN = "name_en";
+
+    //user_details
+    public static final String USER_DETAILS_SALT = "salt";
+    public static final String USER_DETAILS_CODE = "code";
 
 }

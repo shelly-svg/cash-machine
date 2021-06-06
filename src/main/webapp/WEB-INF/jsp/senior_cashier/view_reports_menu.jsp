@@ -13,17 +13,17 @@
     <%@ include file="/WEB-INF/jspf/header.jspf" %>
     <div id="sidebar">
         <form action="generateWeeklyReport" method="post">
-            <input type="hidden" name="action" value="download">
+            <input type="hidden" name="action" value="download"/>
             <button type="submit" class="weekly_report_btn"><fmt:message key="download.weekly.report.name"/></button>
         </form>
         <hr>
         <form action="generateWeeklyReport" method="post">
-            <input type="hidden" name="action" value="sendMail">
+            <input type="hidden" name="action" value="sendMail"/>
             <button type="submit" class="weekly_report_btn"><fmt:message key="sendmail.weekly.report.name"/></button>
         </form>
         <hr>
         <form action="controller">
-            <input type="hidden" name="command" value="searchCashier">
+            <input type="hidden" name="command" value="searchCashier"/>
             <button type="submit" class="cashier_report_btn"><fmt:message key="cashier.report.name.first"/></button>
         </form>
     </div>

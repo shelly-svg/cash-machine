@@ -1,7 +1,7 @@
 package com.my.web.command.cashier;
 
 import com.my.db.entities.Receipt;
-import com.my.db.entities.ReceiptDAO;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.db.entities.ReceiptStatus;
 import com.my.web.Commands;
 import com.my.web.command.Command;

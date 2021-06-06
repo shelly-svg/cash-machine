@@ -50,13 +50,15 @@
                         <td>
                             <form action="controller" method="post" id="change_receipt_product_amount"
                                   name="changeAmountForm" onsubmit="return(validate(this))">
-                                <input type="hidden" name="command" value="editReceiptProducts">
-                                <input type="hidden" name="product_id" value="${product.key.id}">
-                                <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
-                                <input type="hidden" name="storeAmount" value="${product.key.amount}">
-                                <input type="hidden" name="oldAmount" value="${product.value.toString()}">
-                                <input type="text" name="newAmount"
-                                       placeholder="<fmt:message key="edit.product.new.amount"/>" required>
+                                <input type="hidden" name="command" value="editReceiptProducts"/>
+                                <input type="hidden" name="product_id" value="${product.key.id}"/>
+                                <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}"/>
+                                <input type="hidden" name="storeAmount" value="${product.key.amount}"/>
+                                <input type="hidden" name="oldAmount" value="${product.value.toString()}"/>
+                                <label>
+                                    <input type="text" name="newAmount"
+                                           placeholder="<fmt:message key="edit.product.new.amount"/>" required/>
+                                </label>
                                 <button type="submit" class="add_product_btn" name="submit"><fmt:message
                                         key="edit.product.new.amount.submit"/></button>
                             </form>
@@ -66,10 +68,10 @@
                     and sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
                         <td>
                             <form action="controller" method="post" name="removeProductFromReceipt">
-                                <input type="hidden" name="command" value="removeProductFromReceipt">
-                                <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}">
-                                <input type="hidden" name="product_id" value="${product.key.id}">
-                                <input type="hidden" name="amount" value="${product.value.toString()}">
+                                <input type="hidden" name="command" value="removeProductFromReceipt"/>
+                                <input type="hidden" name="receipt_id" value="${sessionScope.currentReceipt.id}"/>
+                                <input type="hidden" name="product_id" value="${product.key.id}"/>
+                                <input type="hidden" name="amount" value="${product.value.toString()}"/>
                                 <button type="submit" class="remove_product_btn" name="submit"><fmt:message
                                         key="view_receipt_products.remove.product"/></button>
                             </form>

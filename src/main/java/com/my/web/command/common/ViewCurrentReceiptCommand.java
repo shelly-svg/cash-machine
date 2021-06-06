@@ -2,6 +2,8 @@ package com.my.web.command.common;
 
 import com.my.Path;
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ReceiptDAO;
+import com.my.db.entities.dao.UserDAO;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;

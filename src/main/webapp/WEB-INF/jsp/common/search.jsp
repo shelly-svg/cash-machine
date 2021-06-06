@@ -20,7 +20,7 @@
             <input type="hidden" name="currentPage" value="1"/>
             <label>
                 <input type="text" placeholder="<fmt:message key="search_jsp.search.placeholder"/>" name="pattern"
-                       required>
+                       required/>
             </label>
             <button type="submit" class="add_product_btn"><fmt:message key="search_jsp.search.button"/></button>
         </form>

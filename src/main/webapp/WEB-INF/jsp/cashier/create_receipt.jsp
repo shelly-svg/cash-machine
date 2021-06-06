@@ -17,31 +17,40 @@
         <h2><fmt:message key="create_receipt_jsp.title"/></h2>
         <form action="controller" method="post" name="createReceiptForm" onsubmit="return(validate())">
             <input type="hidden" name="command" value="createReceipt"/>
-            <input type="text" placeholder="<fmt:message key="receipt.name.ru.column"/>" name="name_ru" required>
-            <input type="text" placeholder="<fmt:message key="receipt.name.en.column"/>" name="name_en" required>
-            <input type="text" placeholder="<fmt:message key="receipt.address.ru.column"/>" name="address_ru" required>
-            <input type="text" placeholder="<fmt:message key="receipt.address.en.column"/>" name="address_en">
-            <textarea rows="10" cols="100" name="description_ru"
-                      placeholder="<fmt:message key="receipt.description.ru.column"/>"></textarea>
+            <label>
+                <input type="text" placeholder="<fmt:message key="receipt.name.ru.column"/>" name="name_ru" required/>
+                <input type="text" placeholder="<fmt:message key="receipt.name.en.column"/>" name="name_en" required/>
+                <input type="text" placeholder="<fmt:message key="receipt.address.ru.column"/>" name="address_ru"
+                       required/>
+                <input type="text" placeholder="<fmt:message key="receipt.address.en.column"/>" name="address_en"/>
+                <textarea rows="10" cols="100" name="description_ru"
+                          placeholder="<fmt:message key="receipt.description.ru.column"/>"></textarea>
+            </label>
             <hr>
-            <textarea rows="10" cols="100" name="description_en"
-                      placeholder="<fmt:message key="receipt.description.en.column"/>"></textarea>
+            <label>
+<textarea rows="10" cols="100" name="description_en"
+          placeholder="<fmt:message key="receipt.description.en.column"/>"></textarea>
+            </label>
             <hr>
-            <input type="text" placeholder="<fmt:message key="receipt.phone.number.column"/>" name="phone_number"
-                   required>
+            <label>
+                <input type="text" placeholder="<fmt:message key="receipt.phone.number.column"/>" name="phone_number"
+                       required/>
+            </label>
             <hr>
             <h5><fmt:message key="receipt.delivery.column"/></h5>
             <c:if test="${not empty requestScope.deliveries}">
-                <select name="delivery_id">
-                    <c:forEach items="${requestScope.deliveries}" var="delivery">
-                        <c:if test="${sessionScope.lang == 'ru'}">
-                            <option><c:out value="${delivery.nameRu}"/></option>
-                        </c:if>
-                        <c:if test="${sessionScope.lang == 'en'}">
-                            <option><c:out value="${delivery.nameEn}"/></option>
-                        </c:if>
-                    </c:forEach>
-                </select>
+                <label>
+                    <select name="delivery_id">
+                        <c:forEach items="${requestScope.deliveries}" var="delivery">
+                            <c:if test="${sessionScope.lang == 'ru'}">
+                                <option><c:out value="${delivery.nameRu}"/></option>
+                            </c:if>
+                            <c:if test="${sessionScope.lang == 'en'}">
+                                <option><c:out value="${delivery.nameEn}"/></option>
+                            </c:if>
+                        </c:forEach>
+                    </select>
+                </label>
             </c:if>
             <hr>
             <button type="submit" class="add_product_btn" name="submit"><fmt:message

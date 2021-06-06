@@ -1,6 +1,7 @@
 package db.entities;
 
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ReceiptDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,6 @@ public class ReceiptDAOTest {
             instance.deleteProductFromReceipt(1, new Product(), 5);
             verify(mockCon, times(2)).prepareStatement(anyString());
             verify(mockPreparedStatement, times(2)).execute();
-            verify(dbManager, times(1)).commitAndClose(any(), any());
         }
     }
 
@@ -78,7 +78,6 @@ public class ReceiptDAOTest {
             instance.setAmountOfProductAtTheReceipt(1, 1, 1, 1);
             verify(mockCon, times(2)).prepareStatement(anyString());
             verify(mockPreparedStatement, times(2)).execute();
-            verify(dbManager, times(1)).commitAndClose(any(), any());
         }
     }
 
@@ -113,7 +112,6 @@ public class ReceiptDAOTest {
             instance.addProductIntoReceipt(new Product(), 1);
             verify(mockCon, times(2)).prepareStatement(anyString());
             verify(mockPreparedStatement, times(2)).execute();
-            verify(dbManager, times(1)).commitAndClose(any(), any());
         }
     }
 

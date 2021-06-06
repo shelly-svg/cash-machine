@@ -2,7 +2,7 @@ package com.my.web.command.common;
 
 import com.my.db.entities.Role;
 import com.my.db.entities.User;
-import com.my.db.entities.UserDAO;
+import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.encryption.PasswordUtility;

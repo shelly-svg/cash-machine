@@ -1,6 +1,8 @@
 package web;
 
 import com.my.db.entities.*;
+import com.my.db.entities.dao.ProductDAO;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.web.Commands;
 import com.my.web.command.cashier.AddProductsIntoCurrentReceiptCommand;
 import com.my.web.exception.ApplicationException;

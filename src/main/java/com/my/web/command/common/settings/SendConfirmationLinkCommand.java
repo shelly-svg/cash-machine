@@ -1,7 +1,7 @@
 package com.my.web.command.common.settings;
 
 import com.my.db.entities.User;
-import com.my.db.entities.UserDAO;
+import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
 import com.my.web.LocalizationUtils;
 import com.my.web.command.Command;
@@ -43,8 +43,6 @@ public class SendConfirmationLinkCommand extends Command {
         }
 
         String code = generateCode(currentUser.getId());
-        String link = "localhost:8080/cash_machine/controller?command=changePassword&c=" + code;
-        System.out.println(link);
         sendConfirmationCode(currentUser, code, rb);
 
         session.setAttribute("userMessage", "send.confirmation.link.command");
@@ -52,11 +50,13 @@ public class SendConfirmationLinkCommand extends Command {
         return Commands.VIEW_SETTINGS_COMMAND;
     }
 
-    private void sendConfirmationCode(User user, String link, ResourceBundle rb) {
+    private void sendConfirmationCode(User user, String link, ResourceBundle rb) throws ApplicationException {
         try {
             EmailUtility.sendPasswordLink(user.getEmail(), link, rb);
         } catch (MessagingException exception) {
-            exception.printStackTrace();
+            String errorMessage = "send.confirmation.message.error";
+            logger.error("An error occurred while sending confirmation message");
+            throw new ApplicationException(errorMessage);
         }
     }
 
@@ -66,9 +66,11 @@ public class SendConfirmationLinkCommand extends Command {
         try {
             new UserDAO().addConfirmationCode(userId, saltRandomCode, randomCode);
         } catch (DBException exception) {
-            logger.error("Some error has occurred, maybe message is already sent, check your email again");
-            throw new ApplicationException("error.occurred");
+            String errorMessage = "send.confirmation.message.get.code.error";
+            logger.error("An error has occurred, maybe message is already sent, check your email");
+            throw new ApplicationException(errorMessage);
         }
         return PasswordUtility.generateSecurePassword(randomCode, saltRandomCode);
     }
+
 }

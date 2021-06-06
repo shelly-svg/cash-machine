@@ -3,7 +3,7 @@ package db.entities;
 import com.my.db.entities.DBManager;
 import com.my.db.entities.Fields;
 import com.my.db.entities.User;
-import com.my.db.entities.UserDAO;
+import com.my.db.entities.dao.UserDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

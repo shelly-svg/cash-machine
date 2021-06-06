@@ -1,6 +1,9 @@
 package com.my.db.entities;
 
+import com.itextpdf.text.Chunk;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Receipt implements Serializable {

@@ -30,10 +30,10 @@
         <hr>
         <input type="hidden" name="command" value="login"/>
         <label>
-            <input type="text" placeholder="<fmt:message key="login_jsp.placeholder.login"/>" name="login">
+            <input type="text" placeholder="<fmt:message key="login_jsp.placeholder.login"/>" name="login"/>
         </label>
         <label>
-            <input type="password" placeholder="<fmt:message key="login_jsp.placeholder.password"/>" name="password">
+            <input type="password" placeholder="<fmt:message key="login_jsp.placeholder.password"/>" name="password"/>
         </label>
         <hr>
         <div class="g-recaptcha" id="rcaptcha" data-sitekey="6Lfg_PcaAAAAABf9bV-7_G3nbBCTlVWEBj38IyoK">

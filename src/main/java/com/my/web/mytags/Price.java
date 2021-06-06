@@ -2,7 +2,7 @@ package com.my.web.mytags;
 
 import com.my.Path;
 import com.my.db.entities.Product;
-import com.my.db.entities.ReceiptDAO;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
 

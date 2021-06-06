@@ -1,5 +1,9 @@
-package com.my.db.entities;
+package com.my.db.entities.dao;
 
+import com.my.db.entities.DBManager;
+import com.my.db.entities.EntityMapper;
+import com.my.db.entities.Fields;
+import com.my.db.entities.Product;
 import com.my.web.exception.DBException;
 
 import java.sql.*;
