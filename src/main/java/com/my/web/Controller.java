@@ -3,6 +3,7 @@ package com.my.web;
 import com.my.web.command.Command;
 import com.my.web.command.CommandContainer;
 import com.my.web.exception.ApplicationException;
+import com.my.web.localization.LocalizationUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+/**
+ * Main servlet controller
+ */
 public class Controller extends HttpServlet {
 
     private static final long serialVersionUID = 2342839518293047283L;
@@ -29,6 +33,12 @@ public class Controller extends HttpServlet {
         process(req, resp);
     }
 
+    /**
+     * Main method
+     *
+     * @param request request
+     * @param response response
+     */
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("Controller is started");
 

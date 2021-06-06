@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Set receipt status closed command
+ */
 public class SetReceiptStatusClosedCommand extends Command {
 
     private static final long serialVersionUID = -8372367112394320123L;

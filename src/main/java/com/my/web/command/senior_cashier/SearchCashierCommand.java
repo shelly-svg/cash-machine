@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Search cashier command
+ */
 public class SearchCashierCommand extends Command {
 
     private static final long serialVersionUID = -2910392904439854875L;

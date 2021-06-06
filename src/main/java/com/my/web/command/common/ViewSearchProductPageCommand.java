@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * View search product page command
+ */
 public class ViewSearchProductPageCommand extends Command {
 
     private static final long serialVersionUID = 2348934726283494344L;

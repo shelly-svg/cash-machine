@@ -1,5 +1,8 @@
 package com.my;
 
+/**
+ * Path holder (jsp pages).
+ */
 public final class Path {
 
     public static final String LOGIN_PAGE = "/login.jsp";

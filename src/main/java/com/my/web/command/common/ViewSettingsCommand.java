@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * View settings command
+ */
 public class ViewSettingsCommand extends Command {
 
     private static final long serialVersionUID = 923462384362343410L;

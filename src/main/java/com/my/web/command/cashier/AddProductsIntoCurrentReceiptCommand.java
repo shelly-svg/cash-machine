@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Add product into current receipt command
+ */
 public class AddProductsIntoCurrentReceiptCommand extends Command {
 
     private static final long serialVersionUID = -2348237473492349742L;

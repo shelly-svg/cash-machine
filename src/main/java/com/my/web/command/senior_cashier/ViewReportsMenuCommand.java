@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * View reports menu command
+ */
 public class ViewReportsMenuCommand extends Command {
 
     private static final long serialVersionUID = -928437123982934321L;

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Edit product command
+ */
 public class EditProductCommand extends Command {
 
     private static final long serialVersionUID = -2348237473492349742L;

@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * View search receipt page command
+ */
 public class ViewSearchReceiptPageCommand extends Command {
 
     private static final long serialVersionUID = -4923484329592341022L;

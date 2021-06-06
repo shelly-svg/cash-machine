@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * View search cashier result command
+ */
 public class ViewSearchCashierResultCommand extends Command {
 
     private static final long serialVersionUID = 8932012939203934290L;

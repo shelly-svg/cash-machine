@@ -1,4 +1,4 @@
-package com.my.web;
+package com.my.web.localization;
 
 import com.my.Path;
 import com.my.db.entities.*;
@@ -16,11 +16,24 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+/**
+ * Localization utils
+ *
+ * @author Denys Tsebro
+ */
 public class LocalizationUtils {
 
     private LocalizationUtils() {
     }
 
+    /**
+     * Return previous page for work with localization.
+     *
+     * @param session session
+     * @param request request
+     * @return String
+     * @throws ApplicationException if cannot obtain data from db
+     */
     public static String getAction(HttpSession session, HttpServletRequest request) throws ApplicationException {
         ReceiptDAO receiptDAO = new ReceiptDAO();
         String forward = (String) session.getAttribute("lastAction");
@@ -114,6 +127,12 @@ public class LocalizationUtils {
         return forward;
     }
 
+    /**
+     * Get rb based on user locale language, stored at session
+     *
+     * @param session session
+     * @return Resource bundle
+     */
     public static ResourceBundle getCurrentRb(HttpSession session) {
 
         String localeName = "en";

@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Create receipt command
+ */
 public class CreateReceiptCommand extends Command {
 
     private static final long serialVersionUID = 6234812397439832433L;

@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Choose receipt command
+ */
 public class ChooseReceiptCommand extends Command {
 
     private static final long serialVersionUID = 7231839234283109321L;

@@ -3,7 +3,7 @@ package com.my.web.command.common.settings;
 import com.my.db.entities.User;
 import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
-import com.my.web.LocalizationUtils;
+import com.my.web.localization.LocalizationUtils;
 import com.my.web.command.Command;
 import com.my.web.email.EmailUtility;
 import com.my.web.encryption.PasswordUtility;
@@ -19,6 +19,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+/**
+ * Send confirmation link command
+ */
 public class SendConfirmationLinkCommand extends Command {
 
     private static final long serialVersionUID = -4019392012993292002L;

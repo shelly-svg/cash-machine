@@ -16,6 +16,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * View current receipt command
+ */
 public class ViewCurrentReceiptCommand extends Command {
 
     private static final long serialVersionUID = -8293127324782348212L;

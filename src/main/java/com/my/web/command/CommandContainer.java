@@ -16,6 +16,9 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Holder for all commands
+ */
 public class CommandContainer {
 
     private static final Logger logger = Logger.getLogger(CommandContainer.class);
@@ -57,6 +60,12 @@ public class CommandContainer {
         commands.put("changePassword", new ChangePasswordCommand());
     }
 
+    /**
+     * Return command object with given name
+     *
+     * @param commandName Name of the command
+     * @return Command object
+     */
     public static Command get(String commandName) {
         if (commandName == null || !commands.containsKey(commandName)) {
             logger.trace("Command not found, name --> " + commandName);

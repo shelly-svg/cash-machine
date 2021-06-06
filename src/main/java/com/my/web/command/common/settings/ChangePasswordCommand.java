@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Change password command
+ */
 public class ChangePasswordCommand extends Command {
 
     private static final long serialVersionUID = 7292203901100002330L;

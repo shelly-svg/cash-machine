@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Search receipt command
+ */
 public class SearchReceiptCommand extends Command {
 
     private static final long serialVersionUID = -8129347283482812309L;

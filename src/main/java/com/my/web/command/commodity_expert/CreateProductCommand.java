@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
+/**
+ * Create product command
+ */
 public class CreateProductCommand extends Command {
 
     private static final long serialVersionUID = 2394193249932294933L;

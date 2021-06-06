@@ -1,5 +1,9 @@
 package com.my.web;
 
+/**
+ * Commands holder
+ *
+ */
 public class Commands {
 
     public static final String ERROR_PAGE_COMMAND = "controller?command=noCommand";

@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Search products command
+ */
 public class SearchProductsCommand extends Command {
 
     private static final long serialVersionUID = 2394193249932294933L;

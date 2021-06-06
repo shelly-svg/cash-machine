@@ -10,7 +10,7 @@ import com.my.db.entities.*;
 import com.my.db.entities.dao.ReceiptDAO;
 import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
-import com.my.web.LocalizationUtils;
+import com.my.web.localization.LocalizationUtils;
 import com.my.web.email.EmailUtility;
 import com.my.web.exception.DBException;
 import org.apache.log4j.Logger;
@@ -26,6 +26,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Generate weekly report servlet
+ */
 @WebServlet(urlPatterns = "/generateWeeklyReport")
 public class GenerateWeeklyReportServlet extends HttpServlet {
 

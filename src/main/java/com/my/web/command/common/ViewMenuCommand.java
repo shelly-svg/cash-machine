@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * View menu command
+ */
 public class ViewMenuCommand extends Command {
 
     private static final long serialVersionUID = 2348934726283494344L;

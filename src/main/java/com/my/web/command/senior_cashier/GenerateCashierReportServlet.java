@@ -19,6 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Generate cashier report servlet
+ */
 @WebServlet(urlPatterns = "/generateCashierReport")
 public class GenerateCashierReportServlet extends HttpServlet {
 
@@ -82,7 +85,7 @@ public class GenerateCashierReportServlet extends HttpServlet {
      * Generates cashier report and save`s into file
      *
      * @param localeName language, on which report will be generated
-     * @param id cashier`s id to report on
+     * @param id         cashier`s id to report on
      * @throws IOException when file not found
      * @throws DBException when something happened with connection to DB
      */

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Set receipt status canceled command
+ */
 public class SetReceiptStatusCanceledCommand extends Command {
 
     private static final long serialVersionUID = 2391093230348598231L;

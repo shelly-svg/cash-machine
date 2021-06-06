@@ -17,6 +17,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Edit receipt products command
+ */
 public class EditReceiptProductsCommand extends Command {
 
     private static final long serialVersionUID = 4912383489123901021L;
