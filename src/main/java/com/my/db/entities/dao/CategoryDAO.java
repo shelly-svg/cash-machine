@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Data access object for category related entities
+ */
 public class CategoryDAO {
 
     private static final String SQL__FIND_ALL_CATEGORIES = "SELECT * FROM category;";
@@ -20,6 +23,14 @@ public class CategoryDAO {
     private static final String SQL__FIND_CATEGORY_BY_NAME_RU = "SELECT * FROM category WHERE name_ru=?;";
     private static final String SQL__FIND_CATEGORY_BY_ID = "SELECT * FROM category WHERE id=?;";
 
+    /**
+     * Return category with requested name
+     *
+     * @param name       to be found
+     * @param localeName language for localization
+     * @return category entity
+     * @throws DBException if an error has occurred while search
+     */
     public Category findCategoryByName(String name, String localeName) throws DBException {
         Category category = null;
         PreparedStatement preparedStatement = null;
@@ -47,6 +58,13 @@ public class CategoryDAO {
         return category;
     }
 
+    /**
+     * Return category with requested id
+     *
+     * @param id id to be found
+     * @return category entity
+     * @throws DBException if could not find category
+     */
     public Category findCategoryById(Integer id) throws DBException {
         Category category = null;
         PreparedStatement preparedStatement = null;
@@ -70,6 +88,12 @@ public class CategoryDAO {
         return category;
     }
 
+    /**
+     * Return all categories
+     *
+     * @return Map of category entities with their id`s as keys
+     * @throws DBException if couldn't retrieve categories
+     */
     public Map<Integer, Category> findAllCategories() throws DBException {
         Map<Integer, Category> categories = new ConcurrentHashMap<>();
         PreparedStatement preparedStatement = null;
@@ -93,6 +117,9 @@ public class CategoryDAO {
         return categories;
     }
 
+    /**
+     * Extract a category entity from the result set row
+     */
     private static class CategoryMapper implements EntityMapper<Category> {
 
         @Override

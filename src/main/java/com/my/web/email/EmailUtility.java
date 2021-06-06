@@ -12,6 +12,11 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+/**
+ * Utility class for work with smtp
+ *
+ * @author Denys Tsebro
+ */
 public class EmailUtility {
 
     private static final Logger logger = Logger.getLogger(EmailUtility.class);
@@ -22,6 +27,14 @@ public class EmailUtility {
     private EmailUtility() {
     }
 
+    /**
+     * Sends confirmation message with link to change user`s password
+     *
+     * @param recipientMail email address to which message will be sent
+     * @param code          encrypted code to the page
+     * @param rb            current users resource bundle to make localization
+     * @throws MessagingException if message could not be sent
+     */
     public static void sendPasswordLink(String recipientMail, String code, ResourceBundle rb) throws MessagingException {
         logger.debug("sendMail method is started");
 
@@ -60,10 +73,10 @@ public class EmailUtility {
                 "\t\t\t<input type=\"hidden\" name=\"code\" value=\"" + code
                 + "\"/>\n" +
                 "\t\t\t<input type=submit style=\"background-color: #45c0d5;color: white;padding: 16px 20px;margin: 8px 0;border: none;cursor: pointer;width: 100%;opacity: 0.9;\" value=\""
-                + rb.getString("settings_jsp.change_pass_btn")+"\"/>\n" +
+                + rb.getString("settings_jsp.change_pass_btn") + "\"/>\n" +
                 "\t\t\t</form>\n" +
                 "\t\t\t</p>\n" +
-                "\t\t\t<p style=\"color:#262222\">" + rb.getString("verify.password.change.email.notify")+"</p>\n" +
+                "\t\t\t<p style=\"color:#262222\">" + rb.getString("verify.password.change.email.notify") + "</p>\n" +
                 "\t\t</td>\n" +
                 "\t</tr>\n" +
                 "\t</tbody>\n" +
@@ -75,6 +88,14 @@ public class EmailUtility {
         logger.debug("Email sent successfully, sendMail method finished his work");
     }
 
+    /**
+     * Send`s receipt for user
+     *
+     * @param recipientMail email address to which message will be sent
+     * @param filePath      path to the report, to be sent
+     * @param rb            current users resource bundle to make localization
+     * @throws MessagingException if message could not be sent
+     */
     public static void sendMail(String recipientMail, String filePath, ResourceBundle rb) throws MessagingException {
         logger.debug("sendMail method is started");
 

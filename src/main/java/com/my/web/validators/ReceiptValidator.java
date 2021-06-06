@@ -3,14 +3,23 @@ package com.my.web.validators;
 import com.my.db.entities.Receipt;
 import com.my.web.exception.ApplicationException;
 
-import javax.servlet.http.HttpSession;
-import java.util.ResourceBundle;
-
+/**
+ * Receipt validator class
+ *
+ * @author Denys Tsebro
+ */
 public class ReceiptValidator extends Validator<Receipt> {
 
     private static final String cyrillicPattern = "[а-яА-ЯёЁІіЇїЪъ]";
     private static final String phonePattern = "^\\d{10}$";
 
+    /**
+     * return true, only if receipt is valid
+     *
+     * @param receipt receipt to be validated
+     * @return true if receipt is valid
+     * @throws ApplicationException if receipt invalid
+     */
     @Override
     public boolean validate(Receipt receipt) throws ApplicationException {
         if (receipt.getNameRu() == null || receipt.getNameRu().isEmpty()) {

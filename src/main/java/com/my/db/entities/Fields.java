@@ -1,5 +1,8 @@
 package com.my.db.entities;
 
+/**
+ * Class display fields name from DB
+ */
 public final class Fields {
 
     // entities

@@ -5,10 +5,22 @@ import com.my.web.exception.ApplicationException;
 
 import java.math.BigDecimal;
 
+/**
+ * Product validator class
+ *
+ * @author Denys Tsebro
+ */
 public class ProductValidator extends Validator<Product> {
 
     private static final String cyrillicPattern = "[а-яА-ЯёЁІіЇїЪъ]";
 
+    /**
+     * return true only if product is valid
+     *
+     * @param product product to be validated
+     * @return true if product is valid
+     * @throws ApplicationException if product invalid
+     */
     @Override
     public boolean validate(Product product) throws ApplicationException {
         if (!validateProductNameRu(product.getNameRu())) {

@@ -9,6 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Data access object for all receipt related entities
+ */
 public class ReceiptDAO {
 
     private static final String SQL__CREATE_NEW_RECEIPT = "INSERT INTO receipt(creation_time, name_ru, name_en, address_ru, address_en, " +
@@ -40,6 +43,13 @@ public class ReceiptDAO {
 
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
 
+    /**
+     * Add product into receipt
+     *
+     * @param product   product entity
+     * @param receiptId receipt id
+     * @throws DBException if couldn't update data
+     */
     public void addProductIntoReceipt(Product product, int receiptId) throws DBException {
         PreparedStatement preparedStatement = null;
         Connection con = null;
@@ -64,6 +74,14 @@ public class ReceiptDAO {
         }
     }
 
+    /**
+     * Delete product from receipt
+     *
+     * @param receiptId       receipt id
+     * @param product         product entity
+     * @param amountAtReceipt amount of product at the receipt
+     * @throws DBException if couldn't update data
+     */
     public void deleteProductFromReceipt(int receiptId, Product product, int amountAtReceipt) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -87,6 +105,12 @@ public class ReceiptDAO {
         }
     }
 
+    /**
+     * Canceling receipt
+     *
+     * @param receipt receipt entity
+     * @throws DBException if couldn't cancel receipt
+     */
     public void cancelReceipt(Receipt receipt) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -113,6 +137,15 @@ public class ReceiptDAO {
         }
     }
 
+    /**
+     * Set amount of products at the receipt
+     *
+     * @param amount           amount of product at the store
+     * @param newProductAmount new amount of product
+     * @param receiptId        receipt id
+     * @param productId        product id
+     * @throws DBException if couldn't update data
+     */
     public void setAmountOfProductAtTheReceipt(int amount, int newProductAmount, int receiptId, int productId) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -137,6 +170,13 @@ public class ReceiptDAO {
         }
     }
 
+    /**
+     * Return today closed receipts for user
+     *
+     * @param user user entity
+     * @return List of receipt entities
+     * @throws DBException if couldn't retrieve data
+     */
     public List<Receipt> getCurrentDayClosedReceiptsForUser(User user) throws DBException {
         List<Receipt> receipts = new ArrayList<>();
         PreparedStatement p = null;
@@ -160,6 +200,12 @@ public class ReceiptDAO {
         return receipts;
     }
 
+    /**
+     * Return last week closed receipts
+     *
+     * @return List of receipt entities
+     * @throws DBException if couldn't retrieve data
+     */
     public List<Receipt> getLastWeekClosedReceipts() throws DBException {
         List<Receipt> receiptList = new ArrayList<>();
         PreparedStatement p = null;
@@ -182,6 +228,13 @@ public class ReceiptDAO {
         return receiptList;
     }
 
+    /**
+     * Set receipt status
+     *
+     * @param receiptId     receipt id to be modified
+     * @param receiptStatus new receipt status
+     * @throws DBException if couldn't update data
+     */
     public void setReceiptStatus(int receiptId, ReceiptStatus receiptStatus) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -199,6 +252,13 @@ public class ReceiptDAO {
         }
     }
 
+    /**
+     * Return map where key is product and value is amount of this product at the receipt
+     *
+     * @param receipt receipt entity
+     * @return Map of products and amounts
+     * @throws DBException if couldn't retrieve data
+     */
     public Map<Product, Integer> getMapOfAmountsAndProductsFromReceipt(Receipt receipt) throws DBException {
         Map<Product, Integer> productMap = new TreeMap<>();
         List<Product> products = new ReceiptDAO().getAllProductsFromReceipt(receipt.getId());
@@ -225,6 +285,13 @@ public class ReceiptDAO {
         return productMap;
     }
 
+    /**
+     * Return receipt with given id
+     *
+     * @param id receipt id
+     * @return receipt entity
+     * @throws DBException if couldn't retrieve data
+     */
     public Receipt findReceipt(int id) throws DBException {
         Receipt receipt = new Receipt();
         PreparedStatement p = null;
@@ -248,6 +315,13 @@ public class ReceiptDAO {
         return receipt;
     }
 
+    /**
+     * Return number of rows affected by search pattern
+     *
+     * @param pattern String
+     * @return int
+     * @throws DBException if couldn't retrieve data
+     */
     public int countOfRowsAffectedBySearch(String pattern) throws DBException {
         int numberOfRows = 0;
         PreparedStatement p = null;
@@ -272,6 +346,15 @@ public class ReceiptDAO {
         return numberOfRows;
     }
 
+    /**
+     * Return receipts which hit search pattern
+     *
+     * @param pattern        String
+     * @param currentPage    int current pagination page
+     * @param recordsPerPage int number of receipts displayed per page
+     * @return List of receipt entities
+     * @throws DBException if couldn't retrieve data
+     */
     public List<Receipt> searchReceipts(String pattern, int currentPage, int recordsPerPage) throws DBException {
         List<Receipt> receipts = new ArrayList<>();
         PreparedStatement p = null;
@@ -300,6 +383,13 @@ public class ReceiptDAO {
         return receipts;
     }
 
+    /**
+     * Return all product at the requested receipt
+     *
+     * @param receiptId int receipt id
+     * @return List of product entities
+     * @throws DBException if couldn't retrieve data
+     */
     public List<Product> getAllProductsFromReceipt(int receiptId) throws DBException {
         List<Product> products = new ArrayList<>();
         List<Integer> productsIds = new ArrayList<>();
@@ -327,6 +417,13 @@ public class ReceiptDAO {
         return products;
     }
 
+    /**
+     * Create receipt and return generated id
+     *
+     * @param receipt receipt entity
+     * @return int id
+     * @throws DBException if couldn't update data
+     */
     public int createReceipt(Receipt receipt) throws DBException {
         int generatedKey;
         PreparedStatement p = null;
@@ -362,6 +459,9 @@ public class ReceiptDAO {
         return generatedKey;
     }
 
+    /**
+     * Extract receipt entity for the result set row
+     */
     private static class ReceiptMapper implements EntityMapper<Receipt> {
 
         @Override

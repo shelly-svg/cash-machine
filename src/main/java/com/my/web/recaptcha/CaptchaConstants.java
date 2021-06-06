@@ -1,5 +1,10 @@
 package com.my.web.recaptcha;
 
+/**
+ * Constants for work with captcha
+ *
+ * @author Denys Tsebro
+ */
 public class CaptchaConstants {
 
     public static final String SITE_KEY = "6Lfg_PcaAAAAABf9bV-7_G3nbBCTlVWEBj38IyoK";

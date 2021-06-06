@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object from delivery related objects
+ */
 public class DeliveryDAO {
 
     private static final String SQL__GET_ALL_DELIVERIES = "SELECT * FROM delivery ORDER BY id;";
@@ -21,6 +24,13 @@ public class DeliveryDAO {
 
     private static final String SQL__GET_DELIVERY_BY_ID = "SELECT * FROM delivery WHERE id=?";
 
+    /**
+     * Return delivery entity with given id
+     *
+     * @param id id of delivery
+     * @return delivery entity
+     * @throws DBException if couldn't retrieve delivery
+     */
     public Delivery findDeliveryById(int id) throws DBException {
         Delivery delivery = new Delivery();
         PreparedStatement p = null;
@@ -44,6 +54,13 @@ public class DeliveryDAO {
         return delivery;
     }
 
+    /**
+     * Return delivery entity with given name
+     *
+     * @param name name of delivery
+     * @return delivery entity
+     * @throws DBException if couldn't retrieve delivery
+     */
     public Delivery findDeliveryByName(String name) throws DBException {
         Delivery delivery = new Delivery();
         name = "%" + name + "%";
@@ -69,6 +86,12 @@ public class DeliveryDAO {
         return delivery;
     }
 
+    /**
+     * Return all deliveries
+     *
+     * @return List of delivery entities
+     * @throws DBException if could retrieve data
+     */
     public List<Delivery> getAllDeliveries() throws DBException {
         List<Delivery> deliveries = new ArrayList<>();
         PreparedStatement p = null;
@@ -91,6 +114,9 @@ public class DeliveryDAO {
         return deliveries;
     }
 
+    /**
+     * Extract delivery entity from the result set row
+     */
     private static class DeliveryMapper implements EntityMapper<Delivery> {
 
         @Override

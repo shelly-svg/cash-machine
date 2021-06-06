@@ -1,13 +1,14 @@
 package com.my.db.entities;
 
-import com.itextpdf.text.Chunk;
-
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Receipt entity
+ */
 public class Receipt implements Serializable {
 
+    private static final long serialVersionUID = 8230092034234091230L;
     private int id;
     private Date createTime;
     private String nameRu;

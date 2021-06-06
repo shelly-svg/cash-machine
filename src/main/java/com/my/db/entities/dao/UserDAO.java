@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object for user related entities
+ */
 public class UserDAO {
 
     private static final String SQL__FIND_USER_BY_LOGIN =
@@ -37,7 +40,7 @@ public class UserDAO {
     private static final String SQL__ADD_CONFIRMATION_CODE = "INSERT INTO user_details(user_id, salt, code) VALUE (?, ?, ?);";
 
     private static final String SQL__FIRST_PART_OF_EVENT = "CREATE EVENT IF NOT EXISTS delete_code";
-    private static final String SQL__SECOND_PART_OF_EVENT = " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 SECOND DO DELETE FROM user_details WHERE code=?;";
+    private static final String SQL__SECOND_PART_OF_EVENT = " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR DO DELETE FROM user_details WHERE code=?;";
 
     private static final String SQL__GET_SALT_FROM_USER_DETAILS = "SELECT salt FROM user_details WHERE user_id=?;";
 
@@ -45,6 +48,14 @@ public class UserDAO {
 
     private static final String SQL__UPDATE_USER_PASSWORD = "UPDATE user SET password=?, salt=? WHERE id=?;";
 
+    /**
+     * Updates user password
+     *
+     * @param newSecurePassword new user encrypted password
+     * @param newSalt           new key
+     * @param userId            user id
+     * @throws DBException if couldn't update user password
+     */
     public void updateUserPassword(String newSecurePassword, String newSalt, int userId) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -63,6 +74,13 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Retrieves code from user details table
+     *
+     * @param userId user id
+     * @return String code
+     * @throws DBException if couldn't retrieve data
+     */
     public String getCode(int userId) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -85,6 +103,13 @@ public class UserDAO {
         return code;
     }
 
+    /**
+     * Retrieves key from user details table
+     *
+     * @param userId user id
+     * @return String key
+     * @throws DBException if couldn't retrieve data
+     */
     public String getSalt(int userId) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -107,6 +132,14 @@ public class UserDAO {
         return salt;
     }
 
+    /**
+     * Add code and key to the user details table, also creates event, that delete this data after 1 hour
+     *
+     * @param userId user id
+     * @param salt   key
+     * @param code   code
+     * @throws DBException if couldn't add data or create event
+     */
     public void addConfirmationCode(int userId, String salt, String code) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -133,6 +166,13 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Updates user locale
+     *
+     * @param userId  user id
+     * @param newLang new locale name
+     * @throws DBException if couldn't update data
+     */
     public void updateUserLanguage(int userId, String newLang) throws DBException {
         PreparedStatement p = null;
         Connection con = null;
@@ -150,6 +190,13 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Get user
+     *
+     * @param id user id
+     * @return user entity
+     * @throws DBException if couldn't retrieve data
+     */
     public User getUserForReport(int id) throws DBException {
         User user = new User();
         PreparedStatement p = null;
@@ -175,6 +222,14 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Return count of rows affected by search cashiers
+     *
+     * @param firstName users first name
+     * @param lastName  users last name
+     * @return int
+     * @throws DBException if couldn't retrieve data
+     */
     public int countOfRowsAffectedBySearchCashiers(String firstName, String lastName) throws DBException {
         int numberOfRows = 0;
         PreparedStatement p = null;
@@ -201,6 +256,16 @@ public class UserDAO {
         return numberOfRows;
     }
 
+    /**
+     * Search cashiers by their first name and last name
+     *
+     * @param firstName      users first name
+     * @param lastName       users last name
+     * @param currentPage    current pagination page
+     * @param recordsPerPage number of users, displayed per page
+     * @return List of user entities
+     * @throws DBException if couldn't retrieve data
+     */
     public List<User> searchCashiersByName(String firstName, String lastName, int currentPage, int recordsPerPage) throws DBException {
         List<User> users = new ArrayList<>();
         PreparedStatement p = null;
@@ -235,6 +300,13 @@ public class UserDAO {
         return users;
     }
 
+    /**
+     * find user first and last name for report
+     *
+     * @param id user id
+     * @return String
+     * @throws DBException if couldn't retrieve data
+     */
     public String findUsersFNameLName(int id) throws DBException {
         String result = null;
         PreparedStatement preparedStatement = null;
@@ -257,6 +329,13 @@ public class UserDAO {
         return result;
     }
 
+    /**
+     * Return user with given id
+     *
+     * @param id user id
+     * @return user entity
+     * @throws DBException if couldn't retrieve data
+     */
     public User findUser(int id) throws DBException {
         User user = null;
         PreparedStatement preparedStatement = null;
@@ -280,6 +359,13 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Return user with given login
+     *
+     * @param login user login
+     * @return user entity
+     * @throws DBException if couldn't retrieve data
+     */
     public User findUserByLogin(String login) throws DBException {
         User user = null;
         PreparedStatement preparedStatement = null;
@@ -302,6 +388,9 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Extract user entity from the result set row
+     */
     private static class UserMapper implements EntityMapper<User> {
 
         @Override

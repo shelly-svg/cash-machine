@@ -3,8 +3,12 @@ package com.my.db.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+/**
+ * Product entity
+ */
 public class Product implements Serializable, Comparable<Product> {
 
+    private static final long serialVersionUID = 3490549029348012395L;
     private int id;
     private String nameRu;
     private String nameEn;

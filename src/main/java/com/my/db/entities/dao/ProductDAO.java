@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data access object for all product related entities
+ */
 public class ProductDAO {
 
     private static final String SQL__ADD_NEW_PRODUCT = "INSERT INTO product(name_ru, name_en, code, price, amount, " +
@@ -24,6 +27,13 @@ public class ProductDAO {
 
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
 
+    /**
+     * Updates product amount at the store
+     *
+     * @param id        id of product to be modified
+     * @param newAmount new amount of product
+     * @throws DBException if couldn't update data
+     */
     public void updateProductsAmount(int id, int newAmount) throws DBException {
         PreparedStatement preparedStatement = null;
         Connection con = null;
@@ -41,6 +51,13 @@ public class ProductDAO {
         }
     }
 
+    /**
+     * Return number of rows affected by search product
+     *
+     * @param pattern search pattern
+     * @return number of affected rows
+     * @throws DBException if couldn't retrieve data
+     */
     public int countOfRowsAffectedBySearch(String pattern) throws DBException {
         int numberOfRows = 0;
         PreparedStatement p = null;
@@ -66,6 +83,15 @@ public class ProductDAO {
         return numberOfRows;
     }
 
+    /**
+     * Return products that hit search pattern
+     *
+     * @param pattern        search pattern
+     * @param currentPage    current pagination page
+     * @param recordsPerPage number of products displayed per page
+     * @return List of product entities
+     * @throws DBException if couldn't retrieve data
+     */
     public List<Product> searchProducts(String pattern, int currentPage, int recordsPerPage) throws DBException {
         List<Product> products = new ArrayList<>();
         PreparedStatement p = null;
@@ -95,6 +121,13 @@ public class ProductDAO {
         return products;
     }
 
+    /**
+     * Adds product into DB, and returns generated id
+     *
+     * @param product product to be added
+     * @return int
+     * @throws DBException if couldn't update data
+     */
     public int addProduct(Product product) throws DBException {
         int generatedKey;
         PreparedStatement preparedStatement = null;
@@ -128,7 +161,14 @@ public class ProductDAO {
         return generatedKey;
     }
 
-    public Product findProduct(Integer id) throws DBException {
+    /**
+     * find product with requested id
+     *
+     * @param id product id
+     * @return product entity
+     * @throws DBException if couldn't retrieve data
+     */
+    public Product findProduct(int id) throws DBException {
         Product product = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
@@ -151,7 +191,9 @@ public class ProductDAO {
         return product;
     }
 
-
+    /**
+     * Extract product entity from the result set row
+     */
     private static class ProductMapper implements EntityMapper<Product> {
 
         @Override

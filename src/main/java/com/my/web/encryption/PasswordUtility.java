@@ -98,16 +98,4 @@ public class PasswordUtility {
         return returnValue;
     }
 
-    /*public static void main(String[] args) {
-        String mypassword = "myadminpass";
-        String salt = PasswordUtility.getSalt(50);
-        System.out.println(salt);
-        String mySecurePassword = PasswordUtility.generateSecurePassword(mypassword, salt);
-        System.out.println(mySecurePassword);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        String mySalt = "3DWY7iafZrw2w3AXRU17jU1VcG7u8gBgEOA4lz5dmIS1gD6ris";
-        String mySecPass = "nolJn8lgslzedGzaLqT/HUrT7QJXioeDQO7mmvGkmV4=";
-        boolean validate = PasswordUtility.verifyUserPassword(mypassword, mySecPass, mySalt);
-        System.out.println(validate);
-    }*/
 }

@@ -3,8 +3,12 @@ package com.my.db.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * User entity
+ */
 public class User implements Serializable {
 
+    private static final long serialVersionUID = 9120329082933948223L;
     private int id;
     private String login;
     private String password;

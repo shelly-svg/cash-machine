@@ -2,6 +2,9 @@ package com.my.db.entities;
 
 import java.io.Serializable;
 
+/**
+ * Receipt status entity
+ */
 public enum ReceiptStatus implements Serializable {
 
     NEW_RECEIPT(1, "new receipt", "новый заказ"),

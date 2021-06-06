@@ -15,6 +15,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Class Price displays custom tag Price entity
+ *
+ * @author Denys Tsebro
+ */
 public class Price extends SimpleTagSupport {
 
     private static final Logger logger = Logger.getLogger(Price.class);

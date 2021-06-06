@@ -3,8 +3,12 @@ package com.my.db.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Delivery entity
+ */
 public class Delivery implements Serializable {
 
+    private static final long serialVersionUID = -9128932909034892233L;
     private int id;
     private String nameRu;
     private String nameEn;

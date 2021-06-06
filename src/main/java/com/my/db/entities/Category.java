@@ -2,8 +2,12 @@ package com.my.db.entities;
 
 import java.io.Serializable;
 
+/**
+ * Category entity
+ */
 public class Category implements Serializable {
 
+    private static final long serialVersionUID = -1290292001290349022L;
     private int id;
     private String nameRu;
     private String nameEn;
