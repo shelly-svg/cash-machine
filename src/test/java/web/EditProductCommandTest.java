@@ -29,7 +29,7 @@ public class EditProductCommandTest {
     private static HttpServletResponse mockResponse;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         productDAO = Mockito.mock(ProductDAO.class);
         underTest = new EditProductCommand(productDAO);
         mockRequest = Mockito.mock(HttpServletRequest.class);
@@ -60,7 +60,7 @@ public class EditProductCommandTest {
     @Test
     public void editProductCommandGETTest() throws ServletException, IOException, DBException, ApplicationException {
         when(mockRequest.getMethod()).thenReturn("GET");
-        when(productDAO.findProduct(any())).thenReturn(new Product());
+        when(productDAO.findProduct(anyInt())).thenReturn(new Product());
 
         String actual = underTest.execute(mockRequest, mockResponse);
         String expected = Path.EDIT_PRODUCT_PAGE;

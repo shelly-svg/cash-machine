@@ -44,7 +44,7 @@ public class PasswordUtility {
      * Hash password
      *
      * @param password password to be hashed
-     * @param salt salt of the password
+     * @param salt     salt of the password
      * @return encoded password with PBKDF2 Algorithm
      */
     public static byte[] hash(char[] password, byte[] salt) {
@@ -64,7 +64,7 @@ public class PasswordUtility {
      * Encodes password with Base64
      *
      * @param password password to be encoded
-     * @param salt salt to the password
+     * @param salt     salt to the password
      * @return encoded password with Base64
      */
     public static String generateSecurePassword(String password, String salt) {
@@ -81,8 +81,8 @@ public class PasswordUtility {
      * Verifying password with encoded one
      *
      * @param providedPassword password which need to be verified
-     * @param securedPassword encoded password
-     * @param salt salt of the encoded password
+     * @param securedPassword  encoded password
+     * @param salt             salt of the encoded password
      * @return true if providedPassword is match encoded
      */
     public static boolean verifyUserPassword(String providedPassword,
@@ -96,6 +96,15 @@ public class PasswordUtility {
         returnValue = newSecurePassword.equalsIgnoreCase(securedPassword);
 
         return returnValue;
+    }
+
+    public static void main(String[] args) {
+        String pass = "sencashierpass";
+        String salt = getSalt(50);
+        String secPass = generateSecurePassword(pass, salt);
+        System.out.println(pass);
+        System.out.println(salt);
+        System.out.println(secPass);
     }
 
 }

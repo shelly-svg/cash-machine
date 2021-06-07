@@ -4,6 +4,7 @@ import com.my.Path;
 import com.my.db.entities.*;
 import com.my.db.entities.dao.DeliveryDAO;
 import com.my.db.entities.dao.ReceiptDAO;
+import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;
@@ -26,6 +27,24 @@ public class CreateReceiptCommand extends Command {
 
     private static final long serialVersionUID = 6234812397439832433L;
     private static final Logger logger = Logger.getLogger(CreateReceiptCommand.class);
+    private final DeliveryDAO deliveryDAO;
+    private final ReceiptDAO receiptDAO;
+    private final ReceiptValidator receiptValidator;
+    private final UserDAO userDAO;
+
+    public CreateReceiptCommand() {
+        deliveryDAO = new DeliveryDAO();
+        receiptDAO = new ReceiptDAO();
+        receiptValidator = new ReceiptValidator();
+        userDAO = new UserDAO();
+    }
+
+    public CreateReceiptCommand(DeliveryDAO deliveryDAO, ReceiptDAO receiptDAO, ReceiptValidator receiptValidator, UserDAO userDAO) {
+        this.deliveryDAO = deliveryDAO;
+        this.receiptDAO = receiptDAO;
+        this.receiptValidator = receiptValidator;
+        this.userDAO = userDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
@@ -62,9 +81,18 @@ public class CreateReceiptCommand extends Command {
         receipt.setPhoneNumber(request.getParameter("phone_number"));
         receipt.setReceiptStatus(ReceiptStatus.NEW_RECEIPT);
         User currentUser = (User) session.getAttribute("user");
+
+        try {
+            currentUser = userDAO.findUser(currentUser.getId());
+        } catch (DBException exception) {
+            String errorMessage = "user.dao.find.user.error";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
+        }
+
         receipt.setUserId(currentUser.getId());
         try {
-            Delivery delivery = new DeliveryDAO().findDeliveryByName(request.getParameter("delivery_id"));
+            Delivery delivery = deliveryDAO.findDeliveryByName(request.getParameter("delivery_id"));
             receipt.setDelivery(delivery);
         } catch (DBException exception) {
             String errorMessage = "delivery.dao.error";
@@ -72,11 +100,11 @@ public class CreateReceiptCommand extends Command {
             throw new ApplicationException(errorMessage);
         }
 
-        new ReceiptValidator().validate(receipt);
+        receiptValidator.validate(receipt);
 
         int id;
         try {
-            id = new ReceiptDAO().createReceipt(receipt);
+            id = receiptDAO.createReceipt(receipt);
         } catch (DBException exception) {
             String errorMessage = "receipt.dao.create.receipt";
             logger.error("errorMessage --> " + exception);
@@ -94,7 +122,7 @@ public class CreateReceiptCommand extends Command {
     private String doGet(HttpServletRequest request) throws ApplicationException {
         logger.debug("Create receipt command started at GET method");
         try {
-            List<Delivery> deliveries = new DeliveryDAO().getAllDeliveries();
+            List<Delivery> deliveries = deliveryDAO.getAllDeliveries();
             request.setAttribute("deliveries", deliveries);
         } catch (DBException exception) {
             String errorMessage = "delivery.dao.error";
