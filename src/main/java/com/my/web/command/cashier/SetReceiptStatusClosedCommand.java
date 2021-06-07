@@ -22,13 +22,21 @@ public class SetReceiptStatusClosedCommand extends Command {
 
     private static final long serialVersionUID = -8372367112394320123L;
     private static final Logger logger = Logger.getLogger(SetReceiptStatusClosedCommand.class);
+    private final ReceiptDAO receiptDAO;
+
+    public SetReceiptStatusClosedCommand() {
+        receiptDAO = new ReceiptDAO();
+    }
+
+    public SetReceiptStatusClosedCommand(ReceiptDAO receiptDAO) {
+        this.receiptDAO = receiptDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Set receipt status closed command is started");
 
         HttpSession session = request.getSession();
-        ReceiptDAO receiptDAO = new ReceiptDAO();
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         if (currentReceipt != null) {

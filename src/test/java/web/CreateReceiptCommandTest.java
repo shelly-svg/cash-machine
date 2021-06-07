@@ -53,7 +53,7 @@ public class CreateReceiptCommandTest {
     }
 
     @Test
-    public void createProductPOSTTest() throws ServletException, IOException, DBException, ApplicationException {
+    public void createReceiptPOSTTest() throws ServletException, IOException, DBException, ApplicationException {
         User testUser = new User();
         testUser.setId(1);
         HttpSession mockSession = Mockito.mock(HttpSession.class);
@@ -74,7 +74,7 @@ public class CreateReceiptCommandTest {
     }
 
     @Test
-    public void createProductGETTest() throws ServletException, IOException, DBException, ApplicationException {
+    public void createReceiptGETTest() throws ServletException, IOException, DBException, ApplicationException {
         when(mockRequest.getMethod()).thenReturn("GET");
 
         String actual = underTest.execute(mockRequest, mockResponse);

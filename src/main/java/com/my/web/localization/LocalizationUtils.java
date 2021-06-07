@@ -124,6 +124,9 @@ public class LocalizationUtils {
 
             request.setAttribute("receiptProductMap", productMap);
         }
+        if (Path.CHANGE_PASSWORD_PAGE.equals(forward)) {
+            return Path.SETTINGS_PAGE;
+        }
         return forward;
     }
 

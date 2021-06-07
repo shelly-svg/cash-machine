@@ -101,7 +101,7 @@ public class ChangePasswordCommand extends Command {
 
         logger.debug(oldPass + newPass + repNewPass);
 
-        session.setAttribute("userMessage", "Your password successfully changed");
+        session.setAttribute("userMessage", "change.password.successfully.message");
         return Commands.VIEW_SETTINGS_COMMAND;
     }
 

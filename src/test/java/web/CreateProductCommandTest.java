@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-public class CreateProductTest {
+public class CreateProductCommandTest {
 
     private static ProductDAO productDAO;
     private static CategoryDAO categoryDAO;

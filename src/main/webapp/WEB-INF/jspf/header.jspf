@@ -10,27 +10,35 @@
                     <li><a href="?command=viewSettings"><fmt:message key="header.menu.profile"/></a></li>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'commodity_expert'}">
                         <li><a href="?command=createProduct"><fmt:message key="header.menu.create.product"/></a></li>
-                        <li><a href="?command=viewSearchProductPage"><fmt:message key="header.menu.edit.product"/></a></li>
+                        <li><a href="?command=viewSearchProductPage"><fmt:message key="header.menu.edit.product"/></a>
+                        </li>
                     </c:if>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'cashier'}">
                         <li><a href="?command=createReceipt"><fmt:message key="header.menu.create.receipt"/></a></li>
                         <c:if test="${not empty sessionScope.currentReceipt}">
-                            <li><a href="?command=viewCurrentReceipt"><fmt:message key="header.menu.current.receipt"/></a></li>
+                            <li><a href="?command=viewCurrentReceipt"><fmt:message
+                                    key="header.menu.current.receipt"/></a></li>
                             <c:if test="${sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
-                                <li><a href="?command=viewSearchProductPage"><fmt:message key="header.menu.add.products"/></a></li>
-                                <li><a href="?command=editReceiptProducts"><fmt:message key="header.menu.edit.products"/></a></li>
+                                <li><a href="?command=viewSearchProductPage"><fmt:message
+                                        key="header.menu.add.products"/></a></li>
+                                <li><a href="?command=editReceiptProducts"><fmt:message
+                                        key="header.menu.edit.products"/></a></li>
                             </c:if>
                         </c:if>
-                        <li><a href="?command=viewSearchReceiptPage"><fmt:message key="header.menu.choose.receipt"/></a></li>
+                        <li><a href="?command=viewSearchReceiptPage"><fmt:message key="header.menu.choose.receipt"/></a>
+                        </li>
                     </c:if>
                     <c:if test="${sessionScope.userRole.name().toLowerCase() == 'senior_cashier'}">
                         <c:if test="${not empty sessionScope.currentReceipt}">
-                            <li><a href="?command=viewCurrentReceipt"><fmt:message key="header.menu.current.receipt"/></a></li>
+                            <li><a href="?command=viewCurrentReceipt"><fmt:message
+                                    key="header.menu.current.receipt"/></a></li>
                             <c:if test="${sessionScope.currentReceipt.receiptStatus.name().toLowerCase() == 'new_receipt'}">
-                                <li><a href="?command=viewReceiptProducts"><fmt:message key="header.menu.remove.products"/></a></li>
+                                <li><a href="?command=viewReceiptProducts"><fmt:message
+                                        key="header.menu.remove.products"/></a></li>
                             </c:if>
                         </c:if>
-                        <li><a href="?command=viewSearchReceiptPage"><fmt:message key="header.menu.choose.receipt"/></a></li>
+                        <li><a href="?command=viewSearchReceiptPage"><fmt:message key="header.menu.choose.receipt"/></a>
+                        </li>
                         <li><a href="?command=viewReportsMenu"><fmt:message key="header.menu.reports"/></a></li>
                     </c:if>
                     <li><a href="?command=logout"><fmt:message key="header.menu.log.out"/></a></li>
@@ -43,11 +51,11 @@
 
         <form action="controller">
             <input type="hidden" name="command" value="changeLocaleToRu"/>
-            <input type="submit" value="RU" name="RU" class="lang_button">
+            <input type="submit" value="RU" class="lang_button">
         </form>
         <form action="controller">
             <input type="hidden" name="command" value="changeLocaleToEn"/>
-            <input type="submit" value="EN" name="RU" class="lang_button">
+            <input type="submit" value="EN" class="lang_button">
         </form>
 
     </div>
