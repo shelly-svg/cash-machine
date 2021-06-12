@@ -48,7 +48,6 @@
     </c:if>
 
     <div id="right_header">
-
         <form action="controller">
             <input type="hidden" name="command" value="changeLocaleToRu"/>
             <input type="submit" value="RU" class="lang_button">
@@ -57,7 +56,6 @@
             <input type="hidden" name="command" value="changeLocaleToEn"/>
             <input type="submit" value="EN" class="lang_button">
         </form>
-
     </div>
 
 </div>
