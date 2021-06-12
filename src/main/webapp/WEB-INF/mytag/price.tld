@@ -5,7 +5,7 @@
 
     <tag>
         <name>price</name>
-        <tag-class>com.my.web.mytags.Price</tag-class>
+        <tag-class>com.my.web.mytag.Price</tag-class>
         <body-content>empty</body-content>
         
         <attribute>

@@ -1,4 +1,4 @@
-package com.my.web.validators;
+package com.my.web.validator;
 
 import com.my.db.entities.Receipt;
 import com.my.web.exception.ApplicationException;

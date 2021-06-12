@@ -1,4 +1,4 @@
-package com.my.web.command.common.settings;
+package com.my.web.command.common.setting;
 
 import com.my.db.entities.User;
 import com.my.db.entities.dao.UserDAO;

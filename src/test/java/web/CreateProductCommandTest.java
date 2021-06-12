@@ -7,7 +7,7 @@ import com.my.db.entities.dao.ProductDAO;
 import com.my.web.command.commodity_expert.CreateProductCommand;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
-import com.my.web.validators.ProductValidator;
+import com.my.web.validator.ProductValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

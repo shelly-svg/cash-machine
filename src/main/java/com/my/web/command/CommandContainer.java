@@ -7,9 +7,9 @@ import com.my.web.command.cashier.SetReceiptStatusClosedCommand;
 import com.my.web.command.commodity_expert.CreateProductCommand;
 import com.my.web.command.commodity_expert.EditProductCommand;
 import com.my.web.command.common.*;
-import com.my.web.command.common.settings.ChangePasswordCommand;
-import com.my.web.command.common.settings.ChangeUserLocaleCommand;
-import com.my.web.command.common.settings.SendConfirmationLinkCommand;
+import com.my.web.command.common.setting.ChangePasswordCommand;
+import com.my.web.command.common.setting.ChangeUserLocaleCommand;
+import com.my.web.command.common.setting.SendConfirmationLinkCommand;
 import com.my.web.command.senior_cashier.*;
 import org.apache.log4j.Logger;
 

@@ -24,6 +24,25 @@
         <servlet-name>Controller</servlet-name>
         <url-pattern>/controller</url-pattern>
     </servlet-mapping>
+
+    <!--============================================================
+    Encoding support filter
+=============================================================-->
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.my.web.filter.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/WEB-INF/jsp/*</url-pattern>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
     <!--============================================================
 	Security filter.
 	1) admin: admin commands
@@ -70,24 +89,6 @@
 
     <filter-mapping>
         <filter-name>SecurityFilter</filter-name>
-        <servlet-name>Controller</servlet-name>
-    </filter-mapping>
-
-    <!--============================================================
-        Encoding support filter
-    =============================================================-->
-    <filter>
-        <filter-name>EncodingFilter</filter-name>
-        <filter-class>com.my.web.filter.EncodingFilter</filter-class>
-        <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>EncodingFilter</filter-name>
-        <url-pattern>/WEB-INF/jsp/*</url-pattern>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
 

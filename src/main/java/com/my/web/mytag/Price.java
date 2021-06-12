@@ -1,4 +1,4 @@
-package com.my.web.mytags;
+package com.my.web.mytag;
 
 import com.my.Path;
 import com.my.db.entities.Product;

@@ -8,7 +8,7 @@ import com.my.db.entities.dao.ProductDAO;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
-import com.my.web.validators.ProductValidator;
+import com.my.web.validator.ProductValidator;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

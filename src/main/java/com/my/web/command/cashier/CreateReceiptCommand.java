@@ -9,7 +9,7 @@ import com.my.web.Commands;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
-import com.my.web.validators.ReceiptValidator;
+import com.my.web.validator.ReceiptValidator;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

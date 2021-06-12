@@ -1,4 +1,4 @@
-package com.my.web.command.common.settings;
+package com.my.web.command.common.setting;
 
 import com.my.Path;
 import com.my.db.entities.User;
@@ -121,6 +121,12 @@ public class ChangePasswordCommand extends Command {
         }
         String parameter = request.getParameter("code");
 
+        if (parameter == null || parameter.isEmpty()) {
+            String errorMessage = "change.password.link.invalid";
+            logger.error("Invalid credentials");
+            throw new ApplicationException(errorMessage);
+        }
+
         String userCode;
         String userSalt;
         try {
@@ -132,7 +138,7 @@ public class ChangePasswordCommand extends Command {
             throw new ApplicationException(errorMessage);
         }
 
-        if (userCode == null || userCode.isEmpty() || userSalt == null || userSalt.isEmpty() || parameter == null || parameter.isEmpty()) {
+        if (userCode == null || userCode.isEmpty() || userSalt == null || userSalt.isEmpty()) {
             String errorMessage = "change.password.link.invalid";
             logger.error("Invalid credentials");
             throw new ApplicationException(errorMessage);

@@ -8,7 +8,7 @@ import com.my.web.Commands;
 import com.my.web.command.cashier.CreateReceiptCommand;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
-import com.my.web.validators.ReceiptValidator;
+import com.my.web.validator.ReceiptValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

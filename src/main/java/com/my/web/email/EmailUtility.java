@@ -7,8 +7,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -20,9 +19,6 @@ import java.util.ResourceBundle;
 public class EmailUtility {
 
     private static final Logger logger = Logger.getLogger(EmailUtility.class);
-    private static final String SENDER_MAIL = "cash.machine.epam2021@gmail.com";
-    private static final String SENDER_PASS = "customPASS22";
-    private static final String HOST = "smtp.gmail.com";
 
     private EmailUtility() {
     }
@@ -38,16 +34,19 @@ public class EmailUtility {
     public static void sendPasswordLink(String recipientMail, String code, ResourceBundle rb) throws MessagingException {
         logger.debug("sendMail method is started");
 
-        Properties properties = System.getProperties();
-        properties.put("mail.smtp.host", HOST);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
+        Properties properties = new Properties();
+        try {
+            properties.load(EmailUtility.class.getClassLoader().getResourceAsStream("email.properties"));
+        } catch (IOException exception) {
+            logger.error("An error has occurred while retrieving data from email.properties");
+            throw new MessagingException();
+        }
 
+        System.out.println(properties.getProperty("mail.login"));
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(SENDER_MAIL, SENDER_PASS);
+                return new PasswordAuthentication(properties.getProperty("mail.login"), properties.getProperty("mail.password"));
             }
         });
 
@@ -55,7 +54,7 @@ public class EmailUtility {
         session.setDebug(false);
 
         MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(SENDER_MAIL));
+        message.setFrom(new InternetAddress(properties.getProperty("mail.login")));
 
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipientMail));
 
@@ -99,23 +98,27 @@ public class EmailUtility {
     public static void sendMail(String recipientMail, String filePath, ResourceBundle rb) throws MessagingException {
         logger.debug("sendMail method is started");
 
-        Properties properties = System.getProperties();
-        properties.put("mail.smtp.host", HOST);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
+        Properties properties = new Properties();
+        try {
+            properties.load(EmailUtility.class.getClassLoader().getResourceAsStream("email.properties"));
+        } catch (IOException exception) {
+            logger.error("An error has occurred while retrieving data from email.properties");
+            throw new MessagingException();
+        }
 
+        System.out.println(properties.getProperty("mail.login"));
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(SENDER_MAIL, SENDER_PASS);
+                return new PasswordAuthentication(properties.getProperty("mail.login"), properties.getProperty("mail.password"));
             }
         });
+
         logger.debug("Received email session => " + session);
         session.setDebug(false);
 
         MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(SENDER_MAIL));
+        message.setFrom(new InternetAddress(properties.getProperty("mail.login")));
 
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipientMail));
 

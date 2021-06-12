@@ -1,18 +1,11 @@
 package web;
 
-import com.my.Path;
-import com.my.db.entities.Delivery;
 import com.my.db.entities.Receipt;
-import com.my.db.entities.User;
-import com.my.db.entities.dao.DeliveryDAO;
 import com.my.db.entities.dao.ReceiptDAO;
-import com.my.db.entities.dao.UserDAO;
 import com.my.web.Commands;
-import com.my.web.command.cashier.CreateReceiptCommand;
 import com.my.web.command.cashier.SetReceiptStatusClosedCommand;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
-import com.my.web.validators.ReceiptValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
