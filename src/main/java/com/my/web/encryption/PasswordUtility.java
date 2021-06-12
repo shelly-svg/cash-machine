@@ -98,13 +98,4 @@ public class PasswordUtility {
         return returnValue;
     }
 
-    public static void main(String[] args) {
-        String pass = "sencashierpass";
-        String salt = getSalt(50);
-        String secPass = generateSecurePassword(pass, salt);
-        System.out.println(pass);
-        System.out.println(salt);
-        System.out.println(secPass);
-    }
-
 }

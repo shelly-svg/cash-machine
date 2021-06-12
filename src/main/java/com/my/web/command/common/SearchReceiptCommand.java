@@ -63,7 +63,6 @@ public class SearchReceiptCommand extends Command {
 
         String pattern = request.getParameter("receipt_pattern");
         logger.debug("search pattern is ==> " + pattern);
-        session.setAttribute("lastSearchReceiptPattern", pattern);
 
         List<Receipt> result;
         try {
@@ -96,7 +95,6 @@ public class SearchReceiptCommand extends Command {
 
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
-        session.setAttribute("currentRecPagPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
 
         logger.debug("Search receipt command is finished");

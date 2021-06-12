@@ -32,6 +32,7 @@ public class ViewCurrentReceiptCommandTest {
 
     @BeforeAll
     static void init() {
+        System.out.println("HELLO WORLD view current receipt");
         productDAO = Mockito.mock(ProductDAO.class);
         underTest = new SearchProductsCommand(productDAO);
         mockRequest = Mockito.mock(HttpServletRequest.class);

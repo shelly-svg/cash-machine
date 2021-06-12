@@ -21,8 +21,6 @@
 
 <body>
 
-<%@ include file="/WEB-INF/jspf/header.jspf" %>
-
 <div id="log_form">
     <form id="login_form" action="controller" method="post" name="loginForm" onsubmit="return(validate())">
         <h1><fmt:message key="login_jsp.welcome.text"/></h1>

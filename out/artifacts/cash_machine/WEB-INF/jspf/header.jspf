@@ -48,13 +48,17 @@
     </c:if>
 
     <div id="right_header">
-        <form action="controller">
-            <input type="hidden" name="command" value="changeLocaleToRu"/>
-            <input type="submit" value="RU" class="lang_button">
+        <form action="controller" method="post">
+            <input type="hidden" name="command" value="changeLanguage"/>
+            <input type="hidden" name="queryString" value="${pageContext.request.queryString}"/>
+            <input type="hidden" name="language" value="ru"/>
+            <input type="submit" value="RU" class="lang_button"/>
         </form>
-        <form action="controller">
-            <input type="hidden" name="command" value="changeLocaleToEn"/>
-            <input type="submit" value="EN" class="lang_button">
+        <form action="controller" method="post">
+            <input type="hidden" name="command" value="changeLanguage"/>
+            <input type="hidden" name="queryString" value="${pageContext.request.queryString}"/>
+            <input type="hidden" name="language" value="en"/>
+            <input type="submit" value="EN" class="lang_button"/>
         </form>
     </div>
 

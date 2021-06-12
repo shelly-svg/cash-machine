@@ -29,8 +29,7 @@ public class CommandContainer {
         commands.put("logout", new LogoutCommand());
         commands.put("noCommand", new NoCommand());
         commands.put("viewMenu", new ViewMenuCommand());
-        commands.put("changeLocaleToRu", new ChangeLangToRuCommand());
-        commands.put("changeLocaleToEn", new ChangeLangToEnCommand());
+        commands.put("changeLanguage", new ChangeLanguageCommand());
         commands.put("viewSettings", new ViewSettingsCommand());
 
         commands.put("createProduct", new CreateProductCommand());

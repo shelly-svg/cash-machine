@@ -44,8 +44,6 @@ public class ViewSearchCashierResultCommand extends Command {
         String firstName = request.getParameter("cashier_first_name");
         String lastName = request.getParameter("cashier_last_name");
         logger.trace("Received first name and last name => " + firstName + " " + lastName);
-        session.setAttribute("lastSearchCashierFName", firstName);
-        session.setAttribute("lastSearchCashierLName", lastName);
 
         List<User> users;
         try {
@@ -78,7 +76,6 @@ public class ViewSearchCashierResultCommand extends Command {
 
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
-        session.setAttribute("currentCashierPagPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
 
         logger.debug("View search cashier result command is finished");

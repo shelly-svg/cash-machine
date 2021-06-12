@@ -119,13 +119,12 @@ public class EditProductCommand extends Command {
         }
 
         if (product == null) {
-            String errorMessage = "error.occurred";
+            String errorMessage = "number.format.exception.product";
             logger.error("errorMessage --> invalid product");
             throw new ApplicationException(errorMessage);
         }
 
         request.setAttribute("product", product);
-        request.getSession().setAttribute("lastEditedProductId", id);
         return Path.EDIT_PRODUCT_PAGE;
     }
 

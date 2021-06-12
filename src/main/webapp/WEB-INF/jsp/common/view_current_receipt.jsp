@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
-<%@ taglib prefix="my" uri="/WEB-INF/mytags/price.tld" %>
+<%@ taglib prefix="my" uri="/WEB-INF/mytag/price.tld" %>
 <%@ page pageEncoding="UTF-8" %>
 
 <html>

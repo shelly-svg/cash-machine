@@ -57,7 +57,7 @@ public class SearchProductsCommand extends Command {
         }
         logger.debug("Pattern is => " + pattern);
 
-        session.setAttribute("lastSearchPattern", pattern);
+        request.setAttribute("lastSearchPattern", pattern);
 
         List<Product> result;
         try {
@@ -90,7 +90,6 @@ public class SearchProductsCommand extends Command {
 
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
-        session.setAttribute("currentPagPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
 
         logger.debug("Search command is finished");

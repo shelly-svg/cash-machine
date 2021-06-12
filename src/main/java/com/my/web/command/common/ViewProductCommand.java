@@ -53,7 +53,6 @@ public class ViewProductCommand extends Command {
         }
 
         request.setAttribute("product", product);
-        session.setAttribute("lastViewedProductId", id);
 
         logger.debug("View Product command is finished");
         return Path.VIEW_PRODUCT_PAGE;

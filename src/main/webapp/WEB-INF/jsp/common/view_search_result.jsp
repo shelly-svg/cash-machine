@@ -79,7 +79,7 @@
                         <c:if test="${requestScope.currentPage != 1}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=searchProduct&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage-1}"><fmt:message
+                                   href="controller?command=searchProduct&pattern=${requestScope.lastSearchPattern}&currentPage=${requestScope.currentPage-1}"><fmt:message
                                         key="pagination.previous"/></a>
                             </li>
                         </c:if>
@@ -94,7 +94,7 @@
                                 <c:otherwise>
                                     <li class="page_item">
                                         <a class="page_link"
-                                           href="controller?command=searchProduct&pattern=${sessionScope.lastSearchPattern}&currentPage=${i}">${i}</a>
+                                           href="controller?command=searchProduct&pattern=${requestScope.lastSearchPattern}&currentPage=${i}">${i}</a>
                                     </li>
                                 </c:otherwise>
                             </c:choose>
@@ -102,7 +102,7 @@
                         <c:if test="${requestScope.currentPage lt requestScope.nOfPages}">
                             <li class="page_item">
                                 <a class="page_link"
-                                   href="controller?command=searchProduct&pattern=${sessionScope.lastSearchPattern}&currentPage=${requestScope.currentPage+1}"><fmt:message
+                                   href="controller?command=searchProduct&pattern=${requestScope.lastSearchPattern}&currentPage=${requestScope.currentPage+1}"><fmt:message
                                         key="pagination.next"/></a>
                             </li>
                         </c:if>
