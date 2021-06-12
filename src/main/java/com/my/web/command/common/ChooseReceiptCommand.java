@@ -22,12 +22,19 @@ public class ChooseReceiptCommand extends Command {
 
     private static final long serialVersionUID = 7231839234283109321L;
     private static final Logger logger = Logger.getLogger(ChooseReceiptCommand.class);
+    private final ReceiptDAO receiptDAO;
+
+    public ChooseReceiptCommand() {
+        receiptDAO = new ReceiptDAO();
+    }
+
+    public ChooseReceiptCommand(ReceiptDAO receiptDAO) {
+        this.receiptDAO = receiptDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Choose receipt command is started");
-
-        ReceiptDAO receiptDAO = new ReceiptDAO();
 
         int id;
         try {
