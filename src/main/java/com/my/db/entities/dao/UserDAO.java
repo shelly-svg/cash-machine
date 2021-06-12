@@ -48,6 +48,8 @@ public class UserDAO {
 
     private static final String SQL__UPDATE_USER_PASSWORD = "UPDATE user SET password=?, salt=? WHERE id=?;";
 
+    private static final String SQL__DROP_CONFIRMATION_CODE = "DELETE FROM user_details WHERE user_id=?;";
+
     /**
      * Updates user password
      *
@@ -146,6 +148,9 @@ public class UserDAO {
         try {
             con = DBManager.getInstance().getConnection();
             con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            p = con.prepareStatement(SQL__DROP_CONFIRMATION_CODE);
+            p.setInt(1, userId);
+            p.execute();
             p = con.prepareStatement(SQL__ADD_CONFIRMATION_CODE);
             p.setInt(1, userId);
             p.setString(2, salt);

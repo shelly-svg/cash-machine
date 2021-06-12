@@ -22,19 +22,41 @@ public class SearchProductsCommand extends Command {
 
     private static final long serialVersionUID = 2394193249932294933L;
     private static final Logger logger = Logger.getLogger(SearchProductsCommand.class);
+    private final ProductDAO productDAO;
+
+    public SearchProductsCommand() {
+        productDAO = new ProductDAO();
+    }
+
+    public SearchProductsCommand(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Search command is started");
 
         HttpSession session = request.getSession();
-        ProductDAO productDAO = new ProductDAO();
         int recordsPerPage = 3;
 
-        int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        int currentPage;
+        try {
+            currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        } catch (NumberFormatException exception) {
+            String errorMessage = "error.occurred";
+            logger.error("errorMessage --> " + exception);
+            throw new ApplicationException(errorMessage);
+        }
+
         logger.debug("Current page => " + currentPage);
         String pattern = request.getParameter("pattern");
+        if (pattern == null || pattern.isEmpty()) {
+            String errorMessage = "error.occurred";
+            logger.error("Search pattern is empty");
+            throw new ApplicationException(errorMessage);
+        }
         logger.debug("Pattern is => " + pattern);
+
         session.setAttribute("lastSearchPattern", pattern);
 
         List<Product> result;

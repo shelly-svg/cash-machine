@@ -48,7 +48,6 @@
     </c:if>
 
     <div id="right_header">
-
         <form action="controller">
             <input type="hidden" name="command" value="changeLocaleToRu"/>
             <input type="submit" value="RU" class="lang_button">
@@ -57,17 +56,6 @@
             <input type="hidden" name="command" value="changeLocaleToEn"/>
             <input type="submit" value="EN" class="lang_button">
         </form>
-        <button onclick="changeLangToRusFunction()">Change lang RU!</button>
-
     </div>
 
 </div>
-
-<script type="text/javascript">
-    function changeLangToRusFunction() {
-        <%--<c:set scope="session" var="lang" value="ru"/>--%>
-        window.location.reload(true);
-        //location.reload(true);
-        return false;
-    }
-</script>
