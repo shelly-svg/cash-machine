@@ -5,8 +5,10 @@
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/commodity_expert/add_product.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/commodity_expert" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/common/view_search_receipt_result.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/common" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/menu.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/view_receipt.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/view_search_result.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jspf/head.jspf" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jspf" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/login.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
       </map>
     </option>

@@ -21,6 +21,15 @@ public class ViewMenuCommand extends Command {
 
     private static final long serialVersionUID = 2348934726283494344L;
     private static final Logger logger = Logger.getLogger(ViewMenuCommand.class);
+    private final ReceiptDAO receiptDAO;
+
+    public ViewMenuCommand() {
+        receiptDAO = new ReceiptDAO();
+    }
+
+    public ViewMenuCommand(ReceiptDAO receiptDAO) {
+        this.receiptDAO = receiptDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
@@ -31,7 +40,7 @@ public class ViewMenuCommand extends Command {
         Receipt currentReceipt = (Receipt) request.getSession().getAttribute("currentReceipt");
         if (currentReceipt != null) {
             try {
-                currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+                currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
             } catch (DBException exception) {
                 String errorMessage = "receipt.dao.find.receipt";
                 logger.error("errorMessage --> " + exception);

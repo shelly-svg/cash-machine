@@ -21,12 +21,19 @@ public class ViewProductCommand extends Command {
 
     private static final long serialVersionUID = -923486238461238432L;
     private static final Logger logger = Logger.getLogger(ViewProductCommand.class);
+    private final ProductDAO productDAO;
+
+    public ViewProductCommand() {
+        productDAO = new ProductDAO();
+    }
+
+    public ViewProductCommand(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("View Product command is started");
-
-        HttpSession session = request.getSession();
 
         int id;
         try {
@@ -39,7 +46,7 @@ public class ViewProductCommand extends Command {
 
         Product product;
         try {
-            product = new ProductDAO().findProduct(id);
+            product = productDAO.findProduct(id);
         } catch (DBException exception) {
             String errorMessage = "product.dao.find.product";
             logger.error("errorMessage --> " + exception);
