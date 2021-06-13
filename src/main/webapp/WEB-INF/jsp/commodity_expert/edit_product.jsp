@@ -5,7 +5,7 @@
 
 <html>
 
-<c:set var="title" value="Редактировать товар"/>
+<c:set var="title" value="edit.product.page.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

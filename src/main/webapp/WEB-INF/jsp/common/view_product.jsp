@@ -4,7 +4,7 @@
 
 <html>
 
-<c:set var="title" value="Просмотр товара"/>
+<c:set var="title" value="view.product.page.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

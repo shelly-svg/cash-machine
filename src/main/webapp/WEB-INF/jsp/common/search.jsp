@@ -5,7 +5,7 @@
 
 <html>
 
-<c:set var="title" value="Search product"/>
+<c:set var="title" value="search.product.page.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

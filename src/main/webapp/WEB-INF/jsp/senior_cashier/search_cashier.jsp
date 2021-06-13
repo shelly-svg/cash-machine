@@ -5,7 +5,7 @@
 
 <html>
 
-<c:set var="title" value="Поиск кассиров"/>
+<c:set var="title" value=""/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

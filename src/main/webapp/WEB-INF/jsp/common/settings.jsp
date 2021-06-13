@@ -4,7 +4,7 @@
 
 <html>
 
-<c:set var="title" value="Настройки пользователя"/>
+<c:set var="title" value="settings.page.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

@@ -6,7 +6,7 @@
 
 <html>
 
-<c:set var="title" value="Главное меню"/>
+<c:set var="title" value="main.menu.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

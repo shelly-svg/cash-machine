@@ -6,7 +6,7 @@
 
 <html>
 
-<c:set var="title" value="Результат поиска"/>
+<c:set var="title" value="search.result.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

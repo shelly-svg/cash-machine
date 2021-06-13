@@ -5,7 +5,7 @@
 
 <html>
 
-<c:set var="title" value="Создать заказ"/>
+<c:set var="title" value="create.receipt.page.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

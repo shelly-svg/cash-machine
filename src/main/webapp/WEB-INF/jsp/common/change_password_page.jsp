@@ -5,7 +5,7 @@
 
 <html>
 
-<c:set var="title" value="Change password"/>
+<c:set var="title" value="change.password.page.title"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>

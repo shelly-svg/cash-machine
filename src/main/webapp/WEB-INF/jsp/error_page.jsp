@@ -2,10 +2,8 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ page isErrorPage="true" %>
 <html>
-<head>
-    <%@ include file="/WEB-INF/jspf/head.jspf" %>
-    <title><fmt:message key="error.page.title"/></title>
-</head>
+<c:set var="title" value="error.page.title"/>
+<%@ include file="/WEB-INF/jspf/head.jspf" %>
 <body>
 
 <c:if test="${not empty sessionScope.errorMessage and empty exception and empty code}">

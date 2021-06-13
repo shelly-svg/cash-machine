@@ -5,8 +5,7 @@
 
 <html>
 
-<fmt:message var="titleE" key="product.create.new.product"/>
-<c:set var="title" value="Добавление товара"/>
+<c:set var="title" value="product.create.new.product"/>
 <%@ include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
