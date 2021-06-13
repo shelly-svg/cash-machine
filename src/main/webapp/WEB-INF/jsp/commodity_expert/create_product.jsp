@@ -38,7 +38,7 @@
                     <select name="category_id">
                         <c:forEach items="${requestScope.categories}" var="category">
                             <c:if test="${sessionScope.lang == 'ru'}">
-                                <option><c:out value="${category.value.nameRu}"/></option>
+                                <option><c:out value="${category.value.nameRu}"/></option>  
                             </c:if>
                             <c:if test="${sessionScope.lang == 'en'}">
                                 <option><c:out value="${category.value.nameEn}"/></option>
@@ -94,7 +94,7 @@
             alertify.alert("<fmt:message key="product.price.column"/>", "<fmt:message key="add.product.invalid.length"/>");
             return false;
         }
-        if (document.addProductForm.price.value < 0) {
+        if (document.addProductForm.price.value <= 0) {
             alertify.alert("<fmt:message key="product.price.column"/>", "<fmt:message key="add.product.invalid.numeric.negative"/>");
             return false;
         }
@@ -118,7 +118,7 @@
             alertify.alert("<fmt:message key="product.weight.column"/>", "<fmt:message key="add.product.invalid.length"/>");
             return false;
         }
-        if (document.addProductForm.weight.value < 0) {
+        if (document.addProductForm.weight.value <= 0) {
             alertify.alert("<fmt:message key="product.weight.column"/>", "<fmt:message key="add.product.invalid.numeric.negative"/>");
             return false;
         }

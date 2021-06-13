@@ -3,6 +3,7 @@ package web;
 import com.my.Path;
 import com.my.db.entities.Receipt;
 import com.my.db.entities.dao.ProductDAO;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.web.command.common.SearchProductsCommand;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.times;
 public class SearchProductsCommandTest {
 
     private static ProductDAO productDAO;
+    private static ReceiptDAO receiptDAO;
     private static SearchProductsCommand underTest;
     private static HttpServletRequest mockRequest;
     private static HttpServletResponse mockResponse;
@@ -32,7 +34,8 @@ public class SearchProductsCommandTest {
     @BeforeAll
     static void init() {
         productDAO = Mockito.mock(ProductDAO.class);
-        underTest = new SearchProductsCommand(productDAO);
+        receiptDAO = Mockito.mock(ReceiptDAO.class);
+        underTest = new SearchProductsCommand(productDAO, receiptDAO);
         mockRequest = Mockito.mock(HttpServletRequest.class);
         mockResponse = Mockito.mock(HttpServletResponse.class);
 

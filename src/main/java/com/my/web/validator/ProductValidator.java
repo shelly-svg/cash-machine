@@ -76,7 +76,7 @@ public class ProductValidator extends Validator<Product> {
 
     private static boolean validateProductPrice(BigDecimal price) {
         double doublePrice = price.doubleValue();
-        if (doublePrice < 0) {
+        if (doublePrice <= 0) {
             return false;
         }
         return !(doublePrice >= 1000000000);
@@ -91,7 +91,7 @@ public class ProductValidator extends Validator<Product> {
 
     private static boolean validateProductWeight(BigDecimal weight) {
         double doubleWeight = weight.doubleValue();
-        if (doubleWeight < 0) {
+        if (doubleWeight <= 0) {
             return false;
         }
         return !(doubleWeight >= 1000000000);

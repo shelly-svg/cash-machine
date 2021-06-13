@@ -2,7 +2,10 @@ package com.my.web.command.common;
 
 import com.my.Path;
 import com.my.db.entities.Product;
+import com.my.db.entities.Receipt;
+import com.my.db.entities.Role;
 import com.my.db.entities.dao.ProductDAO;
+import com.my.db.entities.dao.ReceiptDAO;
 import com.my.web.command.Command;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
@@ -23,13 +26,16 @@ public class SearchProductsCommand extends Command {
     private static final long serialVersionUID = 2394193249932294933L;
     private static final Logger logger = Logger.getLogger(SearchProductsCommand.class);
     private final ProductDAO productDAO;
+    private final ReceiptDAO receiptDAO;
 
     public SearchProductsCommand() {
         productDAO = new ProductDAO();
+        receiptDAO = new ReceiptDAO();
     }
 
-    public SearchProductsCommand(ProductDAO productDAO) {
+    public SearchProductsCommand(ProductDAO productDAO, ReceiptDAO receiptDAO) {
         this.productDAO = productDAO;
+        this.receiptDAO = receiptDAO;
     }
 
     @Override
@@ -37,7 +43,7 @@ public class SearchProductsCommand extends Command {
         logger.debug("Search command is started");
 
         HttpSession session = request.getSession();
-        int recordsPerPage = 3;
+        int recordsPerPage = 4;
 
         int currentPage;
         try {
@@ -60,27 +66,38 @@ public class SearchProductsCommand extends Command {
         request.setAttribute("lastSearchPattern", pattern);
 
         List<Product> result;
-        try {
-            result = productDAO.searchProducts(pattern, currentPage, recordsPerPage);
-        } catch (DBException ex) {
-            String errorMessage = "product.dao.search.products";
-            logger.error("errorMessage --> " + ex);
-            throw new ApplicationException(errorMessage);
+        int numberOfRows;
+        Role userRole = (Role) session.getAttribute("userRole");
+        if (userRole.equals(Role.COMMODITY_EXPERT)) {
+            try {
+                result = productDAO.searchProducts(pattern, currentPage, recordsPerPage);
+                numberOfRows = productDAO.countOfRowsAffectedBySearch(pattern);
+            } catch (DBException ex) {
+                String errorMessage = "product.dao.search.products";
+                logger.error("errorMessage --> " + ex);
+                throw new ApplicationException(errorMessage);
+            }
+        } else {
+            try {
+                Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
+                if (currentReceipt == null) {
+                    logger.error("User haven`t choose receipt");
+                    throw new ApplicationException("error.occurred");
+                }
+                currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
+                result = productDAO.searchProducts(currentReceipt, pattern, currentPage, recordsPerPage);
+                numberOfRows = productDAO.countOfRowsAffectedBySearch(currentReceipt, pattern);
+            } catch (DBException ex) {
+                String errorMessage = "product.dao.search.products";
+                logger.error("errorMessage --> " + ex);
+                throw new ApplicationException(errorMessage);
+            }
         }
 
         logger.debug("Search result is => " + result);
         request.setAttribute("searchResult", result);
 
-        int numberOfRows;
-        try {
-            numberOfRows = productDAO.countOfRowsAffectedBySearch(pattern);
-        } catch (DBException ex) {
-            String errorMessage = "error.occurred";
-            logger.error("errorMessage --> " + ex);
-            throw new ApplicationException(errorMessage);
-        }
         logger.debug("Number of rows affected by search " + numberOfRows);
-
         int nOfPages = numberOfRows / recordsPerPage;
         logger.debug("nOfPages ===>>> " + nOfPages);
 

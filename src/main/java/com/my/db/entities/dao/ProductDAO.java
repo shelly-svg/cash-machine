@@ -1,9 +1,6 @@
 package com.my.db.entities.dao;
 
-import com.my.db.entities.DBManager;
-import com.my.db.entities.EntityMapper;
-import com.my.db.entities.Fields;
-import com.my.db.entities.Product;
+import com.my.db.entities.*;
 import com.my.web.exception.DBException;
 
 import java.sql.*;
@@ -22,8 +19,15 @@ public class ProductDAO {
 
     private static final String SQL__FIND_PRODUCT_BY_SEARCH = "SELECT * FROM product WHERE name_ru LIKE ? OR name_en LIKE ? OR code LIKE ? LIMIT ?,?;";
 
+    private static final String SQL__FIND_PRODUCTS_BY_SEARCH_FOR_RECEIPT = "SELECT * FROM product LEFT JOIN receipt_has_product ON receipt_has_product.product_id = product.id " +
+            "AND receipt_has_product.receipt_id=? WHERE receipt_has_product.product_id IS null AND name_ru LIKE ? OR name_en LIKE ? OR code LIKE ? LIMIT ?,?;";
+
     private static final String SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH = "SELECT COUNT(*) FROM product WHERE name_ru " +
             "LIKE ? OR name_en LIKE ? OR code LIKE ?;";
+
+
+    private static final String SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_FOR_RECEIPT = "SELECT COUNT(*) FROM product LEFT JOIN receipt_has_product ON receipt_has_product.product_id = product.id " +
+            "AND receipt_has_product.receipt_id=? WHERE receipt_has_product.product_id IS null AND name_ru like ? or name_en like ? OR code like ?;";
 
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
 
@@ -49,6 +53,39 @@ public class ProductDAO {
         } finally {
             DBManager.getInstance().commitAndClose(con, preparedStatement);
         }
+    }
+
+    /**
+     * Return number of rows affected by search product for special receipt, search excludes products that already added into receipt
+     *
+     * @param pattern search pattern
+     * @return number of affected rows
+     * @throws DBException if couldn't retrieve data
+     */
+    public int countOfRowsAffectedBySearch(Receipt receipt, String pattern) throws DBException {
+        int numberOfRows = 0;
+        PreparedStatement p = null;
+        ResultSet rs = null;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__FIND_NUMBER_OF_ROWS_AFFECTED_BY_SEARCH_FOR_RECEIPT);
+            pattern = "%" + pattern + "%";
+            p.setInt(1, receipt.getId());
+            p.setString(2, pattern);
+            p.setString(3, pattern);
+            p.setString(4, pattern);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                numberOfRows = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, p, rs);
+        }
+        return numberOfRows;
     }
 
     /**
@@ -81,6 +118,45 @@ public class ProductDAO {
             DBManager.getInstance().commitAndClose(con, p, rs);
         }
         return numberOfRows;
+    }
+
+    /**
+     * Return products that hit search pattern and excludes products that already added into receipt
+     *
+     * @param pattern        search pattern
+     * @param currentPage    current pagination page
+     * @param recordsPerPage number of products displayed per page
+     * @return List of product entities
+     * @throws DBException if couldn't retrieve data
+     */
+    public List<Product> searchProducts(Receipt receipt, String pattern, int currentPage, int recordsPerPage) throws DBException {
+        List<Product> products = new ArrayList<>();
+        PreparedStatement p = null;
+        ResultSet rs = null;
+        Connection con = null;
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
+            p = con.prepareStatement(SQL__FIND_PRODUCTS_BY_SEARCH_FOR_RECEIPT);
+            pattern = "%" + pattern + "%";
+            p.setInt(1, receipt.getId());
+            p.setString(2, pattern);
+            p.setString(3, pattern);
+            p.setString(4, pattern);
+            p.setInt(5, start);
+            p.setInt(6, recordsPerPage);
+            rs = p.executeQuery();
+            while (rs.next()) {
+                products.add(mapper.mapRow(rs));
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, p, rs);
+        }
+        return products;
     }
 
     /**
