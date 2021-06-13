@@ -39,7 +39,7 @@ public class GenerateWeeklyReportServlet extends HttpServlet {
     private static final String DOWNLOAD = "download";
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         logger.debug("generateWeeklyReport servlet is started at the POST method");
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null || session.getAttribute("userRole") == null

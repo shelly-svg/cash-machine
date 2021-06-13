@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,14 +21,21 @@ public class ViewSearchCashierResultCommand extends Command {
 
     private static final long serialVersionUID = 8932012939203934290L;
     private static final Logger logger = Logger.getLogger(ViewSearchCashierResultCommand.class);
+    private final UserDAO userDAO;
+
+    public ViewSearchCashierResultCommand() {
+        userDAO = new UserDAO();
+    }
+
+    public ViewSearchCashierResultCommand(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("View search cashier result command is started");
 
-        HttpSession session = request.getSession();
-        UserDAO userDAO = new UserDAO();
-        int recordsPerPage = 2;
+        int recordsPerPage = 3;
 
         int currentPage;
         try {

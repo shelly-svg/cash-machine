@@ -17,7 +17,6 @@
 <c:if test="${not empty sessionScope.user}">
     <meta http-equiv="refresh" content="0 ; url=controller?command=viewMenu"/>
 </c:if>
-
 <body>
 
 <div id="log_form">

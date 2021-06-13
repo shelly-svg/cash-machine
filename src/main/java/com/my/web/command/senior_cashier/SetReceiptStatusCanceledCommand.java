@@ -21,13 +21,21 @@ public class SetReceiptStatusCanceledCommand extends Command {
 
     private static final long serialVersionUID = 2391093230348598231L;
     private static final Logger logger = Logger.getLogger(SetReceiptStatusCanceledCommand.class);
+    private final ReceiptDAO receiptDAO;
+
+    public SetReceiptStatusCanceledCommand() {
+        receiptDAO = new ReceiptDAO();
+    }
+
+    public SetReceiptStatusCanceledCommand(ReceiptDAO receiptDAO) {
+        this.receiptDAO = receiptDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Set receipt status canceled command is started");
 
         HttpSession session = request.getSession();
-        ReceiptDAO receiptDAO = new ReceiptDAO();
         String errorMessage;
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");

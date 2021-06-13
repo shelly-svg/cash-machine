@@ -1,4 +1,4 @@
-package web;
+package web.command;
 
 import com.my.web.command.common.LoginCommand;
 import com.my.web.exception.ApplicationException;

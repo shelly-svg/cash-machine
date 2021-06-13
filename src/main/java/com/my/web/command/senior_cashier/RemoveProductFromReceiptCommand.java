@@ -22,14 +22,24 @@ public class RemoveProductFromReceiptCommand extends Command {
 
     private static final long serialVersionUID = -7291892230120392931L;
     private static final Logger logger = Logger.getLogger(RemoveProductFromReceiptCommand.class);
+    private final ReceiptDAO receiptDAO;
+    private final ProductDAO productDAO;
+
+    public RemoveProductFromReceiptCommand() {
+        receiptDAO = new ReceiptDAO();
+        productDAO = new ProductDAO();
+    }
+
+    public RemoveProductFromReceiptCommand(ReceiptDAO receiptDAO, ProductDAO productDAO) {
+        this.receiptDAO = receiptDAO;
+        this.productDAO = productDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("Remove product from receipt command is started");
 
         HttpSession session = request.getSession();
-        ReceiptDAO receiptDAO = new ReceiptDAO();
-        ProductDAO productDAO = new ProductDAO();
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         Receipt updatedReceipt;

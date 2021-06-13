@@ -134,4 +134,43 @@ public class ProductDAOTest {
         }
     }
 
+    @Test
+    public void testCountOfRowsAffectedBySearch() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
+
+            when(mockCon.prepareStatement(anyString())).thenReturn(preparedStatement);
+
+            when(preparedStatement.getGeneratedKeys()).thenReturn(mockRS);
+
+            instance.countOfRowsAffectedBySearch("laptop");
+
+            verify(mockCon, times(1)).prepareStatement(anyString());
+            verify(preparedStatement, times(1)).executeQuery();
+            verify(mockRS, times(1)).next();
+            verify(dbManager, times(1)).commitAndClose(any(), any(), any());
+        }
+    }
+
+    @Test
+    public void testSearchProducts() throws SQLException {
+        DBManager dbManager = Mockito.mock(DBManager.class);
+        try (MockedStatic<DBManager> ignored = mockStatic(DBManager.class)) {
+            when(DBManager.getInstance()).thenReturn(dbManager);
+            when(DBManager.getInstance().getConnection()).thenReturn(mockCon);
+
+            when(mockCon.prepareStatement(anyString())).thenReturn(preparedStatement);
+            when(preparedStatement.getGeneratedKeys()).thenReturn(mockRS);
+
+            instance.searchProducts("laptop", 1, 5);
+
+            verify(mockCon, times(2)).prepareStatement(anyString());
+            verify(preparedStatement, times(2)).executeQuery();
+            verify(mockRS, times(3)).next();
+            verify(dbManager, times(2)).commitAndClose(any(), any(), any());
+        }
+    }
+
 }

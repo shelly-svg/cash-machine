@@ -23,6 +23,15 @@ public class ViewReceiptProductsPageCommand extends Command {
 
     private static final long serialVersionUID = -4923484329592341022L;
     private static final Logger logger = Logger.getLogger(ViewReceiptProductsPageCommand.class);
+    private final ReceiptDAO receiptDAO;
+
+    public ViewReceiptProductsPageCommand() {
+        receiptDAO = new ReceiptDAO();
+    }
+
+    public ViewReceiptProductsPageCommand(ReceiptDAO receiptDAO) {
+        this.receiptDAO = receiptDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
@@ -32,7 +41,7 @@ public class ViewReceiptProductsPageCommand extends Command {
 
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
         try {
-            currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
         } catch (DBException exception) {
             String errorMessage = "receipt.dao.find.receipt ";
             logger.error("errorMessage --> " + exception);
@@ -43,7 +52,7 @@ public class ViewReceiptProductsPageCommand extends Command {
 
         Map<Product, Integer> productMap;
         try {
-            productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            productMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
         } catch (DBException ex) {
             String errorMessage = "receipt.dao.receipt.products.amounts";
             logger.error("errorMessage -> " + ex);

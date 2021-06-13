@@ -1,4 +1,4 @@
-package web;
+package web.command;
 
 import com.my.Path;
 import com.my.db.entities.*;

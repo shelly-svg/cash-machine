@@ -23,6 +23,15 @@ public class ChangePasswordCommand extends Command {
 
     private static final long serialVersionUID = 7292203901100002330L;
     private static final Logger logger = Logger.getLogger(ChangePasswordCommand.class);
+    private final UserDAO userDAO;
+
+    public ChangePasswordCommand() {
+        userDAO = new UserDAO();
+    }
+
+    public ChangePasswordCommand(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
@@ -54,8 +63,6 @@ public class ChangePasswordCommand extends Command {
         String oldPass = request.getParameter("oldPassword");
         String newPass = request.getParameter("newPassword");
         String repNewPass = request.getParameter("repPassword");
-
-        UserDAO userDAO = new UserDAO();
 
         User currentUser = (User) session.getAttribute("user");
         try {
@@ -109,7 +116,6 @@ public class ChangePasswordCommand extends Command {
         logger.debug("Change password command is started at the get method");
 
         HttpSession session = request.getSession();
-        UserDAO userDAO = new UserDAO();
 
         User currentUser = (User) session.getAttribute("user");
         try {

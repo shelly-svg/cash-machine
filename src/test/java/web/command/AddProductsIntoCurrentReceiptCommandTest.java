@@ -1,4 +1,4 @@
-package web;
+package web.command;
 
 import com.my.db.entities.*;
 import com.my.db.entities.dao.ProductDAO;

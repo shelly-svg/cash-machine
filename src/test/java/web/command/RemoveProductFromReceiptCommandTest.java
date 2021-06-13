@@ -1,9 +1,11 @@
-package web;
+package web.command;
 
-import com.my.Path;
-import com.my.db.entities.Product;
+import com.my.db.entities.Receipt;
+import com.my.db.entities.ReceiptStatus;
 import com.my.db.entities.dao.ProductDAO;
-import com.my.web.command.common.ViewProductCommand;
+import com.my.db.entities.dao.ReceiptDAO;
+import com.my.web.Commands;
+import com.my.web.command.senior_cashier.RemoveProductFromReceiptCommand;
 import com.my.web.exception.ApplicationException;
 import com.my.web.exception.DBException;
 import org.junit.jupiter.api.Assertions;
@@ -23,17 +25,19 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
-public class ViewProductCommandTest {
+public class RemoveProductFromReceiptCommandTest {
 
+    private static ReceiptDAO receiptDAO;
     private static ProductDAO productDAO;
-    private static ViewProductCommand underTest;
+    private static RemoveProductFromReceiptCommand underTest;
     private static HttpServletRequest mockRequest;
     private static HttpServletResponse mockResponse;
 
     @BeforeAll
     static void init() {
+        receiptDAO = Mockito.mock(ReceiptDAO.class);
         productDAO = Mockito.mock(ProductDAO.class);
-        underTest = new ViewProductCommand(productDAO);
+        underTest = new RemoveProductFromReceiptCommand(receiptDAO, productDAO);
         mockRequest = Mockito.mock(HttpServletRequest.class);
         mockResponse = Mockito.mock(HttpServletResponse.class);
 
@@ -41,21 +45,26 @@ public class ViewProductCommandTest {
     }
 
     @Test
-    public void viewMenuCommandExecuteTest() throws ServletException, IOException, DBException, ApplicationException {
+    public void removeProductFromReceiptCommandExecuteTest() throws ServletException, IOException, DBException, ApplicationException {
         HttpSession mockSession = Mockito.mock(HttpSession.class);
 
-        Product testProduct = new Product();
+        Receipt testReceipt = new Receipt();
+        testReceipt.setId(1);
+        testReceipt.setReceiptStatus(ReceiptStatus.NEW_RECEIPT);
 
         when(mockRequest.getSession()).thenReturn(mockSession);
         doNothing().when(mockSession).setAttribute(anyString(), any());
-        when(mockRequest.getParameter("id")).thenReturn("1");
-        when(productDAO.findProduct(anyInt())).thenReturn(testProduct);
+        when(mockSession.getAttribute("currentReceipt")).thenReturn(testReceipt);
+        when(receiptDAO.findReceipt(testReceipt.getId())).thenReturn(testReceipt);
+        when(mockRequest.getParameter(anyString())).thenReturn("1");
 
         String actual = underTest.execute(mockRequest, mockResponse);
-        String expected = Path.VIEW_PRODUCT_PAGE;
+        String expected = Commands.VIEW_RECEIPT_PRODUCTS_COMMAND;
         Assertions.assertEquals(expected, actual);
 
+        verify(receiptDAO, times(1)).findReceipt(anyInt());
         verify(productDAO, times(1)).findProduct(anyInt());
+        verify(receiptDAO, times(1)).deleteProductFromReceipt(anyInt(), any(), anyInt());
     }
 
 }
