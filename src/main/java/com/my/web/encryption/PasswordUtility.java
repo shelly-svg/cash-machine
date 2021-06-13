@@ -98,4 +98,13 @@ public class PasswordUtility {
         return returnValue;
     }
 
+    public static void main(String[] args) {
+        String password = "customPASS22";
+        String salt = getSalt(50);
+        String secPass = generateSecurePassword(password, salt);
+        System.out.println(password);
+        System.out.println(salt);
+        System.out.println(secPass);
+    }
+
 }

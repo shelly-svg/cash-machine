@@ -63,8 +63,6 @@ public class Controller extends HttpServlet {
 
         logger.debug("Controller is finished, forward to address -> " + forward);
 
-        request.getSession().setAttribute("lastAction", forward);
-
         if (request.getMethod().equals("GET")) {
             if (forward != null) {
                 RequestDispatcher dispatcher = request.getRequestDispatcher(forward);

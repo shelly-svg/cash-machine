@@ -93,7 +93,6 @@ public class EditProductCommand extends Command {
         logger.debug("Received new amount => " + newAmount);
 
         logger.debug("Edit product command is finished at POST method, forwarding to view product");
-        session.setAttribute("lastAction", "controller?command=editProduct&id=" + id);
         return "controller?command=viewProduct&id=" + id;
     }
 

@@ -153,7 +153,6 @@ public class CreateProductCommand extends Command {
         }
 
         logger.debug("create product command is finished at POST method, forwarding to view product");
-        session.setAttribute("lastAction", "controller?command=viewProduct&id=" + id);
         return "controller?command=viewProduct&id=" + id;
     }
 
