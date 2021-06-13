@@ -23,6 +23,18 @@ public class ViewCurrentReceiptCommand extends Command {
 
     private static final long serialVersionUID = -8293127324782348212L;
     private static final Logger logger = Logger.getLogger(ViewCurrentReceiptCommand.class);
+    private final ReceiptDAO receiptDAO;
+    private final UserDAO userDAO;
+
+    public ViewCurrentReceiptCommand() {
+        receiptDAO = new ReceiptDAO();
+        userDAO = new UserDAO();
+    }
+
+    public ViewCurrentReceiptCommand(ReceiptDAO receiptDAO, UserDAO userDAO) {
+        this.receiptDAO = receiptDAO;
+        this.userDAO = userDAO;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
@@ -32,7 +44,7 @@ public class ViewCurrentReceiptCommand extends Command {
         Receipt currentReceipt = (Receipt) session.getAttribute("currentReceipt");
 
         try {
-            currentReceipt = new ReceiptDAO().findReceipt(currentReceipt.getId());
+            currentReceipt = receiptDAO.findReceipt(currentReceipt.getId());
         } catch (DBException exception) {
             String errorMessage = "receipt.dao.find.receipt";
             logger.error("errorMessage --> " + exception);
@@ -41,7 +53,7 @@ public class ViewCurrentReceiptCommand extends Command {
 
         Map<Product, Integer> productMap;
         try {
-            productMap = new ReceiptDAO().getMapOfAmountsAndProductsFromReceipt(currentReceipt);
+            productMap = receiptDAO.getMapOfAmountsAndProductsFromReceipt(currentReceipt);
         } catch (DBException exception) {
             String errorMessage = "error.occurred";
             logger.error("errorMessage -> " + exception);
@@ -51,7 +63,7 @@ public class ViewCurrentReceiptCommand extends Command {
 
         String creator;
         try {
-            creator = new UserDAO().findUsersFNameLName(currentReceipt.getUserId());
+            creator = userDAO.findUsersFNameLName(currentReceipt.getUserId());
         } catch (DBException exception) {
             String errorMessage = "user.dao.creator";
             logger.error("errorMessage -> " + exception);
