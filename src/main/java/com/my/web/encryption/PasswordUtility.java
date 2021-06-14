@@ -89,10 +89,7 @@ public class PasswordUtility {
                                              String securedPassword, String salt) {
         boolean returnValue;
 
-        // Generate New secure password with the same salt
         String newSecurePassword = generateSecurePassword(providedPassword, salt);
-
-        // Check if two passwords are equal
         returnValue = newSecurePassword.equalsIgnoreCase(securedPassword);
 
         return returnValue;

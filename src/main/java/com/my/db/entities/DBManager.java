@@ -16,8 +16,6 @@ public class DBManager {
 
     private static DBManager instance;
 
-    //singleton
-
     private DBManager() {
     }
 

@@ -17,6 +17,14 @@ public class ProductDAO {
 
     private static final String SQL__FIND_PRODUCT_BY_ID = "SELECT * FROM product WHERE id=?;";
 
+    private static final String SQL__FIND_ALL_PRODUCTS = "SELECT * FROM product LIMIT ?,?;";
+
+    private static final String SQL__FIND_ALL_PRODUCTS_SORT_BY_NAME = "SELECT * FROM product ORDER BY name_ru LIMIT ?,?;";
+
+    private static final String SQL__FIND_ALL_PRODUCTS_SORT_BY_PRICE = "SELECT * FROM product ORDER BY price LIMIT ?,?;";
+
+    private static final String SQL__ALL_PRODUCTS_ROWS = "SELECT COUNT(*) FROM product;";
+
     private static final String SQL__FIND_PRODUCT_BY_SEARCH = "SELECT * FROM product WHERE name_ru LIKE ? OR name_en LIKE ? OR code LIKE ? LIMIT ?,?;";
 
     private static final String SQL__FIND_PRODUCTS_BY_SEARCH_FOR_RECEIPT = "SELECT * FROM product LEFT JOIN receipt_has_product ON receipt_has_product.product_id = product.id " +
@@ -30,6 +38,102 @@ public class ProductDAO {
             "AND receipt_has_product.receipt_id=? WHERE receipt_has_product.product_id IS null AND name_ru like ? or name_en like ? OR code like ?;";
 
     private static final String SQL__UPDATE_PRODUCT_AMOUNT_BY_ID = "UPDATE product SET amount=? WHERE id=?;";
+
+    public List<Product> findAllProductsSortByPrice(int currentPage, int recordsPerPage) throws DBException {
+        List<Product> products = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Connection con = null;
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
+            preparedStatement = con.prepareStatement(SQL__FIND_ALL_PRODUCTS_SORT_BY_PRICE);
+            preparedStatement.setInt(1, start);
+            preparedStatement.setInt(2, recordsPerPage);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                products.add(mapper.mapRow(rs));
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
+        }
+        return products;
+    }
+
+    public List<Product> findAllProductsSortByName(int currentPage, int recordsPerPage) throws DBException {
+        List<Product> products = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Connection con = null;
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
+            preparedStatement = con.prepareStatement(SQL__FIND_ALL_PRODUCTS_SORT_BY_NAME);
+            preparedStatement.setInt(1, start);
+            preparedStatement.setInt(2, recordsPerPage);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                products.add(mapper.mapRow(rs));
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
+        }
+        return products;
+    }
+
+    public int numberOfAllProducts() throws DBException {
+        int numberOfRows = 0;
+        PreparedStatement p = null;
+        ResultSet rs = null;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            p = con.prepareStatement(SQL__ALL_PRODUCTS_ROWS);
+            rs = p.executeQuery();
+            if (rs.next()) {
+                numberOfRows = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, p, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, p, rs);
+        }
+        return numberOfRows;
+    }
+
+    public List<Product> findAllProducts(int currentPage, int recordsPerPage) throws DBException {
+        List<Product> products = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Connection con = null;
+        int start = currentPage * recordsPerPage - recordsPerPage;
+        try {
+            con = DBManager.getInstance().getConnection();
+            ProductDAO.ProductMapper mapper = new ProductDAO.ProductMapper();
+            preparedStatement = con.prepareStatement(SQL__FIND_ALL_PRODUCTS);
+            preparedStatement.setInt(1, start);
+            preparedStatement.setInt(2, recordsPerPage);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                products.add(mapper.mapRow(rs));
+            }
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con, preparedStatement, rs);
+            throw new DBException(ex.getMessage(), ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con, preparedStatement, rs);
+        }
+        return products;
+    }
 
     /**
      * Updates product amount at the store
