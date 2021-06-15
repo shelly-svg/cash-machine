@@ -17,7 +17,7 @@ public class ProductDAO {
 
     private static final String SQL__FIND_PRODUCT_BY_ID = "SELECT * FROM product WHERE id=?;";
 
-    private static final String SQL__FIND_ALL_PRODUCTS = "SELECT * FROM product LIMIT ?,?;";
+    private static final String SQL__FIND_ALL_PRODUCTS = "SELECT * FROM product ORDER BY id LIMIT ?,?;";
 
     private static final String SQL__FIND_ALL_PRODUCTS_SORT_BY_NAME = "SELECT * FROM product ORDER BY name_ru LIMIT ?,?;";
 

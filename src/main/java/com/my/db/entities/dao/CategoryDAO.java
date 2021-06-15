@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Data access object for category related entities
  */
-public class CategoryDAO {
+public class CategoryDAO{
 
     private static final String SQL__FIND_ALL_CATEGORIES = "SELECT * FROM category;";
     private static final String SQL__FIND_CATEGORY_BY_NAME_EN = "SELECT * FROM category WHERE name_en=?;";

@@ -4,7 +4,6 @@ import com.my.db.entities.Receipt;
 
 public class OrderClass {
 
-
     private Receipt receipt;
 
     public OrderClass(Receipt receipt) {

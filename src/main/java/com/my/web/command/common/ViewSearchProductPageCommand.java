@@ -30,7 +30,6 @@ public class ViewSearchProductPageCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ApplicationException {
         logger.debug("View search page command is stared");
-        logger.debug("View search page command is finished");
 
         int recordsPerPage = 4;
 
@@ -50,10 +49,15 @@ public class ViewSearchProductPageCommand extends Command {
         int numberOfRows;
         String sort = request.getParameter("sort");
 
+        try {
+            numberOfRows = productDAO.numberOfAllProducts();
+        } catch (DBException exception) {
+            exception.printStackTrace();
+            throw new ApplicationException();
+        }
         if ("byName".equals(sort)) {
             try {
                 allProducts = productDAO.findAllProductsSortByName(currentPage, recordsPerPage);
-                numberOfRows = productDAO.numberOfAllProducts();
             } catch (DBException exception) {
                 exception.printStackTrace();
                 throw new ApplicationException();
@@ -61,7 +65,6 @@ public class ViewSearchProductPageCommand extends Command {
         } else if ("byPrice".equals(sort)) {
             try {
                 allProducts = productDAO.findAllProductsSortByPrice(currentPage, recordsPerPage);
-                numberOfRows = productDAO.numberOfAllProducts();
             } catch (DBException exception) {
                 exception.printStackTrace();
                 throw new ApplicationException();
@@ -69,7 +72,6 @@ public class ViewSearchProductPageCommand extends Command {
         } else {
             try {
                 allProducts = productDAO.findAllProducts(currentPage, recordsPerPage);
-                numberOfRows = productDAO.numberOfAllProducts();
             } catch (DBException exception) {
                 exception.printStackTrace();
                 throw new ApplicationException();
@@ -90,6 +92,7 @@ public class ViewSearchProductPageCommand extends Command {
         request.setAttribute("nOfPages", nOfPages);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("recordsPerPage", recordsPerPage);
+        logger.debug("View search page command is finished");
         return Path.VIEW_SEARCH_PRODUCTS_PAGE;
     }
 
