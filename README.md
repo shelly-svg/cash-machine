@@ -1,6 +1,6 @@
 # cash-machine
 
-this finishing task of the external java lab
+this is finishing task of the external java lab
 
 technologies: servlet-api, jsp, jdbc
 
